@@ -139,10 +139,17 @@ def email_confirmation_view(request, key):
     """
     try:
         # Try to get and verify the confirmation
-        confirmation = EmailConfirmationHMAC.from_key(key)
+        try:
+            confirmation = EmailConfirmationHMAC.from_key(key)
+            print(f"[DEBUG] Confirmation key: {key}")
+            print(f"[DEBUG] Confirmation object: {confirmation}")
+        except Exception as e:
+            print(f"[DEBUG] Error getting confirmation from key: {e}")
+            confirmation = None
         
         if not confirmation:
             # Invalid or non-existent key
+            print("[DEBUG] Confirmation is None/False - invalid key")
             context = {
                 'title': 'Verification Failed',
                 'error_type': 'invalid',
@@ -151,10 +158,16 @@ def email_confirmation_view(request, key):
             return render(request, 'accounts/email_verification_failure.html', context)
         
         # Get the email address object
-        email_address = confirmation.email_address
+        try:
+            email_address = confirmation.email_address
+            print(f"[DEBUG] Email address: {email_address}")
+        except Exception as e:
+            print(f"[DEBUG] Error getting email_address: {e}")
+            raise
         
         # Check if already verified
         if email_address.verified:
+            print(f"[DEBUG] Email already verified: {email_address.email}")
             context = {
                 'title': 'Already Verified',
                 'error_type': 'already_verified',
@@ -163,19 +176,33 @@ def email_confirmation_view(request, key):
             }
             return render(request, 'accounts/email_verification_success.html', context)
         
-        # Verify the email address
+        # Verify the email address - handle duplicate email addresses first
+        user = email_address.user
+        
+        # Delete any duplicate EmailAddress records with the same email (keep only this one)
+        EmailAddress.objects.filter(email=email_address.email).exclude(id=email_address.id).delete()
+        print(f"[DEBUG] Deleted duplicate EmailAddress records for: {email_address.email}")
+        
+        # Delete any other primary emails for this user
+        EmailAddress.objects.filter(user=user, primary=True).exclude(id=email_address.id).delete()
+        print(f"[DEBUG] Cleared other primary emails for user: {user.username}")
+        
+        # Now update this email as verified and primary using save()
         email_address.verified = True
         email_address.primary = True
         email_address.save()
+        print(f"[DEBUG] Email verified and saved: {email_address.email}")
         
         # Activate the user account
-        user = email_address.user
         if not user.is_active:
             user.is_active = True
             user.save()
+            print(f"[DEBUG] User activated: {user.username}")
         
-        # Auto-login the user
+        # Auto-login the user - refresh user object first
+        user.refresh_from_db()
         login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+        print(f"[DEBUG] User logged in: {user.username}")
         
         # Show success page
         context = {
@@ -188,7 +215,10 @@ def email_confirmation_view(request, key):
     
     except Exception as e:
         # Handle expired or invalid confirmations
-        print(f"Email verification error: {e}")
+        print(f"[ERROR] Email verification exception: {type(e).__name__}: {e}")
+        import traceback
+        traceback.print_exc()
+        
         error_message = str(e).lower()
         
         if 'expired' in error_message or 'invalid' in error_message:
@@ -196,7 +226,7 @@ def email_confirmation_view(request, key):
             error_msg = 'যাচাইকরণ লিঙ্কের মেয়াদ শেষ হয়েছে। দয়া করে নতুন লিঙ্কের জন্য অনুরোধ করুন।'
         else:
             error_type = 'invalid'
-            error_msg = 'যাচাইকরণ ব্যর্থ হয়েছে। দয়া করে আবার চেষ্টা করুন বা সাহায্য যোগাযোগ করুন।'
+            error_msg = f'যাচাইকরণ ব্যর্থ হয়েছে: {str(e)}'
         
         context = {
             'title': 'Verification Failed',
@@ -224,12 +254,22 @@ def resend_verification_email(request):
             messages.info(request, 'এই ইমেইল ইতিমধ্যে যাচাই করা হয়েছে। আপনি এখন লগইন করতে পারেন।')
             return redirect('accounts:login')
         
-        # Get or create EmailAddress
-        email_address, created = EmailAddress.objects.get_or_create(
-            user=user,
-            email=email,
-            defaults={'verified': False, 'primary': True}
-        )
+        # Get or create EmailAddress - handle primary constraint
+        email_address = None
+        try:
+            # Try to get existing EmailAddress for this user+email
+            email_address = EmailAddress.objects.get(user=user, email=email)
+        except EmailAddress.DoesNotExist:
+            # Create new EmailAddress
+            # Check if user already has a primary email
+            has_primary = EmailAddress.objects.filter(user=user, primary=True).exists()
+            
+            email_address = EmailAddress.objects.create(
+                user=user,
+                email=email,
+                verified=False,
+                primary=not has_primary  # Only mark as primary if user doesn't have one
+            )
         
         # Send verification email
         try:
