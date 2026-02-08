@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Edit App - {{ app.title }} - JN App Store{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/app_detail.css' %}">{% endblock %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 0 auto; padding: 40px 20px;">
+  <!-- Header -->
+  <div style="margin-bottom: 40px; padding-bottom: 24px; border-bottom: 2px solid var(--line);">
+    <h1 style="margin: 0 0 8px; font-size: 32px;">✏️ Edit App</h1>
+    <p style="margin: 0; color: var(--muted);">Update the app details and information</p>
+  </div>
+
+  <!-- Form Container -->
+  <form method="POST" enctype="multipart/form-data" style="background: var(--bg-secondary); padding: 32px; border-radius: var(--radius); border: 1px solid var(--line);">
+    {% csrf_token %}
+
+    <!-- Messages -->
+    {% if messages %}
+      {% for message in messages %}
+        <div style="padding: 12px 16px; background: {% if message.tags %}var(--primary){% else %}#28a745{% endif %}; color: white; border-radius: var(--radius); margin-bottom: 16px;">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <!-- Basic Information -->
+    <div style="margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--line);">
+      <h2 style="margin: 0 0 20px; font-size: 20px;">📋 Basic Information</h2>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+        <!-- App Name -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600;">App Name *</label>
+          {{ form.title }}
+          {% if form.title.errors %}<div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ form.title.errors }}</div>{% endif %}
+          <small style="color: var(--muted); display: block; margin-top: 4px;">The name of your application</small>
+        </div>
+
+        <!-- Slug -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600;">App Slug *</label>
+          {{ form.slug }}
+          {% if form.slug.errors %}<div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ form.slug.errors }}</div>{% endif %}
+          <small style="color: var(--muted); display: block; margin-top: 4px;">URL-friendly name (lowercase, hyphens only)</small>
+        </div>
+
+        <!-- Category -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600;">Category *</label>
+          {{ form.category }}
+          {% if form.category.errors %}<div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ form.category.errors }}</div>{% endif %}
+        </div>
+
+        <!-- Platform -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600;">Platform *</label>
+          {{ form.platform }}
+          {% if form.platform.errors %}<div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ form.platform.errors }}</div>{% endif %}
+        </div>
+
+        <!-- Version -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600;">Version</label>
+          {{ form.version }}
+          {% if form.version.errors %}<div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ form.version.errors }}</div>{% endif %}
+          <small style="color: var(--muted); display: block; margin-top: 4px;">e.g. 1.0.0</small>
+        </div>
+
+        <!-- Size -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600;">Size (MB)</label>
+          {{ form.size_mb }}
+          {% if form.size_mb.errors %}<div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ form.size_mb.errors }}</div>{% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Descriptions -->
+    <div style="margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--line);">
+      <h2 style="margin: 0 0 20px; font-size: 20px;">📝 Descriptions</h2>
+      
+      <!-- Short Description -->
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; margin-bottom: 8px; font-weight: 600;">Short Description</label>
+        {{ form.short_description }}
+        {% if form.short_description.errors %}<div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ form.short_description.errors }}</div>{% endif %}
+        <small style="color: var(--muted); display: block; margin-top: 4px;">Brief one-line description (max 220 characters)</small>
+      </div>
+
+      <!-- Full Description -->
+      <div>
+        <label style="display: block; margin-bottom: 8px; font-weight: 600;">Full Description</label>
+        {{ form.description }}
+        {% if form.description.errors %}<div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ form.description.errors }}</div>{% endif %}
+        <small style="color: var(--muted); display: block; margin-top: 4px;">Detailed description of your app features and functionality</small>
+      </div>
+    </div>
+
+    <!-- Media -->
+    <div style="margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--line);">
+      <h2 style="margin: 0 0 20px; font-size: 20px;">🖼️ Media & Downloads</h2>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+        <!-- Cover Image -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600;">Cover Image</label>
+          {% if app.cover_image %}
+            <div style="margin-bottom: 12px;">
+              <img src="{{ app.cover_image.url }}" alt="{{ app.title }}" style="width: 100%; height: 150px; object-fit: cover; border-radius: var(--radius);">
+            </div>
+          {% endif %}
+          {{ form.cover_image }}
+          {% if form.cover_image.errors %}<div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ form.cover_image.errors }}</div>{% endif %}
+          <small style="color: var(--muted); display: block; margin-top: 4px;">App cover/icon image</small>
+        </div>
+
+        <!-- APK File -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600;">APK/App File</label>
+          {% if app.apk_file %}
+            <div style="margin-bottom: 8px; padding: 8px; background: var(--bg); border-radius: 4px; font-size: 12px; color: var(--muted);">
+              Current: {{ app.apk_file.name|truncatechars:30 }}
+            </div>
+          {% endif %}
+          {{ form.apk_file }}
+          {% if form.apk_file.errors %}<div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ form.apk_file.errors }}</div>{% endif %}
+          <small style="color: var(--muted); display: block; margin-top: 4px;">Upload new APK/EXE/IPA file (optional)</small>
+        </div>
+
+        <!-- Download Link -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600;">External Download Link</label>
+          {{ form.download_link }}
+          {% if form.download_link.errors %}<div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ form.download_link.errors }}</div>{% endif %}
+          <small style="color: var(--muted); display: block; margin-top: 4px;">e.g., Google Drive, GitHub Release, Pixeldrain</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Store Information -->
+    <div style="margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--line);">
+      <h2 style="margin: 0 0 20px; font-size: 20px;">🏪 Store Information</h2>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+        <!-- Store Name -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600;">Store Name</label>
+          {{ form.store_name }}
+          {% if form.store_name.errors %}<div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ form.store_name.errors }}</div>{% endif %}
+          <small style="color: var(--muted); display: block; margin-top: 4px;">e.g., Google Play, App Store</small>
+        </div>
+
+        <!-- Store Email -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600;">Store Email</label>
+          {{ form.store_email }}
+          {% if form.store_email.errors %}<div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ form.store_email.errors }}</div>{% endif %}
+          <small style="color: var(--muted); display: block; margin-top: 4px;">Contact email for the store or developer</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Publishing Status -->
+    <div style="margin-bottom: 32px;">
+      <h2 style="margin: 0 0 20px; font-size: 20px;">📊 Publishing Status</h2>
+      
+      <div style="padding: 16px; background: var(--bg); border-radius: var(--radius); border-left: 4px solid var(--primary);">
+        <label style="display: flex; align-items: center; cursor: pointer;">
+          {{ form.is_published }}
+          <span style="margin-left: 8px; font-weight: 600;">
+            {% if form.is_published.value %}
+              ✅ Published (visible to users)
+            {% else %}
+              ⏸️ Draft (hidden from users)
+            {% endif %}
+          </span>
+        </label>
+        {% if form.is_published.errors %}<div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ form.is_published.errors }}</div>{% endif %}
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="display: flex; gap: 12px; margin-top: 32px;">
+      <button type="submit" style="padding: 12px 32px; background: var(--primary); color: white; border: none; border-radius: 4px; font-size: 14px; font-weight: 600; cursor: pointer;">
+        💾 Save Changes
+      </button>
+      <a href="{% url 'apps:admin_app_detail' app.slug %}" style="padding: 12px 32px; background: var(--bg-secondary); color: var(--text); border: 1px solid var(--line); border-radius: 4px; font-size: 14px; font-weight: 600; text-decoration: none; display: inline-block;">
+        ← Cancel
+      </a>
+    </div>
+  </form>
+</div>
+
+<style>
+  input[type="text"],
+  input[type="email"],
+  input[type="url"],
+  input[type="number"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+  }
+
+  input[type="file"] {
+    display: block;
+    width: 100%;
+    padding: 8px 0;
+  }
+
+  input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+  }
+</style>
+{% endblock %}

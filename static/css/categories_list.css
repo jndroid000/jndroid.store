@@ -1,0 +1,71 @@
+/* Categories page specific styles */
+.pageHeader {
+  padding: 32px 0 24px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 32px;
+}
+
+.pageHeader h1 {
+  margin: 0 0 8px;
+  font-size: 36px;
+}
+
+.pageHeader p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.grid3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.card {
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 14px;
+  cursor: pointer;
+  transition: transform .12s ease, background .12s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  background: var(--card2);
+}
+
+.card h3 {
+  margin: 10px 0 6px;
+  font-size: 15px;
+}
+
+.card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: var(--card2);
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  color: var(--text);
+}
+
+/* Responsive */
+@media (max-width: 920px) {
+  .grid3 {
+    grid-template-columns: 1fr;
+  }
+
+  .pageHeader h1 {
+    font-size: 28px;
+  }
+}

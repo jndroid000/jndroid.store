@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Home - JN App Store{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/home.css' %}">{% endblock %}
+
+{% block content %}
+  <div class="hero">
+    <div class="heroGrid">
+      <div class="heroCard">
+        <div class="heroInner">
+          <span class="pill"><span class="dot"></span> Verified APK • Clean UI • Fast Download</span>
+
+          <h2 class="title">বাংলায় সহজ, দ্রুত এবং নিরাপদ APK হাব</h2>
+          <p class="subtitle">
+            JN App Store — এমন অ্যাপ খুঁজে পাও যেগুলো <b>Play Store-এ নেই</b>, বা <b>Old Version</b> দরকার,
+            বা <b>Lite</b> ব্যবহার করতে চাও — সবকিছু এক জায়গায়।
+          </p>
+
+          <div class="heroRow">
+            <a class="btn primary" href="{% url 'apps:list' %}">Start Exploring</a>
+            <a class="btn" href="{% url 'categories:list' %}">Browse Categories</a>
+            <span class="chip">No forced login</span>
+            <span class="chip">Bangla-friendly</span>
+            <span class="chip">Verified uploads</span>
+          </div>
+        </div>
+      </div>
+
+      <aside class="sideCard">
+        <div class="statGrid">
+          <div class="stat"><b>বিশ্বস্ত</b><span>APK হাব</span></div>
+          <div class="stat"><b>দ্রুত</b><span>ডাউনলোড</span></div>
+          <div class="stat"><b>সহজ</b><span>ইন্টারফেস</span></div>
+          <div class="stat"><b>সবসময়</b><span>সাপোর্ট</span></div>
+        </div>
+
+        <div class="safe">
+          <div class="badge">✓</div>
+          <div>
+            <b>নিরাপদ ডাউনলোড</b>
+            <p>সব অ্যাপ যাচাই করা এবং কমিউনিটি দ্বারা অনুমোদিত।</p>
+          </div>
+        </div>
+
+        <div class="card" style="background:var(--card)">
+          <h3 style="margin:0 0 8px;">Quick Links</h3>
+          <div class="heroRow" style="margin:0">
+            <a class="btn" href="{% url 'apps:list' %}">Browse Apps</a>
+            <a class="btn" href="{% url 'categories:list' %}">Categories</a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <section>
+    <div class="sectionTitle">
+      <div>
+        <h2>কেন মানুষ JN App Store ব্যবহার করে</h2>
+        <p>পরিষ্কার, পঠনযোগ্য ইন্টারফেস + যাচাইকৃত আপলোড।</p>
+      </div>
+    </div>
+
+    <div class="grid3">
+      <div class="card">
+        <div class="icon">⚡</div>
+        <h3>দ্রুত ডাউনলোড</h3>
+        <p>সরাসরি ডাউনলোড ফ্লো। অপ্রয়োজনীয় বিজ্ঞাপন নেই, কাজটা দ্রুত।</p>
+      </div>
+
+      <div class="card">
+        <div class="icon">🧩</div>
+        <h3>পুরানো ও লাইট সংস্করণ</h3>
+        <p>পুরানো ফোন/কম RAM-এর জন্য Lite বা পুরানো সংস্করণ সহজে পান।</p>
+      </div>
+
+      <div class="card">
+        <div class="icon">🛡️</div>
+        <h3>রিপোর্ট এবং বিশ্বাস</h3>
+        <p>কমিউনিটি রিপোর্ট সিস্টেম। সমস্যা হলে তাৎক্ষণিক ব্যবস্থা।</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sectionTitle">
+      <div>
+        <h2>জনপ্রিয় অ্যাপগুলি</h2>
+        <p>সর্বশেষ এবং সবচেয়ে বেশি ব্যবহৃত অ্যাপ</p>
+      </div>
+      <a class="btn" href="{% url 'apps:list' %}">সব অ্যাপ দেখুন →</a>
+    </div>
+  </section>
+{% endblock %}

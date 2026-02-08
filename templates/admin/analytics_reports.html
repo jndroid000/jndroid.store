@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Reports - Admin{% endblock %}
+
+{% block content %}
+<div style="padding:20px;">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:32px;">
+    <h1 style="margin:0; font-size:32px;">Reports</h1>
+    <a href="{% url 'admin_panel:dashboard' %}" class="btn secondary" style="padding:10px 20px;">← Back</a>
+  </div>
+
+  <div style="padding:40px; text-align:center; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:12px;">
+    <p style="font-size:18px; color:var(--muted);">Reports page coming soon...</p>
+    <p style="color:var(--muted); font-size:14px;">Detailed reports and export options will be available here.</p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Categories Management - Admin{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/review_form.css' %}">{% endblock %}
+
+{% block content %}
+<div style="padding:20px;">
+  <!-- Header -->
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:32px;">
+    <div>
+      <h1 style="margin:0 0 8px; font-size:32px;">Categories Management</h1>
+      <p style="color:var(--muted);">Total: {{ categories|length }} categories</p>
+    </div>
+    <a href="{% url 'admin_panel:dashboard' %}" class="btn secondary" style="padding:10px 20px;">← Back to Dashboard</a>
+  </div>
+
+  <!-- Add Category Form -->
+  <div style="margin-bottom:32px; padding:20px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:12px;">
+    <h3 style="margin:0 0 16px;">Add New Category</h3>
+    <form method="post" action="{% url 'admin_panel:categories_create' %}" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:12px; align-items:flex-end;">
+      {% csrf_token %}
+      <div>
+        <label style="display:block; font-size:13px; margin-bottom:4px;">Category Name</label>
+        <input type="text" name="name" placeholder="e.g. Games" required style="width:100%; padding:10px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text);">
+      </div>
+      <div>
+        <label style="display:block; font-size:13px; margin-bottom:4px;">Description</label>
+        <input type="text" name="description" placeholder="Brief description" style="width:100%; padding:10px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text);">
+      </div>
+      <button type="submit" class="btn primary" style="padding:10px 20px; width:100%;">Create Category</button>
+    </form>
+  </div>
+
+  <!-- Categories Table -->
+  <div style="overflow-x:auto; border:1px solid var(--line); border-radius:12px;">
+    <table style="width:100%; border-collapse:collapse; font-size:14px;">
+      <thead>
+        <tr style="background:rgba(255,255,255,0.04); border-bottom:1px solid var(--line);">
+          <th style="padding:12px; text-align:left; color:var(--muted); font-weight:500;">Category</th>
+          <th style="padding:12px; text-align:left; color:var(--muted); font-weight:500;">Description</th>
+          <th style="padding:12px; text-align:center; color:var(--muted); font-weight:500;">Apps</th>
+          <th style="padding:12px; text-align:center; color:var(--muted); font-weight:500;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for category in categories %}
+          <tr style="border-bottom:1px solid var(--line); hover:background:rgba(255,255,255,0.02);">
+            <td style="padding:12px;">
+              <div style="font-weight:500;">{{ category.name }}</div>
+            </td>
+            <td style="padding:12px;">
+              <div style="color:var(--muted); font-size:13px;">{{ category.description|default:"No description" }}</div>
+            </td>
+            <td style="padding:12px; text-align:center;">{{ category.apps.count }}</td>
+            <td style="padding:12px; text-align:center;">
+              <div style="display:flex; gap:6px; justify-content:center;">
+                <a href="{% url 'admin_panel:categories_edit' pk=category.pk %}" class="btn secondary" style="padding:6px 10px; font-size:12px;">Edit</a>
+                <form method="post" action="{% url 'admin_panel:categories_delete' pk=category.pk %}" style="display:inline;" onsubmit="return confirm('Are you sure?');">
+                  {% csrf_token %}
+                  <button type="submit" class="btn" style="padding:6px 10px; font-size:12px; background:rgba(251,113,133,0.15); border:1px solid rgba(251,113,133,0.3); color:rgba(251,113,133,0.9); cursor:pointer;">Delete</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="4" style="padding:32px; text-align:center; color:var(--muted);">No categories found</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<style>
+  input[type="text"],
+  textarea,
+  select {
+    box-sizing: border-box;
+  }
+</style>
+{% endblock %}

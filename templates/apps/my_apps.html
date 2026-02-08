@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Apps - JN App Store{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/app_detail.css' %}">{% endblock %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 0 auto; padding: 40px 20px;">
+  <!-- Header -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; padding-bottom: 24px; border-bottom: 2px solid var(--line);">
+    <div>
+      <h1 style="margin: 0 0 8px; font-size: 32px;">📚 My Apps</h1>
+      <p style="margin: 0; color: var(--muted);">Manage all your uploaded applications</p>
+    </div>
+    <a href="{% url 'apps:upload' %}" style="padding: 12px 24px; background: var(--primary); color: white; border-radius: var(--radius); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
+      📤 Upload New App
+    </a>
+  </div>
+
+  <!-- Stats -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 32px;">
+    <div style="padding: 16px; background: var(--bg-secondary); border-radius: var(--radius); border-left: 4px solid var(--primary); text-align: center;">
+      <div style="font-size: 28px; font-weight: 600; color: var(--primary);">{{ apps|length }}</div>
+      <div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Total Apps</div>
+    </div>
+    <div style="padding: 16px; background: var(--bg-secondary); border-radius: var(--radius); border-left: 4px solid #FFD700; text-align: center;">
+      <div style="font-size: 28px; font-weight: 600; color: #FFD700;">
+        {% widthratio apps|length 1 100 %}%
+      </div>
+      <div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Published</div>
+    </div>
+    <div style="padding: 16px; background: var(--bg-secondary); border-radius: var(--radius); border-left: 4px solid #28a745; text-align: center;">
+      <div style="font-size: 28px; font-weight: 600; color: #28a745;">
+        {% if apps %}
+          {% widthratio apps|first.downloads 1 1 %}
+        {% else %}
+          0
+        {% endif %}
+      </div>
+      <div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Total Downloads</div>
+    </div>
+  </div>
+
+  <!-- Apps List -->
+  {% if apps %}
+    <div style="display: grid; grid-template-columns: 1fr; gap: 16px;">
+      {% for app in apps %}
+        <div style="padding: 20px; background: var(--bg-secondary); border-radius: var(--radius); border: 1px solid var(--line); display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center;">
+          <!-- Left Side -->
+          <div>
+            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
+              <div style="font-size: 48px; width: 60px; height: 60px; background: var(--bg); border-radius: var(--radius); display: flex; align-items: center; justify-content: center;">
+                {{ app.title|first|upper }}
+              </div>
+              <div>
+                <h3 style="margin: 0; font-size: 18px;">{{ app.title }}</h3>
+                <p style="margin: 4px 0 0; color: var(--muted); font-size: 13px;">
+                  v{{ app.version|default:"1.0" }} • 
+                  <a href="{% url 'apps:list' %}?cat={{ app.category.slug }}" style="color: var(--primary); text-decoration: none;">{{ app.category.name }}</a>
+                </p>
+              </div>
+            </div>
+            <p style="margin: 8px 0; color: var(--muted); font-size: 13px; line-height: 1.5;">{{ app.short_description|truncatewords:15 }}</p>
+            <div style="display: flex; gap: 16px; margin-top: 12px; font-size: 12px; color: var(--muted); flex-wrap: wrap;">
+              <span>📦 {{ app.size_mb|floatformat:1 }} MB</span>
+              <span>⬇️ {{ app.downloads }} downloads</span>
+              <span>⭐ {% if app.avg_rating %}{{ app.avg_rating|floatformat:1 }}{% else %}No ratings{% endif %}</span>
+              <span>📅 {{ app.created_at|date:"M d, Y" }}</span>
+            </div>
+            <div style="display: flex; gap: 16px; margin-top: 12px; font-size: 12px; flex-wrap: wrap;">
+              {% if app.download_link %}
+                <div style="padding: 4px 10px; background: var(--bg); border: 1px solid var(--line); border-radius: 4px;">
+                  🔗 <a href="{{ app.download_link }}" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 600;">Download Link</a>
+                </div>
+              {% endif %}
+              {% if app.store_name %}
+                <div style="padding: 6px 12px; background: var(--primary); color: white; border-radius: 4px; font-weight: 600;">
+                  🏪 {{ app.store_name }}
+                </div>
+              {% endif %}
+              {% if app.store_email %}
+                <div style="padding: 4px 10px; background: var(--bg); border: 1px solid var(--line); border-radius: 4px;">
+                  ✉️ <a href="mailto:{{ app.store_email }}" style="color: var(--primary); text-decoration: none; font-weight: 600;">{{ app.store_email }}</a>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Right Side - Actions -->
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            {% if app.is_published %}
+              <div style="padding: 8px 12px; background: #28a745; color: white; border-radius: var(--radius); font-size: 12px; font-weight: 600; text-align: center;">
+                ✓ Published
+              </div>
+            {% else %}
+              <div style="padding: 8px 12px; background: #FFC107; color: #333; border-radius: var(--radius); font-size: 12px; font-weight: 600; text-align: center;">
+                ⏱️ Draft
+              </div>
+            {% endif %}
+            
+            <a href="{% url 'apps:detail' app.slug %}" style="padding: 10px 16px; background: var(--primary); color: white; border-radius: var(--radius); text-decoration: none; text-align: center; font-weight: 600; font-size: 13px;">
+              👁️ View Details
+            </a>
+            
+            <a href="#" style="padding: 10px 16px; background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: var(--radius); text-decoration: none; text-align: center; font-weight: 600; font-size: 13px;">
+              ✏️ Edit
+            </a>
+            
+            <a href="#" style="padding: 10px 16px; background: #dc3545; color: white; border-radius: var(--radius); text-decoration: none; text-align: center; font-weight: 600; font-size: 13px;">
+              🗑️ Delete
+            </a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <!-- Empty State -->
+    <div style="padding: 60px 20px; text-align: center; background: var(--bg-secondary); border-radius: var(--radius);">
+      <div style="font-size: 64px; margin-bottom: 16px;">📭</div>
+      <h2 style="margin: 0 0 8px; font-size: 20px;">No Apps Yet</h2>
+      <p style="margin: 0 0 20px; color: var(--muted);">Start by uploading your first application to share with the community</p>
+      <a href="{% url 'apps:upload' %}" style="display: inline-block; padding: 12px 28px; background: var(--primary); color: white; border-radius: var(--radius); text-decoration: none; font-weight: 600;">
+        📤 Upload Your First App
+      </a>
+    </div>
+  {% endif %}
+</div>
+
+<style>
+  @media (max-width: 768px) {
+    div[style*="grid-template-columns: 1fr 1fr"] {
+      grid-template-columns: 1fr !important;
+    }
+    
+    div[style*="display: flex; justify-content: space-between"] {
+      flex-direction: column;
+      gap: 16px;
+    }
+  }
+</style>
+{% endblock %}

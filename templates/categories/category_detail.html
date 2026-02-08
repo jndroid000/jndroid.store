@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ category.name }} - Categories{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/app_list.css' %}">{% endblock %}
+
+{% block content %}
+<div class="pageHeader">
+  <h1>{{ category.name }}</h1>
+  <p><a href="{% url 'categories:list' %}" style="color:var(--brand);">← Back to categories</a></p>
+</div>
+
+{% if apps %}
+  <div class="sectionTitle">
+    <div>
+      <h2>Apps in this Category</h2>
+      <p>{{ apps|length }} App{{ apps|length|pluralize }}</p>
+    </div>
+  </div>
+  
+  <div class="appGrid">
+    {% for a in apps %}
+      <article class="app">
+        <div class="appIcon">{{ a.title|first|upper }}</div>
+        <div class="appMeta">
+          <b><a href="{% url 'apps:detail' a.slug %}">{{ a.title }}</a></b>
+          <small>{{ a.platform|title }} • v{{ a.version|default:"-" }}</small>
+          <div class="row">
+            <span class="tag">⭐ {{ a.avg_rating|default_if_none:"0"|floatformat:1 }}</span>
+            <span class="tag">⬇ {{ a.downloads }}</span>
+          </div>
+          <div class="dl">
+            <span>Size: {{ a.size_mb|default:"0" }}MB</span>
+            <div style="flex:1;"></div>
+            <a class="btn primary" href="{% url 'apps:download' a.slug %}" style="padding:8px 12px; font-size:12px;">Download</a>
+          </div>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="noReviews">
+    <p>No apps in this category yet.</p>
+  </div>
+{% endif %}
+{% endblock %}

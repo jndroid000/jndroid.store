@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Upload App - JN App Store{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/app_detail.css' %}">{% endblock %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 0 auto; padding: 40px 20px;">
+  <!-- Header -->
+  <div style="margin-bottom: 40px; padding-bottom: 24px; border-bottom: 2px solid var(--line);">
+    <h1 style="margin: 0 0 8px; font-size: 32px;">📤 Upload Your App</h1>
+    <p style="margin: 0; color: var(--muted);">Share your creation with the JN App Store community</p>
+  </div>
+
+  <!-- Info Boxes -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 32px;">
+    <div style="padding: 16px; background: var(--bg-secondary); border-radius: var(--radius); border-left: 4px solid var(--primary);">
+      <div style="font-weight: 600; margin-bottom: 4px;">✅ Simple Upload</div>
+      <div style="font-size: 12px; color: var(--muted);">Easy 5-minute process to list your app</div>
+    </div>
+    <div style="padding: 16px; background: var(--bg-secondary); border-radius: var(--radius); border-left: 4px solid var(--primary);">
+      <div style="font-weight: 600; margin-bottom: 4px;">🌍 Global Reach</div>
+      <div style="font-size: 12px; color: var(--muted);">Get discovered by thousands of users</div>
+    </div>
+    <div style="padding: 16px; background: var(--bg-secondary); border-radius: var(--radius); border-left: 4px solid var(--primary);">
+      <div style="font-weight: 600; margin-bottom: 4px;">⭐ Get Reviews</div>
+      <div style="font-size: 12px; color: var(--muted);">Receive feedback and ratings from users</div>
+    </div>
+  </div>
+
+  <!-- Form Container -->
+  <form method="POST" enctype="multipart/form-data" style="background: var(--bg-secondary); padding: 32px; border-radius: var(--radius); border: 1px solid var(--line);">
+    {% csrf_token %}
+
+    <!-- Messages -->
+    {% if messages %}
+      {% for message in messages %}
+        <div style="padding: 12px 16px; background: {% if message.tags %}var(--primary){% else %}#28a745{% endif %}; color: white; border-radius: var(--radius); margin-bottom: 16px;">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <!-- Basic Information -->
+    <div style="margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--line);">
+      <h2 style="margin: 0 0 20px; font-size: 20px;">📋 Basic Information</h2>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+        <!-- App Name -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600;">App Name *</label>
+          {{ form.title }}
+          {% if form.title.errors %}<div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ form.title.errors }}</div>{% endif %}
+          <small style="color: var(--muted); display: block; margin-top: 4px;">The name of your application</small>
+        </div>
+
+        <!-- Slug -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600;">App Slug *</label>
+          {{ form.slug }}
+          {% if form.slug.errors %}<div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ form.slug.errors }}</div>{% endif %}
+          <small style="color: var(--muted); display: block; margin-top: 4px;">URL-friendly name (lowercase, hyphens only)</small>
+        </div>
+
+        <!-- Category -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600;">Category *</label>
+          {{ form.category }}
+          {% if form.category.errors %}<div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ form.category.errors }}</div>{% endif %}
+        </div>
+
+        <!-- Platform -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600;">Platform *</label>
+          {{ form.platform }}
+          {% if form.platform.errors %}<div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ form.platform.errors }}</div>{% endif %}
+        </div>
+
+        <!-- Version -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600;">Version</label>
+          {{ form.version }}
+          {% if form.version.errors %}<div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ form.version.errors }}</div>{% endif %}
+          <small style="color: var(--muted); display: block; margin-top: 4px;">e.g. 1.0.0</small>
+        </div>
+
+        <!-- Size -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600;">Size (MB)</label>
+          {{ form.size_mb }}
+          {% if form.size_mb.errors %}<div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ form.size_mb.errors }}</div>{% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Descriptions -->
+    <div style="margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--line);">
+      <h2 style="margin: 0 0 20px; font-size: 20px;">📝 Descriptions</h2>
+      
+      <!-- Short Description -->
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; margin-bottom: 8px; font-weight: 600;">Short Description</label>
+        {{ form.short_description }}
+        {% if form.short_description.errors %}<div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ form.short_description.errors }}</div>{% endif %}
+        <small style="color: var(--muted); display: block; margin-top: 4px;">Brief summary (max 220 characters)</small>
+      </div>
+
+      <!-- Full Description -->
+      <div>
+        <label style="display: block; margin-bottom: 8px; font-weight: 600;">Full Description</label>
+        {{ form.description }}
+        {% if form.description.errors %}<div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ form.description.errors }}</div>{% endif %}
+        <small style="color: var(--muted); display: block; margin-top: 4px;">Detailed features, usage instructions, requirements</small>
+      </div>
+    </div>
+
+    <!-- Media & Downloads -->
+    <div style="margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--line);">
+      <h2 style="margin: 0 0 20px; font-size: 20px;">🎨 Media & Downloads</h2>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+        <!-- Cover Image -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600;">Cover Image</label>
+          {{ form.cover_image }}
+          {% if form.cover_image.errors %}<div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ form.cover_image.errors }}</div>{% endif %}
+          <small style="color: var(--muted); display: block; margin-top: 4px;">JPG, PNG (recommended: 1:1 ratio)</small>
+        </div>
+
+        <!-- APK File -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600;">App File (APK/EXE)</label>
+          {{ form.apk_file }}
+          {% if form.apk_file.errors %}<div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ form.apk_file.errors }}</div>{% endif %}
+          <small style="color: var(--muted); display: block; margin-top: 4px;">Optional if using download link</small>
+        </div>
+
+        <!-- Download Link -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600;">External Download Link</label>
+          {{ form.download_link }}
+          {% if form.download_link.errors %}<div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ form.download_link.errors }}</div>{% endif %}
+          <small style="color: var(--muted); display: block; margin-top: 4px;">Google Drive, Mega, etc. (optional)</small>
+        </div>
+
+        <!-- Store Name -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600;">Store / Platform Name</label>
+          {{ form.store_name }}
+          {% if form.store_name.errors %}<div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ form.store_name.errors }}</div>{% endif %}
+          <small style="color: var(--muted); display: block; margin-top: 4px;">Where the app is available (e.g., Google Play Store)</small>
+        </div>
+
+        <!-- Store Email -->
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 600;">Store / Developer Email</label>
+          {{ form.store_email }}
+          {% if form.store_email.errors %}<div style="color: #dc3545; font-size: 12px; margin-top: 4px;">{{ form.store_email.errors }}</div>{% endif %}
+          <small style="color: var(--muted); display: block; margin-top: 4px;">Contact email for support and inquiries</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Publishing -->
+    <div style="margin-bottom: 32px;">
+      <h2 style="margin: 0 0 20px; font-size: 20px;">📢 Publishing</h2>
+      
+      <div style="padding: 16px; background: var(--bg); border-radius: var(--radius); border: 1px solid var(--line);">
+        <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+          {{ form.is_published }}
+          <span style="font-weight: 600;">Publish immediately</span>
+        </label>
+        <small style="color: var(--muted); display: block; margin-top: 8px; margin-left: 28px;">
+          If unchecked, your app will be in draft mode and visible only to you
+        </small>
+      </div>
+    </div>
+
+    <!-- Terms -->
+    <div style="margin-bottom: 24px; padding: 16px; background: var(--card); border-radius: var(--radius); border-left: 4px solid var(--brand);">
+      <small style="color: var(--muted); line-height: 1.6;">
+        ✓ By uploading this app, you confirm that you have the rights to distribute it and that it complies with all applicable laws and regulations.
+        ✓ You are responsible for maintaining your app and providing user support.
+        ✓ JN App Store reserves the right to remove apps that violate policies.
+      </small>
+    </div>
+
+    <!-- Buttons -->
+    <div style="display: flex; gap: 12px; justify-content: space-between;">
+      <a href="{% url 'apps:list' %}" style="padding: 12px 24px; border: 1px solid var(--line); border-radius: var(--radius); text-decoration: none; color: var(--text); background: var(--bg); cursor: pointer; font-weight: 600;">← Cancel</a>
+      <button type="submit" style="padding: 12px 32px; background: var(--primary); color: white; border: none; border-radius: var(--radius); cursor: pointer; font-weight: 600; font-size: 16px;">📤 Upload App</button>
+    </div>
+  </form>
+
+  <!-- Help Section -->
+  <div style="margin-top: 40px; padding: 24px; background: var(--bg-secondary); border-radius: var(--radius);">
+    <h3 style="margin: 0 0 16px; font-size: 18px;">💡 Upload Tips</h3>
+    <ul style="margin: 0; padding-left: 20px; color: var(--muted); line-height: 1.8;">
+      <li><strong>App Name:</strong> Make it clear and memorable</li>
+      <li><strong>Description:</strong> Be detailed about features and benefits</li>
+      <li><strong>Cover Image:</strong> Use a high-quality, eye-catching image</li>
+      <li><strong>Download Link or File:</strong> Provide at least one option</li>
+      <li><strong>Version:</strong> Follow semantic versioning (1.0.0)</li>
+      <li><strong>Size:</strong> Accurately report the file size</li>
+    </ul>
+  </div>
+</div>
+
+<style>
+  .form-control {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    font-family: inherit;
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
+  }
+
+  .form-check-input {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    cursor: pointer;
+  }
+
+  textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+  }
+</style>
+{% endblock %}

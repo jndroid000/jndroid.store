@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Categories - JN App Store{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/categories_list.css' %}">{% endblock %}
+
+{% block content %}
+<div class="pageHeader">
+  <h1>Categories</h1>
+  <p>আপনার পছন্দের ক্যাটাগরি খুঁজে পান এবং অ্যাপ ডাউনলোড করুন।</p>
+</div>
+
+<div class="grid3">
+  {% for c in categories %}
+    <a href="{% url 'categories:detail' c.slug %}" class="card" style="text-decoration:none; color:inherit;">
+      <div class="icon">📂</div>
+      <h3>{{ c.name }}</h3>
+      <p>{{ c.app_count }} App{{ c.app_count|pluralize }}</p>
+    </a>
+  {% endfor %}
+</div>
+{% endblock %}

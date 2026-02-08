@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Edit Profile - JN App Store{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/review_form.css' %}">{% endblock %}
+
+{% block content %}
+<div class="reviewFormContainer" style="max-width:600px;">
+  <!-- Header -->
+  <div style="margin-bottom:32px;">
+    <a href="{% url 'accounts:profile' %}" style="display:inline-flex; align-items:center; gap:8px; color:#3b82f6; text-decoration:none; font-size:14px; margin-bottom:20px;">
+      <span>←</span> Back to Profile
+    </a>
+    <h1 style="margin:0; font-size:32px;">Edit Profile</h1>
+    <p style="color:var(--muted); margin:8px 0 0;">Update your account information</p>
+  </div>
+
+  <!-- Messages -->
+  {% if messages %}
+    <div style="margin-bottom:16px;">
+      {% for message in messages %}
+        <div style="padding:12px; border-radius:12px; margin-bottom:8px; background:rgba(34,197,94,0.15); border:1px solid rgba(34,197,94,0.3); color:rgba(34,197,94,0.9);">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Form -->
+  <form method="post" class="reviewForm">
+    {% csrf_token %}
+    
+    <!-- Email -->
+    <div class="formGroup">
+      <label for="email">Email Address *</label>
+      {{ form.email }}
+      {% if form.email.errors %}
+        <span style="color:#ef4444; font-size:13px; margin-top:4px; display:block;">{{ form.email.errors.0 }}</span>
+      {% endif %}
+      <p style="color:var(--muted); font-size:13px; margin:4px 0 0;">Your email will be used for important notifications</p>
+    </div>
+    
+    <!-- First Name -->
+    <div class="formGroup">
+      <label for="first_name">First Name</label>
+      {{ form.first_name }}
+      {% if form.first_name.errors %}
+        <span style="color:#ef4444; font-size:13px; margin-top:4px; display:block;">{{ form.first_name.errors.0 }}</span>
+      {% endif %}
+    </div>
+    
+    <!-- Last Name -->
+    <div class="formGroup">
+      <label for="last_name">Last Name</label>
+      {{ form.last_name }}
+      {% if form.last_name.errors %}
+        <span style="color:#ef4444; font-size:13px; margin-top:4px; display:block;">{{ form.last_name.errors.0 }}</span>
+      {% endif %}
+    </div>
+    
+    <!-- Phone -->
+    <div class="formGroup">
+      <label for="phone">Phone Number</label>
+      {{ form.phone }}
+      {% if form.phone.errors %}
+        <span style="color:#ef4444; font-size:13px; margin-top:4px; display:block;">{{ form.phone.errors.0 }}</span>
+      {% endif %}
+      <p style="color:var(--muted); font-size:13px; margin:4px 0 0;">Optional - for developers to contact you</p>
+    </div>
+    
+    <!-- Buttons -->
+    <div style="display:flex; gap:12px; margin-top:32px;">
+      <button type="submit" class="btn primary" style="flex:1;">Save Changes</button>
+      <a href="{% url 'accounts:profile' %}" class="btn secondary" style="flex:1; text-align:center; text-decoration:none;">Cancel</a>
+    </div>
+  </form>
+
+  <!-- Info Box -->
+  <div style="margin-top:32px; padding:16px; background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.2); border-radius:12px;">
+    <p style="margin:0; color:var(--muted); font-size:13px;">
+      💡 <strong>Tip:</strong> To change your password or delete your account, visit the Danger Zone section in your profile page.
+    </p>
+  </div>
+</div>
+
+<!-- Inline Styles for Form Controls -->
+<style>
+  .reviewForm input[type="email"],
+  .reviewForm input[type="tel"],
+  .reviewForm input[type="text"],
+  .reviewForm input[type="number"],
+  .reviewForm textarea,
+  .reviewForm select {
+    width: 100%;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+    transition: 0.12s;
+    box-sizing: border-box;
+  }
+  
+  .reviewForm input[type="email"]:focus,
+  .reviewForm input[type="tel"]:focus,
+  .reviewForm input[type="text"]:focus,
+  .reviewForm input[type="number"]:focus,
+  .reviewForm textarea:focus,
+  .reviewForm select:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.06);
+    border-color: #3b82f6;
+  }
+  
+  .formGroup {
+    margin-bottom: 24px;
+  }
+  
+  .formGroup label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 14px;
+  }
+</style>
+{% endblock %}

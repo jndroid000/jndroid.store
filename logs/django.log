@@ -1,0 +1,898 @@
+INFO 2026-02-06 05:07:06 autoreload 4836 5984 Watching for file changes with StatReloader
+INFO 2026-02-06 05:07:18 log 4836 12348 "GET / HTTP/1.1" 200 7357
+INFO 2026-02-06 05:07:21 log 4836 12348 "GET / HTTP/1.1" 200 7357
+INFO 2026-02-06 05:07:23 log 4836 12348 "GET / HTTP/1.1" 200 7357
+WARNING 2026-02-06 05:07:24 log 4836 12348 "GET /accounts/logout/ HTTP/1.1" 405 0
+WARNING 2026-02-06 05:07:27 log 4836 12348 "GET /accounts/logout/ HTTP/1.1" 405 0
+INFO 2026-02-06 05:07:30 log 4836 12348 "GET / HTTP/1.1" 200 7357
+INFO 2026-02-06 05:07:31 log 4836 12348 "GET /support/ HTTP/1.1" 200 22579
+WARNING 2026-02-06 05:07:33 log 4836 12348 "GET /accounts/logout/ HTTP/1.1" 405 0
+INFO 2026-02-06 05:07:37 log 4836 12348 "GET /support/ HTTP/1.1" 200 22579
+INFO 2026-02-06 05:07:38 log 4836 12348 "GET / HTTP/1.1" 200 7357
+INFO 2026-02-06 05:07:40 log 4836 12348 "GET / HTTP/1.1" 200 7357
+WARNING 2026-02-06 05:08:08 log 4836 12348 "GET /accounts/logout/ HTTP/1.1" 405 0
+WARNING 2026-02-06 05:08:09 log 4836 12348 "GET /accounts/logout/ HTTP/1.1" 405 0
+WARNING 2026-02-06 05:08:10 log 4836 12348 "GET /accounts/logout/ HTTP/1.1" 405 0
+INFO 2026-02-06 05:08:47 log 4836 12348 "GET / HTTP/1.1" 200 7357
+INFO 2026-02-06 05:08:48 log 4836 12348 "GET / HTTP/1.1" 200 7357
+INFO 2026-02-06 05:09:02 log 4836 12348 "GET /apps/admin_apps/ HTTP/1.1" 200 20375
+INFO 2026-02-06 05:09:04 log 4836 12348 "GET /apps/upload/ HTTP/1.1" 200 15068
+INFO 2026-02-06 05:09:04 log 4836 12348 "GET /static/css/app_detail.css HTTP/1.1" 304 0
+INFO 2026-02-06 05:11:13 autoreload 9384 8388 Watching for file changes with StatReloader
+INFO 2026-02-06 05:11:18 log 9384 12616 "GET / HTTP/1.1" 200 8014
+INFO 2026-02-06 05:11:19 log 9384 12616 "GET / HTTP/1.1" 200 8014
+INFO 2026-02-06 05:11:21 log 9384 12616 "POST /accounts/logout/ HTTP/1.1" 302 0
+INFO 2026-02-06 05:11:21 log 9384 12616 "GET / HTTP/1.1" 200 7125
+INFO 2026-02-06 05:11:23 log 9384 12616 "GET / HTTP/1.1" 200 7125
+INFO 2026-02-06 05:11:28 log 9384 12616 "GET /apps/upload/ HTTP/1.1" 302 0
+INFO 2026-02-06 05:11:28 log 9384 12616 "GET /accounts/login/?next=/apps/upload/ HTTP/1.1" 200 4654
+INFO 2026-02-06 05:11:30 log 9384 12616 "GET /accounts/login/?next=/apps/upload/ HTTP/1.1" 200 4365
+INFO 2026-02-06 05:11:32 log 9384 12616 "GET /accounts/login/?next=/apps/upload/ HTTP/1.1" 200 4365
+INFO 2026-02-06 05:11:35 log 9384 12616 "GET /apps/admin_apps/ HTTP/1.1" 302 0
+INFO 2026-02-06 05:11:35 log 9384 12616 "GET /accounts/login/?next=/apps/admin_apps/ HTTP/1.1" 200 4365
+INFO 2026-02-06 05:11:38 log 9384 12616 "GET / HTTP/1.1" 200 7125
+INFO 2026-02-06 05:11:41 log 9384 12616 "GET / HTTP/1.1" 200 7125
+INFO 2026-02-06 05:11:47 log 9384 12616 "GET /apps/admin_apps/ HTTP/1.1" 302 0
+INFO 2026-02-06 05:11:47 log 9384 12616 "GET /accounts/login/?next=/apps/admin_apps/ HTTP/1.1" 200 4365
+INFO 2026-02-06 05:11:51 log 9384 12616 "GET /accounts/login/?next=/apps/admin_apps/ HTTP/1.1" 200 4365
+INFO 2026-02-06 05:11:58 log 9384 12616 "POST /accounts/login/?next=/apps/admin_apps/ HTTP/1.1" 302 0
+INFO 2026-02-06 05:11:58 log 9384 12616 "GET /apps/admin_apps/ HTTP/1.1" 200 21032
+INFO 2026-02-06 05:12:01 log 9384 12616 "GET /apps/upload/ HTTP/1.1" 200 15922
+INFO 2026-02-06 05:12:06 log 9384 12616 "GET /apps/abms/ HTTP/1.1" 200 15026
+INFO 2026-02-06 05:12:06 log 9384 12616 "GET /media/app_covers/pexels-goumbik-669502_C3aECtC.jpg HTTP/1.1" 304 0
+INFO 2026-02-06 05:12:11 log 9384 12616 "GET /apps/admin_apps/acxve/ HTTP/1.1" 200 15269
+INFO 2026-02-06 05:12:40 log 9384 12616 "GET /accounts/login/ HTTP/1.1" 302 0
+INFO 2026-02-06 05:12:40 log 9384 12616 "GET / HTTP/1.1" 200 8014
+INFO 2026-02-06 05:12:42 log 9384 12616 "GET /accounts/profile/ HTTP/1.1" 200 6750
+INFO 2026-02-06 05:14:48 autoreload 9384 8388 C:\Users\juhan\Desktop\jn_app_store\backend\accounts\views.py changed, reloading.
+INFO 2026-02-06 05:14:49 autoreload 14156 13936 Watching for file changes with StatReloader
+INFO 2026-02-06 05:16:06 autoreload 14156 13936 C:\Users\juhan\Desktop\jn_app_store\backend\config\settings.py changed, reloading.
+INFO 2026-02-06 05:16:06 autoreload 11276 13892 Watching for file changes with StatReloader
+INFO 2026-02-06 05:16:07 autoreload 4392 13620 Watching for file changes with StatReloader
+INFO 2026-02-06 05:16:12 log 11276 2996 "GET / HTTP/1.1" 200 8014
+ERROR 2026-02-06 05:16:14 log 11276 2996 "GET /accounts/profile/ HTTP/1.1" 500 192709
+INFO 2026-02-06 05:25:53 log 11276 11744 "GET /accounts/profile/ HTTP/1.1" 200 19363
+WARNING 2026-02-06 05:26:10 log 11276 11744 "GET /api/docs/ HTTP/1.1" 404 3850
+INFO 2026-02-06 05:26:14 log 11276 11744 "GET /community-guidelines/ HTTP/1.1" 200 21261
+INFO 2026-02-06 05:26:18 log 11276 11744 "GET /support/ HTTP/1.1" 200 23236
+INFO 2026-02-06 05:26:21 log 11276 11744 "GET /community-guidelines/ HTTP/1.1" 200 21261
+INFO 2026-02-06 05:26:27 log 11276 11744 "GET /support/ HTTP/1.1" 200 23236
+INFO 2026-02-06 05:26:31 log 11276 11744 "GET /community-guidelines/ HTTP/1.1" 200 21261
+INFO 2026-02-06 05:26:41 log 11276 11744 "POST /accounts/logout/ HTTP/1.1" 302 0
+INFO 2026-02-06 05:26:41 log 11276 11744 "GET / HTTP/1.1" 200 7125
+INFO 2026-02-06 05:26:42 log 11276 11744 "GET /accounts/login/ HTTP/1.1" 200 4654
+INFO 2026-02-06 05:26:47 log 11276 11744 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2026-02-06 05:26:47 log 11276 11744 "GET / HTTP/1.1" 200 8014
+INFO 2026-02-06 05:26:48 log 11276 11744 "GET /accounts/profile/ HTTP/1.1" 200 19645
+INFO 2026-02-06 05:26:55 log 11276 11744 "POST /accounts/logout/ HTTP/1.1" 302 0
+INFO 2026-02-06 05:26:55 log 11276 11744 "GET / HTTP/1.1" 200 7125
+INFO 2026-02-06 05:26:57 log 11276 11744 "GET /accounts/login/ HTTP/1.1" 200 4654
+INFO 2026-02-06 05:27:01 log 11276 11744 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2026-02-06 05:27:01 log 11276 11744 "GET / HTTP/1.1" 200 8019
+INFO 2026-02-06 05:27:02 log 11276 11744 "GET /accounts/profile/ HTTP/1.1" 200 14399
+INFO 2026-02-06 05:27:35 log 11276 11744 "GET /accounts/profile/ HTTP/1.1" 200 14117
+INFO 2026-02-06 05:27:37 log 11276 11744 "GET /accounts/profile/ HTTP/1.1" 200 14117
+INFO 2026-02-06 05:28:01 log 11276 11744 "POST /accounts/profile/ HTTP/1.1" 302 0
+INFO 2026-02-06 05:28:01 log 11276 11744 "GET /accounts/profile/ HTTP/1.1" 200 14455
+INFO 2026-02-06 05:28:05 log 11276 11744 "GET /apps/upload/ HTTP/1.1" 200 15730
+INFO 2026-02-06 05:28:58 log 11276 11744 "GET /apps/upload/ HTTP/1.1" 200 15730
+INFO 2026-02-06 05:28:59 log 11276 11744 "GET /accounts/profile/ HTTP/1.1" 200 14161
+INFO 2026-02-06 05:31:31 log 11276 15864 "GET /accounts/profile/ HTTP/1.1" 200 14161
+INFO 2026-02-06 05:33:18 autoreload 11276 13892 C:\Users\juhan\Desktop\jn_app_store\backend\accounts\views.py changed, reloading.
+INFO 2026-02-06 05:33:19 autoreload 4392 13620 C:\Users\juhan\Desktop\jn_app_store\backend\accounts\views.py changed, reloading.
+INFO 2026-02-06 05:33:19 autoreload 11540 14952 Watching for file changes with StatReloader
+INFO 2026-02-06 05:33:20 autoreload 13776 3212 Watching for file changes with StatReloader
+INFO 2026-02-06 05:33:29 autoreload 11540 14952 C:\Users\juhan\Desktop\jn_app_store\backend\accounts\urls.py changed, reloading.
+INFO 2026-02-06 05:33:29 autoreload 13776 3212 C:\Users\juhan\Desktop\jn_app_store\backend\accounts\urls.py changed, reloading.
+INFO 2026-02-06 05:33:30 autoreload 16000 15812 Watching for file changes with StatReloader
+INFO 2026-02-06 05:33:30 autoreload 8528 5412 Watching for file changes with StatReloader
+INFO 2026-02-06 05:42:57 log 16000 15440 "GET / HTTP/1.1" 200 8019
+ERROR 2026-02-06 05:42:58 log 16000 15440 "GET /accounts/profile/ HTTP/1.1" 500 180668
+INFO 2026-02-06 05:47:50 log 16000 9368 "GET /accounts/profile/ HTTP/1.1" 200 12326
+INFO 2026-02-06 05:48:20 log 16000 9368 "GET /accounts/edit-profile/ HTTP/1.1" 200 7814
+INFO 2026-02-06 05:52:05 autoreload 8528 5412 C:\Users\juhan\Desktop\jn_app_store\backend\accounts\views.py changed, reloading.
+INFO 2026-02-06 05:52:05 autoreload 16000 15812 C:\Users\juhan\Desktop\jn_app_store\backend\accounts\views.py changed, reloading.
+INFO 2026-02-06 05:52:06 autoreload 6136 8136 Watching for file changes with StatReloader
+INFO 2026-02-06 05:52:06 autoreload 12412 2076 Watching for file changes with StatReloader
+INFO 2026-02-06 05:54:57 autoreload 6136 8136 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 05:54:57 autoreload 12412 2076 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 05:54:58 autoreload 5724 2872 Watching for file changes with StatReloader
+INFO 2026-02-06 05:54:58 autoreload 2824 15436 Watching for file changes with StatReloader
+INFO 2026-02-06 05:55:10 autoreload 5724 2872 C:\Users\juhan\Desktop\jn_app_store\backend\config\urls.py changed, reloading.
+INFO 2026-02-06 05:55:10 autoreload 2824 15436 C:\Users\juhan\Desktop\jn_app_store\backend\config\urls.py changed, reloading.
+INFO 2026-02-06 05:55:11 autoreload 9704 9712 Watching for file changes with StatReloader
+INFO 2026-02-06 05:55:11 autoreload 14152 15688 Watching for file changes with StatReloader
+INFO 2026-02-06 05:55:22 autoreload 14152 15688 C:\Users\juhan\Desktop\jn_app_store\backend\core\urls.py changed, reloading.
+INFO 2026-02-06 05:55:22 autoreload 14748 3584 Watching for file changes with StatReloader
+INFO 2026-02-06 05:55:23 autoreload 9704 9712 C:\Users\juhan\Desktop\jn_app_store\backend\core\urls.py changed, reloading.
+INFO 2026-02-06 05:55:23 autoreload 11280 11720 Watching for file changes with StatReloader
+INFO 2026-02-06 05:58:13 autoreload 13644 11364 Watching for file changes with StatReloader
+INFO 2026-02-06 05:59:48 log 14748 14864 "GET //admin-panel/dashboard/ HTTP/1.1" 200 14162
+ERROR 2026-02-06 05:59:56 log 14748 14864 "GET /admin-panel/apps/ HTTP/1.1" 500 212711
+ERROR 2026-02-06 05:59:59 log 14748 14864 "GET /admin-panel/apps/pending/ HTTP/1.1" 500 212870
+INFO 2026-02-06 06:00:03 log 14748 14864 "GET /admin-panel/users/ HTTP/1.1" 200 11322
+INFO 2026-02-06 06:00:16 log 14748 14864 "GET /admin-panel/dashboard/ HTTP/1.1" 200 14162
+INFO 2026-02-06 06:00:20 log 14748 14864 "GET /admin-panel/categories/ HTTP/1.1" 200 9423
+INFO 2026-02-06 06:00:22 log 14748 14864 "GET /admin-panel/dashboard/ HTTP/1.1" 200 14162
+INFO 2026-02-06 06:00:25 log 14748 14864 "GET /admin-panel/categories/ HTTP/1.1" 200 9423
+INFO 2026-02-06 06:00:27 log 14748 14864 "GET /admin-panel/dashboard/ HTTP/1.1" 200 14162
+ERROR 2026-02-06 06:00:30 log 14748 14864 "GET /admin-panel/settings/ HTTP/1.1" 500 96639
+ERROR 2026-02-06 06:00:34 log 14748 14864 "GET /admin-panel/reviews/ HTTP/1.1" 500 215606
+INFO 2026-02-06 06:16:59 log 14748 15456 "GET /admin-panel/dashboard/ HTTP/1.1" 200 14162
+INFO 2026-02-06 06:17:00 log 14748 15456 "GET /admin-panel/dashboard/ HTTP/1.1" 200 14162
+INFO 2026-02-06 07:09:18 log 14748 16292 "GET / HTTP/1.1" 200 8019
+INFO 2026-02-06 07:09:21 log 14748 16292 "GET / HTTP/1.1" 200 8019
+INFO 2026-02-06 07:09:23 log 14748 1252 "GET /admin/ HTTP/1.1" 302 0
+INFO 2026-02-06 07:09:23 log 14748 1252 "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4080
+INFO 2026-02-06 07:09:23 log 14748 1252 "GET /static/admin/css/base.css HTTP/1.1" 200 23100
+INFO 2026-02-06 07:09:23 log 14748 1252 "GET /static/admin/css/responsive.css HTTP/1.1" 200 16273
+INFO 2026-02-06 07:09:23 log 14748 14436 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2026-02-06 07:09:23 log 14748 3800 "GET /static/admin/css/login.css HTTP/1.1" 200 951
+INFO 2026-02-06 07:09:23 log 14748 11940 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 3538
+INFO 2026-02-06 07:09:23 log 14748 2916 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2026-02-06 07:09:23 log 14748 14804 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2026-02-06 07:09:26 log 14748 1252 "POST /admin/login/?next=/admin/ HTTP/1.1" 200 4248
+INFO 2026-02-06 07:09:29 log 14748 1252 "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4080
+INFO 2026-02-06 07:09:32 log 14748 16292 "GET /accounts/profile/ HTTP/1.1" 200 12326
+WARNING 2026-02-06 07:09:38 log 14748 16292 "GET /admin/accounts/user/ HTTP/1.1" 403 135
+WARNING 2026-02-06 07:09:51 log 14748 16292 "GET /admin/categories/category/ HTTP/1.1" 403 135
+WARNING 2026-02-06 07:09:54 log 14748 16292 "GET /admin/categories/ HTTP/1.1" 404 6294
+INFO 2026-02-06 07:10:13 log 14748 16292 "GET //admin-panel/dashboard/ HTTP/1.1" 200 14162
+INFO 2026-02-06 07:10:15 log 14748 16292 "GET /admin-panel/categories/ HTTP/1.1" 200 9423
+ERROR 2026-02-06 07:10:22 log 14748 16292 "GET /admin-panel/apps/3/edit/ HTTP/1.1" 500 101561
+ERROR 2026-02-06 07:10:27 log 14748 16292 "GET /admin-panel/apps/1/edit/ HTTP/1.1" 500 101603
+ERROR 2026-02-06 07:10:34 log 14748 16292 "GET /admin-panel/analytics/ HTTP/1.1" 500 96963
+ERROR 2026-02-06 07:10:39 log 14748 16292 "GET /admin-panel/reviews/flagged/ HTTP/1.1" 500 215716
+WARNING 2026-02-06 07:10:43 log 14748 16292 "GET /admin-panel/categories/create/ HTTP/1.1" 405 0
+ERROR 2026-02-06 07:10:54 log 14748 16292 "GET /admin-panel/apps/pending/ HTTP/1.1" 500 212870
+INFO 2026-02-06 07:10:59 autoreload 11280 11720 C:\Users\juhan\Desktop\jn_app_store\backend\config\urls.py changed, reloading.
+INFO 2026-02-06 07:11:00 autoreload 14748 3584 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:11:00 autoreload 10632 14128 Watching for file changes with StatReloader
+INFO 2026-02-06 07:11:00 autoreload 7364 11036 Watching for file changes with StatReloader
+INFO 2026-02-06 07:11:27 autoreload 10632 14128 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:11:27 autoreload 7364 11036 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:11:28 autoreload 14104 15576 Watching for file changes with StatReloader
+INFO 2026-02-06 07:11:28 autoreload 2172 10372 Watching for file changes with StatReloader
+INFO 2026-02-06 07:13:46 log 14104 3236 "GET /accounts/profile/ HTTP/1.1" 200 12326
+INFO 2026-02-06 07:19:07 autoreload 8560 4736 Watching for file changes with StatReloader
+INFO 2026-02-06 07:19:20 log 14104 14128 "GET /admin-panel/apps/pending/ HTTP/1.1" 200 6244
+INFO 2026-02-06 07:19:24 log 14104 14128 "GET /admin-panel/dashboard/ HTTP/1.1" 200 14162
+INFO 2026-02-06 07:19:30 log 14104 14128 "GET /admin-panel/apps/ HTTP/1.1" 200 10646
+INFO 2026-02-06 07:19:35 log 14104 14128 "GET /admin-panel/dashboard/ HTTP/1.1" 200 14162
+INFO 2026-02-06 07:19:37 log 14104 14128 "GET /admin-panel/apps/pending/ HTTP/1.1" 200 6244
+INFO 2026-02-06 07:19:38 log 14104 14128 "GET /admin-panel/dashboard/ HTTP/1.1" 200 14162
+INFO 2026-02-06 07:19:39 log 14104 14128 "GET /admin-panel/users/ HTTP/1.1" 200 11322
+INFO 2026-02-06 07:19:40 log 14104 14128 "GET /admin-panel/dashboard/ HTTP/1.1" 200 14162
+ERROR 2026-02-06 07:19:40 log 14104 14128 "GET /admin-panel/users/create/ HTTP/1.1" 500 101473
+WARNING 2026-02-06 07:19:58 log 14104 14128 "GET /admin-panel/categories/create/ HTTP/1.1" 405 0
+ERROR 2026-02-06 07:20:08 log 14104 14128 "GET /admin-panel/reviews/ HTTP/1.1" 500 215856
+INFO 2026-02-06 07:20:57 autoreload 13476 2784 Watching for file changes with StatReloader
+INFO 2026-02-06 07:21:01 log 14104 14128 "GET /admin-panel/dashboard/ HTTP/1.1" 200 14162
+INFO 2026-02-06 07:21:02 log 14104 14128 "GET /admin-panel/users/create/ HTTP/1.1" 200 7338
+WARNING 2026-02-06 07:21:06 log 14104 14128 "GET /admin-panel/categories/create/ HTTP/1.1" 405 0
+WARNING 2026-02-06 07:21:09 log 14104 14128 "GET /admin-panel/categories/create/ HTTP/1.1" 405 0
+INFO 2026-02-06 07:21:16 autoreload 13476 2784 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:21:16 autoreload 14104 15576 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:21:17 autoreload 6564 9448 Watching for file changes with StatReloader
+INFO 2026-02-06 07:21:17 autoreload 14432 10460 Watching for file changes with StatReloader
+WARNING 2026-02-06 07:21:22 log 6564 6844 "GET /admin-panel/categories/create/ HTTP/1.1" 405 0
+ERROR 2026-02-06 07:21:24 log 6564 6844 "GET /admin-panel/reviews/flagged/ HTTP/1.1" 500 215715
+ERROR 2026-02-06 07:21:28 log 6564 6844 "GET /admin-panel/reviews/ HTTP/1.1" 500 215606
+INFO 2026-02-06 07:21:29 autoreload 14432 10460 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:21:29 autoreload 6564 9448 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:21:30 autoreload 3780 7984 Watching for file changes with StatReloader
+INFO 2026-02-06 07:21:30 autoreload 6248 1636 Watching for file changes with StatReloader
+INFO 2026-02-06 07:21:31 log 3780 5940 "GET /admin-panel/analytics/ HTTP/1.1" 200 4759
+INFO 2026-02-06 07:21:34 log 3780 5940 "GET /admin-panel/analytics/reports/ HTTP/1.1" 200 4741
+INFO 2026-02-06 07:21:38 log 3780 5940 "GET /admin-panel/settings/ HTTP/1.1" 200 4836
+INFO 2026-02-06 07:21:41 log 3780 5940 "GET /admin-panel/moderation/ HTTP/1.1" 200 4829
+INFO 2026-02-06 07:22:00 log 3780 5940 "GET /admin-panel/categories/create/ HTTP/1.1" 200 9423
+INFO 2026-02-06 07:22:03 log 3780 5940 "GET /admin-panel/categories/ HTTP/1.1" 200 9423
+INFO 2026-02-06 07:22:08 log 3780 5940 "GET /admin-panel/categories/create/ HTTP/1.1" 200 9423
+ERROR 2026-02-06 07:22:20 log 3780 5940 "GET /admin-panel/reviews/ HTTP/1.1" 500 215856
+INFO 2026-02-06 07:22:27 autoreload 6248 1636 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:22:27 autoreload 3780 7984 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:22:28 autoreload 7360 11236 Watching for file changes with StatReloader
+INFO 2026-02-06 07:22:28 autoreload 14468 1476 Watching for file changes with StatReloader
+INFO 2026-02-06 07:22:36 autoreload 7360 11236 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:22:36 autoreload 8608 10116 Watching for file changes with StatReloader
+INFO 2026-02-06 07:22:37 autoreload 14468 1476 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:22:37 autoreload 11984 10460 Watching for file changes with StatReloader
+INFO 2026-02-06 07:24:15 log 8608 6952 "GET /admin-panel/reviews/ HTTP/1.1" 200 6309
+INFO 2026-02-06 07:27:55 log 8608 3816 "GET /apps/ HTTP/1.1" 200 7277
+INFO 2026-02-06 07:27:57 log 8608 3816 "GET /apps/acxve/ HTTP/1.1" 200 15946
+INFO 2026-02-06 07:27:57 log 8608 3816 "GET /media/app_covers/pexels-goumbik-669502.jpg HTTP/1.1" 304 0
+INFO 2026-02-06 07:28:12 log 8608 3816 "GET /admin-panel/reviews/ HTTP/1.1" 200 6309
+INFO 2026-02-06 07:28:22 log 8608 3816 "GET /admin-panel/dashboard/ HTTP/1.1" 200 14162
+INFO 2026-02-06 07:28:24 log 8608 3816 "GET /admin-panel/reviews/flagged/ HTTP/1.1" 200 6309
+INFO 2026-02-06 07:28:30 log 8608 3816 "GET /admin-panel/dashboard/ HTTP/1.1" 200 14162
+INFO 2026-02-06 07:28:32 log 8608 3816 "GET /admin-panel/reviews/ HTTP/1.1" 200 6309
+INFO 2026-02-06 07:28:52 log 8608 3816 "GET /admin-panel/dashboard/ HTTP/1.1" 200 14162
+INFO 2026-02-06 07:28:54 autoreload 8608 10116 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:28:55 autoreload 11984 10460 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:28:55 autoreload 11212 6196 Watching for file changes with StatReloader
+INFO 2026-02-06 07:28:56 autoreload 1544 9752 Watching for file changes with StatReloader
+INFO 2026-02-06 07:29:24 autoreload 1544 9752 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:29:24 autoreload 11212 6196 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:29:24 autoreload 1972 16044 Watching for file changes with StatReloader
+INFO 2026-02-06 07:29:25 autoreload 9908 872 Watching for file changes with StatReloader
+INFO 2026-02-06 07:29:47 log 1972 15776 "GET /admin-panel/reviews/flagged/ HTTP/1.1" 200 6302
+INFO 2026-02-06 07:29:57 log 1972 15776 "GET /admin-panel/dashboard/ HTTP/1.1" 200 14162
+INFO 2026-02-06 07:29:59 log 1972 15776 "GET /admin-panel/reviews/ HTTP/1.1" 200 6302
+INFO 2026-02-06 07:30:35 autoreload 9908 872 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:30:35 autoreload 1972 16044 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:30:36 autoreload 15456 2880 Watching for file changes with StatReloader
+INFO 2026-02-06 07:30:36 autoreload 1032 7360 Watching for file changes with StatReloader
+INFO 2026-02-06 07:30:38 autoreload 15456 2880 C:\Users\juhan\Desktop\jn_app_store\backend\core\urls.py changed, reloading.
+INFO 2026-02-06 07:30:38 autoreload 1032 7360 C:\Users\juhan\Desktop\jn_app_store\backend\core\urls.py changed, reloading.
+INFO 2026-02-06 07:30:39 autoreload 14684 4668 Watching for file changes with StatReloader
+INFO 2026-02-06 07:30:39 autoreload 116 14260 Watching for file changes with StatReloader
+INFO 2026-02-06 07:30:53 log 14684 6280 "GET /admin-panel/reviews/ HTTP/1.1" 200 7341
+INFO 2026-02-06 07:30:57 log 14684 6280 "POST /admin-panel/reviews/1/flag/ HTTP/1.1" 302 0
+INFO 2026-02-06 07:30:57 log 14684 6280 "GET /admin-panel/reviews/ HTTP/1.1" 200 7341
+INFO 2026-02-06 07:31:03 log 14684 6280 "GET /admin-panel/reviews/ HTTP/1.1" 200 7341
+INFO 2026-02-06 07:31:14 log 14684 6280 "GET /admin-panel/reviews/ HTTP/1.1" 200 7341
+INFO 2026-02-06 07:31:23 log 14684 6280 "POST /admin-panel/reviews/1/approve/ HTTP/1.1" 302 0
+INFO 2026-02-06 07:31:23 log 14684 6280 "GET /admin-panel/reviews/ HTTP/1.1" 200 7341
+INFO 2026-02-06 07:31:25 log 14684 6280 "GET /admin-panel/reviews/ HTTP/1.1" 200 7341
+INFO 2026-02-06 07:38:38 autoreload 116 14260 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:38:38 autoreload 14684 4668 C:\Users\juhan\Desktop\jn_app_store\backend\core\urls.py changed, reloading.
+INFO 2026-02-06 07:38:39 autoreload 9664 7320 Watching for file changes with StatReloader
+INFO 2026-02-06 07:38:39 autoreload 2020 11528 Watching for file changes with StatReloader
+INFO 2026-02-06 07:38:48 autoreload 9664 7320 C:\Users\juhan\Desktop\jn_app_store\backend\reviews\models.py changed, reloading.
+INFO 2026-02-06 07:38:48 autoreload 2020 11528 C:\Users\juhan\Desktop\jn_app_store\backend\reviews\models.py changed, reloading.
+INFO 2026-02-06 07:38:49 autoreload 10244 792 Watching for file changes with StatReloader
+INFO 2026-02-06 07:38:49 autoreload 8176 912 Watching for file changes with StatReloader
+INFO 2026-02-06 07:39:06 autoreload 10244 792 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:39:06 autoreload 8176 912 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:39:06 autoreload 7988 4652 Watching for file changes with StatReloader
+INFO 2026-02-06 07:39:07 autoreload 6152 11980 Watching for file changes with StatReloader
+INFO 2026-02-06 07:39:09 autoreload 7988 4652 C:\Users\juhan\Desktop\jn_app_store\backend\core\urls.py changed, reloading.
+INFO 2026-02-06 07:39:09 autoreload 6152 11980 C:\Users\juhan\Desktop\jn_app_store\backend\core\urls.py changed, reloading.
+INFO 2026-02-06 07:39:10 autoreload 12840 14432 Watching for file changes with StatReloader
+INFO 2026-02-06 07:39:10 autoreload 5064 15836 Watching for file changes with StatReloader
+INFO 2026-02-06 07:39:11 autoreload 12840 14432 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:39:12 autoreload 5064 15836 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:39:12 autoreload 15488 13900 Watching for file changes with StatReloader
+INFO 2026-02-06 07:39:13 log 15488 7224 "GET /admin-panel/reviews/ HTTP/1.1" 200 7341
+INFO 2026-02-06 07:39:13 autoreload 11520 10816 Watching for file changes with StatReloader
+INFO 2026-02-06 07:39:14 log 15488 7224 "GET / HTTP/1.1" 200 8019
+INFO 2026-02-06 07:39:17 log 15488 7224 "GET /admin-panel/dashboard/ HTTP/1.1" 200 14162
+INFO 2026-02-06 07:39:20 log 15488 7224 "GET /admin-panel/reviews/ HTTP/1.1" 200 7341
+INFO 2026-02-06 07:39:23 log 15488 7224 "GET /admin-panel/reviews/ HTTP/1.1" 200 7341
+INFO 2026-02-06 07:39:26 log 15488 7224 "POST /admin-panel/reviews/1/flag/ HTTP/1.1" 302 0
+INFO 2026-02-06 07:39:26 log 15488 7224 "GET /admin-panel/reviews/ HTTP/1.1" 200 5378
+INFO 2026-02-06 07:39:32 log 15488 7224 "GET /admin-panel/reviews/ HTTP/1.1" 200 5378
+INFO 2026-02-06 07:39:36 log 15488 7224 "GET /admin-panel/reviews/flagged/ HTTP/1.1" 200 6636
+INFO 2026-02-06 07:39:40 log 15488 7224 "POST /admin-panel/reviews/1/approve/ HTTP/1.1" 302 0
+INFO 2026-02-06 07:39:40 log 15488 7224 "GET /admin-panel/reviews/ HTTP/1.1" 200 5378
+INFO 2026-02-06 07:39:43 log 15488 7224 "GET /admin-panel/dashboard/ HTTP/1.1" 200 14162
+INFO 2026-02-06 07:39:45 log 15488 7224 "GET /admin-panel/reviews/ HTTP/1.1" 200 5378
+INFO 2026-02-06 07:39:47 log 15488 7224 "GET /admin-panel/reviews/ HTTP/1.1" 200 5378
+INFO 2026-02-06 07:39:50 log 15488 7224 "GET /admin-panel/reviews/flagged/ HTTP/1.1" 200 4810
+INFO 2026-02-06 07:39:53 log 15488 7224 "GET / HTTP/1.1" 200 8019
+INFO 2026-02-06 07:39:56 log 15488 7224 "GET /apps/ HTTP/1.1" 200 7277
+INFO 2026-02-06 07:39:58 log 15488 7224 "GET /apps/acxve/ HTTP/1.1" 200 15946
+INFO 2026-02-06 07:40:05 log 15488 7224 "GET / HTTP/1.1" 200 8019
+INFO 2026-02-06 07:40:15 log 15488 7224 "GET /admin-panel/dashboard/ HTTP/1.1" 200 14162
+INFO 2026-02-06 07:40:17 log 15488 7224 "GET /admin-panel/reviews/ HTTP/1.1" 200 5378
+INFO 2026-02-06 07:40:38 log 15488 7224 "GET /admin-panel/reviews/ HTTP/1.1" 200 5378
+INFO 2026-02-06 07:40:39 log 15488 7224 "GET /admin-panel/reviews/ HTTP/1.1" 200 5378
+INFO 2026-02-06 07:40:42 log 15488 7224 "GET /admin-panel/reviews/ HTTP/1.1" 200 5378
+INFO 2026-02-06 07:40:43 log 15488 7224 "GET /admin-panel/reviews/ HTTP/1.1" 200 5378
+INFO 2026-02-06 07:40:43 log 15488 7224 "GET /admin-panel/reviews/ HTTP/1.1" 200 5378
+INFO 2026-02-06 07:40:43 log 15488 7224 "GET /admin-panel/reviews/ HTTP/1.1" 200 5378
+INFO 2026-02-06 07:41:25 log 15488 7224 "GET /admin-panel/reviews/ HTTP/1.1" 200 5378
+INFO 2026-02-06 07:41:27 log 15488 7224 "GET / HTTP/1.1" 200 8019
+INFO 2026-02-06 07:41:27 log 15488 7224 "GET /categories/ HTTP/1.1" 200 4810
+INFO 2026-02-06 07:41:30 log 15488 7224 "GET / HTTP/1.1" 200 8019
+INFO 2026-02-06 07:41:44 log 15488 7224 "GET / HTTP/1.1" 200 8019
+INFO 2026-02-06 07:41:47 log 15488 7224 "GET /apps/ HTTP/1.1" 200 7277
+INFO 2026-02-06 07:41:51 log 15488 7224 "GET /apps/abms/ HTTP/1.1" 200 15031
+INFO 2026-02-06 07:41:57 log 15488 7224 "GET /reviews/add/abms/ HTTP/1.1" 200 5333
+INFO 2026-02-06 07:42:07 log 15488 7224 "POST /reviews/add/abms/ HTTP/1.1" 302 0
+INFO 2026-02-06 07:42:07 log 15488 7224 "GET /apps/abms/ HTTP/1.1" 200 15614
+INFO 2026-02-06 07:42:19 log 15488 7224 "GET /admin-panel/dashboard/ HTTP/1.1" 200 14711
+INFO 2026-02-06 07:42:23 log 15488 7224 "GET /admin-panel/reviews/ HTTP/1.1" 200 7432
+INFO 2026-02-06 07:42:25 log 15488 7224 "POST /admin-panel/reviews/2/flag/ HTTP/1.1" 302 0
+INFO 2026-02-06 07:42:25 log 15488 7224 "GET /admin-panel/reviews/ HTTP/1.1" 200 5471
+INFO 2026-02-06 07:42:27 log 15488 7224 "GET /admin-panel/reviews/approved/ HTTP/1.1" 200 6048
+INFO 2026-02-06 07:42:31 log 15488 7224 "GET /admin-panel/dashboard/ HTTP/1.1" 200 14711
+INFO 2026-02-06 07:42:34 log 15488 7224 "GET /admin-panel/reviews/ HTTP/1.1" 200 5471
+INFO 2026-02-06 07:42:37 log 15488 7224 "GET /admin-panel/reviews/flagged/ HTTP/1.1" 200 6648
+INFO 2026-02-06 07:42:40 log 15488 7224 "POST /admin-panel/reviews/2/approve/ HTTP/1.1" 302 0
+INFO 2026-02-06 07:42:40 log 15488 7224 "GET /admin-panel/reviews/ HTTP/1.1" 200 5471
+INFO 2026-02-06 07:42:41 log 15488 7224 "GET /admin-panel/reviews/approved/ HTTP/1.1" 200 8404
+INFO 2026-02-06 07:42:45 log 15488 7224 "GET / HTTP/1.1" 200 8019
+INFO 2026-02-06 07:42:50 log 15488 7224 "GET /admin-panel/dashboard/ HTTP/1.1" 200 14711
+INFO 2026-02-06 07:42:52 log 15488 7224 "GET /admin-panel/reviews/ HTTP/1.1" 200 5471
+INFO 2026-02-06 07:42:54 log 15488 7224 "GET /admin-panel/reviews/ HTTP/1.1" 200 5471
+INFO 2026-02-06 07:42:55 log 15488 7224 "GET /admin-panel/reviews/approved/ HTTP/1.1" 200 8404
+INFO 2026-02-06 07:42:57 log 15488 7224 "GET /admin-panel/reviews/ HTTP/1.1" 200 5471
+INFO 2026-02-06 07:42:58 log 15488 7224 "GET /admin-panel/reviews/approved/ HTTP/1.1" 200 8404
+INFO 2026-02-06 07:42:58 autoreload 15488 13900 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:42:58 autoreload 11520 10816 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:42:59 autoreload 10612 14312 Watching for file changes with StatReloader
+INFO 2026-02-06 07:42:59 autoreload 3788 8696 Watching for file changes with StatReloader
+INFO 2026-02-06 07:43:00 log 10612 1944 "GET /admin-panel/reviews/ HTTP/1.1" 200 5471
+INFO 2026-02-06 07:43:00 log 10612 1944 "GET /admin-panel/reviews/approved/ HTTP/1.1" 200 8404
+INFO 2026-02-06 07:43:01 log 10612 1944 "GET /admin-panel/reviews/flagged/ HTTP/1.1" 200 5453
+INFO 2026-02-06 07:43:02 log 10612 1944 "GET /admin-panel/reviews/approved/ HTTP/1.1" 200 8404
+INFO 2026-02-06 07:43:02 log 10612 1944 "GET /admin-panel/reviews/ HTTP/1.1" 200 5471
+INFO 2026-02-06 07:43:04 log 10612 1944 "GET /admin-panel/reviews/approved/ HTTP/1.1" 200 8404
+INFO 2026-02-06 07:43:05 log 10612 1944 "GET /admin-panel/reviews/flagged/ HTTP/1.1" 200 5453
+INFO 2026-02-06 07:43:06 log 10612 1944 "GET /admin-panel/reviews/approved/ HTTP/1.1" 200 8404
+INFO 2026-02-06 07:43:06 log 10612 1944 "GET /admin-panel/reviews/ HTTP/1.1" 200 5471
+INFO 2026-02-06 07:43:08 log 10612 1944 "GET /admin-panel/reviews/approved/ HTTP/1.1" 200 8404
+INFO 2026-02-06 07:43:09 log 10612 1944 "GET /admin-panel/reviews/flagged/ HTTP/1.1" 200 5453
+INFO 2026-02-06 07:43:10 log 10612 1944 "GET /admin-panel/reviews/approved/ HTTP/1.1" 200 8404
+INFO 2026-02-06 07:43:10 log 10612 1944 "GET /admin-panel/reviews/ HTTP/1.1" 200 5471
+INFO 2026-02-06 07:43:13 log 10612 1944 "GET /admin-panel/dashboard/ HTTP/1.1" 200 14711
+INFO 2026-02-06 07:43:34 log 10612 1944 "GET /admin-panel/users/ HTTP/1.1" 200 11322
+INFO 2026-02-06 07:43:38 log 10612 1944 "GET /admin-panel/users/ HTTP/1.1" 200 11322
+INFO 2026-02-06 07:43:43 log 10612 1944 "GET /admin-panel/users/create/ HTTP/1.1" 200 8771
+INFO 2026-02-06 07:43:48 log 10612 1944 "GET /admin-panel/users/ HTTP/1.1" 200 11322
+INFO 2026-02-06 07:43:51 log 10612 1944 "GET /admin-panel/dashboard/ HTTP/1.1" 200 14711
+INFO 2026-02-06 07:43:52 log 10612 1944 "GET /admin-panel/users/create/ HTTP/1.1" 200 7338
+INFO 2026-02-06 07:44:13 log 10612 1944 "GET /admin-panel/apps/ HTTP/1.1" 200 10646
+INFO 2026-02-06 07:44:20 log 10612 1944 "GET /admin-panel/users/ HTTP/1.1" 200 11322
+INFO 2026-02-06 07:44:23 log 10612 1944 "GET /admin-panel/dashboard/ HTTP/1.1" 200 14711
+INFO 2026-02-06 07:44:27 log 10612 1944 "GET /admin-panel/analytics/ HTTP/1.1" 200 4759
+INFO 2026-02-06 07:44:29 log 10612 1944 "GET /admin-panel/dashboard/ HTTP/1.1" 200 14711
+INFO 2026-02-06 07:44:31 log 10612 1944 "GET /admin-panel/apps/ HTTP/1.1" 200 10646
+INFO 2026-02-06 07:44:32 log 10612 1944 "GET /admin-panel/dashboard/ HTTP/1.1" 200 14711
+INFO 2026-02-06 07:44:33 log 10612 1944 "GET /admin-panel/apps/ HTTP/1.1" 200 10646
+INFO 2026-02-06 07:44:35 log 10612 1944 "GET /admin-panel/apps/3/edit/ HTTP/1.1" 200 8125
+INFO 2026-02-06 07:44:44 log 10612 1944 "GET /admin-panel/apps/ HTTP/1.1" 200 10646
+INFO 2026-02-06 07:45:55 autoreload 3788 8696 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:45:55 autoreload 10612 14312 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:45:56 autoreload 1912 9804 Watching for file changes with StatReloader
+INFO 2026-02-06 07:45:56 autoreload 15616 6904 Watching for file changes with StatReloader
+WARNING 2026-02-06 07:45:57 log 1912 8460 "GET /admin-apps HTTP/1.1" 404 4008
+INFO 2026-02-06 07:46:05 log 1912 8460 "GET /apps/admin_apps/ HTTP/1.1" 200 21040
+INFO 2026-02-06 07:46:27 log 1912 8460 "GET /apps/admin_apps/ HTTP/1.1" 200 21040
+INFO 2026-02-06 07:46:31 log 1912 8460 "GET /admin-panel/dashboard/ HTTP/1.1" 200 15260
+INFO 2026-02-06 07:46:47 log 1912 8460 "GET /admin-panel/apps/ HTTP/1.1" 200 10646
+INFO 2026-02-06 07:46:49 log 1912 8460 "GET /admin-panel/apps/3/edit/ HTTP/1.1" 200 12354
+INFO 2026-02-06 07:47:35 log 1912 8460 "GET /admin-panel/apps/ HTTP/1.1" 200 10646
+INFO 2026-02-06 07:48:00 autoreload 1912 9804 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:48:00 autoreload 15616 6904 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:48:01 autoreload 5924 11312 Watching for file changes with StatReloader
+INFO 2026-02-06 07:48:01 autoreload 10104 16104 Watching for file changes with StatReloader
+INFO 2026-02-06 07:48:16 log 5924 15244 "GET /admin-panel/apps/ HTTP/1.1" 200 10646
+INFO 2026-02-06 07:48:19 log 5924 15244 "GET /admin-panel/apps/3/edit/ HTTP/1.1" 200 12222
+INFO 2026-02-06 07:48:31 log 5924 15244 "GET /admin-panel/apps/3/edit/ HTTP/1.1" 200 16970
+INFO 2026-02-06 07:48:57 log 5924 15244 "GET /admin-panel/apps/ HTTP/1.1" 200 10646
+INFO 2026-02-06 07:48:59 log 5924 15244 "GET /admin-panel/apps/1/edit/ HTTP/1.1" 200 14740
+INFO 2026-02-06 07:49:14 log 5924 15244 "GET /admin-panel/apps/ HTTP/1.1" 200 10646
+INFO 2026-02-06 07:49:19 log 5924 15244 "GET /admin-panel/apps/ HTTP/1.1" 200 10646
+INFO 2026-02-06 07:49:35 autoreload 10104 16104 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:49:36 autoreload 5924 11312 C:\Users\juhan\Desktop\jn_app_store\backend\reviews\models.py changed, reloading.
+INFO 2026-02-06 07:49:36 autoreload 8224 10008 Watching for file changes with StatReloader
+INFO 2026-02-06 07:49:36 autoreload 3452 14632 Watching for file changes with StatReloader
+INFO 2026-02-06 07:52:51 log 8224 14568 "GET /admin-panel/dashboard/ HTTP/1.1" 200 15260
+INFO 2026-02-06 07:52:52 autoreload 3452 14632 C:\Users\juhan\Desktop\jn_app_store\backend\apps\models.py changed, reloading.
+INFO 2026-02-06 07:52:52 autoreload 5348 14680 Watching for file changes with StatReloader
+INFO 2026-02-06 07:52:53 autoreload 8224 10008 C:\Users\juhan\Desktop\jn_app_store\backend\apps\models.py changed, reloading.
+INFO 2026-02-06 07:52:53 autoreload 13400 13800 Watching for file changes with StatReloader
+WARNING 2026-02-06 07:52:56 log 5348 14256 "GET /admin-panel HTTP/1.1" 404 4011
+ERROR 2026-02-06 07:53:01 log 5348 14256 "GET /admin-panel/reviews/flagged/ HTTP/1.1" 500 249211
+ERROR 2026-02-06 07:53:04 log 5348 14256 "GET /admin-panel/reviews/ HTTP/1.1" 500 249894
+ERROR 2026-02-06 07:53:07 log 5348 14256 "GET /admin-panel/dashboard/ HTTP/1.1" 500 237753
+ERROR 2026-02-06 07:53:09 log 5348 14256 "GET /admin-panel/apps/ HTTP/1.1" 500 240863
+INFO 2026-02-06 07:53:14 log 5348 14256 "GET / HTTP/1.1" 200 8019
+INFO 2026-02-06 07:53:38 log 5348 14256 "GET /admin-panel/apps/ HTTP/1.1" 200 10646
+INFO 2026-02-06 07:53:42 autoreload 5348 14680 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:53:42 autoreload 13400 13800 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:53:43 autoreload 12788 8648 Watching for file changes with StatReloader
+INFO 2026-02-06 07:53:43 autoreload 6044 8460 Watching for file changes with StatReloader
+INFO 2026-02-06 07:53:43 log 12788 15772 "GET /admin-panel/dashboard/ HTTP/1.1" 200 15260
+INFO 2026-02-06 07:53:45 log 12788 15772 "GET /admin-panel/reviews/flagged/ HTTP/1.1" 200 7305
+INFO 2026-02-06 07:53:48 autoreload 6044 8460 C:\Users\juhan\Desktop\jn_app_store\backend\core\urls.py changed, reloading.
+INFO 2026-02-06 07:53:48 log 12788 15772 "POST /admin-panel/reviews/6/approve/ HTTP/1.1" 302 0
+INFO 2026-02-06 07:53:48 log 12788 15772 "GET /admin-panel/reviews/ HTTP/1.1" 200 9645
+INFO 2026-02-06 07:53:48 autoreload 12788 8648 C:\Users\juhan\Desktop\jn_app_store\backend\core\urls.py changed, reloading.
+INFO 2026-02-06 07:53:48 autoreload 14292 15660 Watching for file changes with StatReloader
+INFO 2026-02-06 07:53:49 autoreload 2972 12256 Watching for file changes with StatReloader
+INFO 2026-02-06 07:53:50 log 14292 1936 "GET /admin-panel/reviews/ HTTP/1.1" 200 9645
+INFO 2026-02-06 07:53:51 log 14292 1936 "GET /admin-panel/reviews/approved/ HTTP/1.1" 200 6852
+INFO 2026-02-06 07:53:52 log 14292 1936 "GET /admin-panel/reviews/ HTTP/1.1" 200 9645
+INFO 2026-02-06 07:53:54 log 14292 1936 "POST /admin-panel/reviews/5/approve/ HTTP/1.1" 302 0
+INFO 2026-02-06 07:53:54 log 14292 1936 "GET /admin-panel/reviews/ HTTP/1.1" 200 7445
+INFO 2026-02-06 07:53:55 log 14292 1936 "POST /admin-panel/reviews/4/approve/ HTTP/1.1" 302 0
+INFO 2026-02-06 07:53:56 log 14292 1936 "GET /admin-panel/reviews/ HTTP/1.1" 200 5471
+INFO 2026-02-06 07:53:56 log 14292 1936 "GET /admin-panel/reviews/approved/ HTTP/1.1" 200 10053
+INFO 2026-02-06 07:54:36 log 14292 1936 "GET /admin-panel/dashboard/ HTTP/1.1" 200 15996
+INFO 2026-02-06 07:54:39 log 14292 1936 "GET /admin-panel/apps/ HTTP/1.1" 200 10646
+INFO 2026-02-06 07:54:42 autoreload 14292 15660 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:54:42 log 2972 11924 "GET /admin-panel/dashboard/ HTTP/1.1" 200 15996
+INFO 2026-02-06 07:54:42 autoreload 2972 12256 C:\Users\juhan\Desktop\jn_app_store\backend\core\views.py changed, reloading.
+INFO 2026-02-06 07:54:43 autoreload 14356 4832 Watching for file changes with StatReloader
+INFO 2026-02-06 07:54:43 autoreload 13672 12628 Watching for file changes with StatReloader
+INFO 2026-02-06 07:54:48 log 14356 11548 "GET /admin-panel/pending-deletions/ HTTP/1.1" 200 5587
+INFO 2026-02-06 07:54:51 log 14356 11548 "GET /admin-panel/dashboard/ HTTP/1.1" 200 17441
+INFO 2026-02-06 07:54:54 log 14356 11548 "GET /admin-panel/apps/ HTTP/1.1" 200 10646
+INFO 2026-02-06 07:55:00 log 14356 11548 "GET /admin-panel/dashboard/ HTTP/1.1" 200 17441
+INFO 2026-02-06 07:55:03 log 14356 11548 "GET /admin-panel/apps/ HTTP/1.1" 200 10646
+INFO 2026-02-06 07:55:08 log 14356 11548 "GET /admin-panel/apps/3/edit/ HTTP/1.1" 200 20348
+INFO 2026-02-06 07:55:10 log 14356 11548 "GET /admin-panel/apps/ HTTP/1.1" 200 10646
+INFO 2026-02-06 07:55:15 log 14356 11548 "GET / HTTP/1.1" 200 8019
+INFO 2026-02-06 07:55:30 log 14356 11548 "GET /admin-panel/dashboard/ HTTP/1.1" 200 17441
+INFO 2026-02-06 07:55:46 log 14356 11548 "GET / HTTP/1.1" 200 8019
+INFO 2026-02-06 07:56:02 autoreload 14356 4832 C:\Users\juhan\Desktop\jn_app_store\backend\core\urls.py changed, reloading.
+INFO 2026-02-06 07:56:02 autoreload 13672 12628 C:\Users\juhan\Desktop\jn_app_store\backend\apps\models.py changed, reloading.
+INFO 2026-02-06 07:56:03 autoreload 3188 4024 Watching for file changes with StatReloader
+INFO 2026-02-06 07:56:03 autoreload 12200 14916 Watching for file changes with StatReloader
+INFO 2026-02-06 07:56:40 log 3188 14248 "GET / HTTP/1.1" 200 8019
+INFO 2026-02-06 07:56:43 log 3188 14248 "GET /apps/ HTTP/1.1" 200 7277
+INFO 2026-02-06 07:56:46 log 3188 14248 "GET / HTTP/1.1" 200 8019
+INFO 2026-02-06 07:56:47 log 3188 14248 "GET /accounts/profile/ HTTP/1.1" 200 12326
+INFO 2026-02-06 07:56:51 log 3188 14248 "GET /support/ HTTP/1.1" 200 23241
+INFO 2026-02-06 07:56:52 log 3188 14248 "GET / HTTP/1.1" 200 8019
+INFO 2026-02-06 07:57:03 log 3188 14248 "GET /admin-panel/categories/ HTTP/1.1" 200 9423
+INFO 2026-02-06 07:57:04 log 3188 14248 "GET /admin-panel/dashboard/ HTTP/1.1" 200 17441
+INFO 2026-02-06 07:57:08 log 3188 14248 "GET /admin-panel/apps/ HTTP/1.1" 200 10646
+INFO 2026-02-06 07:57:19 log 3188 14248 "GET /admin-panel/users/ HTTP/1.1" 200 11322
+INFO 2026-02-06 07:57:23 log 3188 14248 "GET /admin-panel/dashboard/ HTTP/1.1" 200 17441
+INFO 2026-02-06 07:57:24 log 3188 14248 "GET /admin-panel/categories/ HTTP/1.1" 200 9423
+INFO 2026-02-06 07:57:26 log 3188 14248 "GET /admin-panel/dashboard/ HTTP/1.1" 200 17441
+INFO 2026-02-06 07:57:29 log 3188 14248 "GET /admin-panel/reviews/ HTTP/1.1" 200 5471
+INFO 2026-02-06 07:57:30 log 3188 14248 "GET /admin-panel/reviews/ HTTP/1.1" 200 5471
+INFO 2026-02-06 07:57:30 log 3188 14248 "GET /admin-panel/reviews/approved/ HTTP/1.1" 200 10053
+INFO 2026-02-06 07:57:32 log 3188 14248 "GET /admin-panel/reviews/flagged/ HTTP/1.1" 200 5453
+INFO 2026-02-06 07:57:33 log 3188 14248 "GET /admin-panel/dashboard/ HTTP/1.1" 200 17441
+INFO 2026-02-06 08:00:09 log 3188 13808 "GET /admin-panel/dashboard/ HTTP/1.1" 200 26923
+INFO 2026-02-06 08:00:48 log 3188 13808 "GET /admin-panel/dashboard/ HTTP/1.1" 200 26923
+INFO 2026-02-06 08:00:49 log 3188 13808 "GET /admin-panel/dashboard/ HTTP/1.1" 200 26923
+INFO 2026-02-06 08:01:01 log 3188 13808 "GET /admin-panel/analytics/reports/ HTTP/1.1" 200 4741
+INFO 2026-02-06 08:01:08 log 3188 13808 "GET /admin-panel/apps/ HTTP/1.1" 200 10646
+INFO 2026-02-06 08:01:11 log 3188 13808 "GET /admin-panel/apps/3/edit/ HTTP/1.1" 200 20348
+INFO 2026-02-06 08:01:13 log 3188 13808 "GET /admin-panel/apps/ HTTP/1.1" 200 10646
+INFO 2026-02-06 08:01:14 log 3188 13808 "GET /admin-panel/dashboard/ HTTP/1.1" 200 26923
+INFO 2026-02-06 08:01:16 log 3188 13808 "GET /admin-panel/pending-deletions/ HTTP/1.1" 200 4862
+INFO 2026-02-06 08:01:17 log 3188 13808 "GET /admin-panel/dashboard/ HTTP/1.1" 200 26923
+INFO 2026-02-06 08:01:21 log 3188 13808 "GET /admin-panel/apps/ HTTP/1.1" 200 10646
+INFO 2026-02-06 08:03:35 log 3188 13892 "GET /admin-panel/apps/ HTTP/1.1" 200 10646
+INFO 2026-02-06 08:03:36 log 3188 13892 "GET / HTTP/1.1" 200 8019
+INFO 2026-02-06 08:03:37 log 3188 13892 "GET /categories/ HTTP/1.1" 200 4810
+ERROR 2026-02-06 08:03:38 log 3188 13892 "GET /apps/ HTTP/1.1" 500 88357
+ERROR 2026-02-06 08:03:42 log 3188 13892 "GET /apps/ HTTP/1.1" 500 88357
+INFO 2026-02-06 08:04:30 log 3188 13892 "GET /categories/ HTTP/1.1" 200 4810
+INFO 2026-02-06 08:04:31 log 3188 13892 "GET /apps/ HTTP/1.1" 200 7277
+INFO 2026-02-06 08:05:05 log 3188 13892 "GET / HTTP/1.1" 200 8019
+INFO 2026-02-06 08:05:05 log 3188 13892 "GET / HTTP/1.1" 200 8019
+INFO 2026-02-06 08:05:06 log 3188 13892 "GET /categories/ HTTP/1.1" 200 4810
+INFO 2026-02-06 08:05:06 log 3188 13892 "GET /apps/ HTTP/1.1" 200 7277
+INFO 2026-02-06 08:05:27 log 3188 13892 "GET /categories/ HTTP/1.1" 200 4810
+INFO 2026-02-06 08:05:29 log 3188 13892 "GET /categories/jjjjjj/ HTTP/1.1" 200 5666
+INFO 2026-02-06 08:05:33 log 3188 13892 "GET /categories/ HTTP/1.1" 200 4810
+INFO 2026-02-06 08:05:34 log 3188 13892 "GET /categories/account-busniess/ HTTP/1.1" 200 5081
+INFO 2026-02-06 08:05:36 log 3188 13892 "GET /categories/ HTTP/1.1" 200 4810
+INFO 2026-02-06 08:05:38 log 3188 13892 "GET /categories/ HTTP/1.1" 200 4810
+INFO 2026-02-06 08:05:39 log 3188 13892 "GET /apps/ HTTP/1.1" 200 7277
+INFO 2026-02-06 08:06:50 log 3188 13892 "GET /admin-panel/apps/ HTTP/1.1" 200 15107
+INFO 2026-02-06 08:06:54 log 3188 13892 "POST /admin-panel/apps/3/mark-for-deletion/ HTTP/1.1" 302 0
+INFO 2026-02-06 08:06:54 log 3188 13892 "GET /admin-panel/apps/ HTTP/1.1" 200 15107
+INFO 2026-02-06 08:06:56 log 3188 13892 "GET /admin-panel/apps/ HTTP/1.1" 200 15107
+INFO 2026-02-06 08:06:59 log 3188 13892 "GET /admin-panel/dashboard/ HTTP/1.1" 200 26923
+INFO 2026-02-06 08:07:00 log 3188 13892 "GET /admin-panel/pending-deletions/ HTTP/1.1" 200 8140
+INFO 2026-02-06 08:07:36 log 3188 13892 "GET / HTTP/1.1" 200 8019
+INFO 2026-02-06 08:07:38 log 3188 13892 "GET /apps/ HTTP/1.1" 200 7277
+INFO 2026-02-06 08:07:45 log 3188 13892 "GET /apps/abms/ HTTP/1.1" 200 15627
+INFO 2026-02-06 08:08:02 log 3188 13892 "GET / HTTP/1.1" 200 8019
+INFO 2026-02-06 08:08:06 log 3188 13892 "GET /apps/ HTTP/1.1" 200 7277
+INFO 2026-02-06 08:08:08 log 3188 13892 "GET / HTTP/1.1" 200 8019
+INFO 2026-02-06 08:08:10 log 3188 13892 "GET /apps/ HTTP/1.1" 200 7277
+INFO 2026-02-06 08:08:34 log 3188 13892 "GET /admin-panel/pending-deletions/ HTTP/1.1" 200 7785
+INFO 2026-02-06 08:08:34 log 3188 13892 "GET /admin-panel/dashboard/ HTTP/1.1" 200 26923
+INFO 2026-02-06 08:09:18 log 3188 13892 "GET / HTTP/1.1" 200 8019
+INFO 2026-02-06 08:09:21 log 3188 13892 "GET /apps/ HTTP/1.1" 200 7277
+INFO 2026-02-06 08:10:00 log 3188 13892 "GET /admin-panel/users/ HTTP/1.1" 200 11322
+INFO 2026-02-06 08:10:01 log 3188 13892 "GET /admin-panel/dashboard/ HTTP/1.1" 200 26923
+INFO 2026-02-06 08:10:02 log 3188 13892 "GET /admin-panel/categories/ HTTP/1.1" 200 9423
+INFO 2026-02-06 08:10:03 log 3188 13892 "GET /admin-panel/dashboard/ HTTP/1.1" 200 26923
+INFO 2026-02-06 08:10:05 log 3188 13892 "GET /admin-panel/reviews/ HTTP/1.1" 200 5471
+INFO 2026-02-06 08:10:06 log 3188 13892 "GET /admin-panel/dashboard/ HTTP/1.1" 200 26923
+INFO 2026-02-06 08:10:07 log 3188 13892 "GET /admin-panel/reviews/flagged/ HTTP/1.1" 200 5453
+INFO 2026-02-06 08:10:08 log 3188 13892 "GET /admin-panel/dashboard/ HTTP/1.1" 200 26923
+INFO 2026-02-06 08:10:09 log 3188 13892 "GET /admin-panel/pending-deletions/ HTTP/1.1" 200 7785
+INFO 2026-02-06 08:10:11 log 3188 13892 "POST /admin-panel/apps/3/cancel-deletion/ HTTP/1.1" 302 0
+INFO 2026-02-06 08:10:11 log 3188 13892 "GET /admin-panel/pending-deletions/ HTTP/1.1" 200 5167
+INFO 2026-02-06 08:10:18 log 3188 13892 "GET /admin-panel/dashboard/ HTTP/1.1" 200 26923
+INFO 2026-02-06 08:10:20 log 3188 13892 "GET /admin-panel/analytics/ HTTP/1.1" 200 4759
+INFO 2026-02-06 08:10:34 log 3188 13892 "GET / HTTP/1.1" 200 8019
+INFO 2026-02-06 08:10:38 log 3188 13892 "GET /apps/ HTTP/1.1" 200 7277
+INFO 2026-02-06 08:10:46 log 3188 13892 "GET /accounts/profile/ HTTP/1.1" 200 12326
+INFO 2026-02-06 08:10:57 log 3188 13892 "GET /accounts/edit-profile/ HTTP/1.1" 200 7814
+INFO 2026-02-06 08:11:00 log 3188 13892 "GET /accounts/profile/ HTTP/1.1" 200 12326
+INFO 2026-02-06 08:11:02 log 3188 13892 "GET /apps/upload/ HTTP/1.1" 200 15730
+INFO 2026-02-06 08:11:16 log 3188 13892 "GET /support/ HTTP/1.1" 200 23241
+INFO 2026-02-06 08:11:18 log 3188 13892 "GET / HTTP/1.1" 200 8019
+INFO 2026-02-06 08:12:48 log 3188 13892 "GET /admin-panel/pending-deletions/ HTTP/1.1" 200 4862
+INFO 2026-02-06 08:12:51 log 3188 13892 "GET /admin-panel/dashboard/ HTTP/1.1" 200 26923
+INFO 2026-02-06 08:12:53 log 3188 13892 "GET /admin-panel/apps/ HTTP/1.1" 200 15107
+INFO 2026-02-06 08:12:55 log 3188 13892 "GET /admin-panel/apps/3/edit/ HTTP/1.1" 200 20348
+INFO 2026-02-06 08:12:58 log 3188 13892 "GET /admin-panel/apps/ HTTP/1.1" 200 15107
+INFO 2026-02-06 08:13:13 log 3188 13892 "GET /admin-panel/apps/2/edit/ HTTP/1.1" 200 18540
+INFO 2026-02-06 08:13:16 log 3188 13892 "GET /admin-panel/apps/ HTTP/1.1" 200 15107
+INFO 2026-02-06 08:14:12 log 3188 13892 "GET /admin-panel/apps/ HTTP/1.1" 200 15107
+INFO 2026-02-08 04:10:46 autoreload 14348 15804 Watching for file changes with StatReloader
+INFO 2026-02-08 04:10:49 log 14348 11392 "GET / HTTP/1.1" 200 8019
+INFO 2026-02-08 04:10:49 log 14348 11392 "GET /static/css/styles.css HTTP/1.1" 304 0
+INFO 2026-02-08 04:10:49 log 14348 616 "GET /static/css/home.css HTTP/1.1" 304 0
+INFO 2026-02-08 04:10:49 log 14348 7964 "GET /static/js/common.js HTTP/1.1" 304 0
+INFO 2026-02-08 04:10:54 log 14348 2796 "GET /admin/ HTTP/1.1" 302 0
+INFO 2026-02-08 04:10:55 log 14348 2796 "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4080
+INFO 2026-02-08 04:10:55 log 14348 2796 "GET /static/admin/css/base.css HTTP/1.1" 304 0
+INFO 2026-02-08 04:10:55 log 14348 2796 "GET /static/admin/css/login.css HTTP/1.1" 304 0
+INFO 2026-02-08 04:10:55 log 14348 10188 "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+INFO 2026-02-08 04:10:55 log 14348 14000 "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+INFO 2026-02-08 04:10:55 log 14348 6264 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+INFO 2026-02-08 04:10:55 log 14348 7928 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+INFO 2026-02-08 04:10:55 log 14348 10128 "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+WARNING 2026-02-08 04:11:09 log 14348 11392 "GET /admin-panel/ HTTP/1.1" 404 11048
+INFO 2026-02-08 04:11:31 log 14348 11392 "GET /admin-panel/dashboard/ HTTP/1.1" 200 26923
+INFO 2026-02-08 04:11:31 log 14348 616 "GET /static/css/review_form.css HTTP/1.1" 304 0
+INFO 2026-02-08 04:11:40 log 14348 11392 "GET /admin-panel/apps/ HTTP/1.1" 200 15107
+INFO 2026-02-08 04:11:49 log 14348 11392 "GET /admin-panel/apps/3/edit/ HTTP/1.1" 200 20348
+INFO 2026-02-08 04:11:49 log 14348 7964 "GET /media/app_covers/pexels-goumbik-669502_C3aECtC.jpg HTTP/1.1" 304 0
+INFO 2026-02-08 04:11:52 log 14348 11392 "GET /admin-panel/apps/ HTTP/1.1" 200 15107
+INFO 2026-02-08 04:13:22 autoreload 14348 15804 C:\Users\juhan\Desktop\jndroid.store\backend\core\views.py changed, reloading.
+INFO 2026-02-08 04:13:23 autoreload 14464 15012 Watching for file changes with StatReloader
+INFO 2026-02-08 04:13:30 autoreload 14464 15012 C:\Users\juhan\Desktop\jndroid.store\backend\core\urls.py changed, reloading.
+INFO 2026-02-08 04:13:30 autoreload 15364 8892 Watching for file changes with StatReloader
+INFO 2026-02-08 04:13:33 autoreload 15364 8892 C:\Users\juhan\Desktop\jndroid.store\backend\core\urls.py changed, reloading.
+INFO 2026-02-08 04:13:34 autoreload 15220 8416 Watching for file changes with StatReloader
+INFO 2026-02-08 04:13:47 autoreload 15220 8416 C:\Users\juhan\Desktop\jndroid.store\backend\core\views.py changed, reloading.
+INFO 2026-02-08 04:13:47 autoreload 15556 8388 Watching for file changes with StatReloader
+INFO 2026-02-08 04:13:52 autoreload 15556 8388 C:\Users\juhan\Desktop\jndroid.store\backend\apps\urls.py changed, reloading.
+INFO 2026-02-08 04:13:53 autoreload 14388 16320 Watching for file changes with StatReloader
+INFO 2026-02-08 04:14:05 autoreload 14388 16320 C:\Users\juhan\Desktop\jndroid.store\backend\apps\views.py changed, reloading.
+INFO 2026-02-08 04:14:06 autoreload 14780 8520 Watching for file changes with StatReloader
+INFO 2026-02-08 04:17:06 log 14780 3832 "GET /admin-panel/apps/ HTTP/1.1" 200 20499
+INFO 2026-02-08 04:17:23 log 14780 3832 "GET /admin-panel/apps/ HTTP/1.1" 200 20499
+ERROR 2026-02-08 04:17:32 log 14780 3832 "GET /admin-panel/dashboard/ HTTP/1.1" 500 221900
+ERROR 2026-02-08 04:17:36 log 14780 3832 "GET /admin-panel/dashboard/ HTTP/1.1" 500 221900
+ERROR 2026-02-08 04:17:49 log 14780 3832 "GET /admin-panel/dashboard/ HTTP/1.1" 500 221732
+INFO 2026-02-08 04:17:54 log 14780 3832 "GET /admin-panel/apps/ HTTP/1.1" 200 20499
+INFO 2026-02-08 04:20:58 log 14780 15272 "GET / HTTP/1.1" 200 8019
+INFO 2026-02-08 04:29:59 autoreload 15672 11108 Watching for file changes with StatReloader
+INFO 2026-02-08 04:30:06 log 14780 7740 "GET /admin-panel/apps/ HTTP/1.1" 200 11490
+INFO 2026-02-08 04:30:06 log 14780 7740 "GET /static/js/theme.js HTTP/1.1" 200 2102
+INFO 2026-02-08 04:30:22 log 14780 7740 "GET /admin-panel/apps/?q=abms&status= HTTP/1.1" 200 8312
+INFO 2026-02-08 04:30:22 log 14780 7740 "GET /static/js/theme.js HTTP/1.1" 304 0
+INFO 2026-02-08 04:30:28 log 14780 7740 "GET /admin-panel/apps/?q=abms&status= HTTP/1.1" 200 8312
+INFO 2026-02-08 04:30:29 log 14780 7740 "GET /admin-panel/apps/?q=abms&status= HTTP/1.1" 200 8312
+INFO 2026-02-08 04:30:32 log 14780 7740 "GET /admin-panel/apps/?q=abms&status=draft HTTP/1.1" 200 6890
+ERROR 2026-02-08 04:30:35 log 14780 7740 "GET /admin-panel/dashboard/ HTTP/1.1" 500 222101
+INFO 2026-02-08 04:30:40 log 14780 7740 "GET /admin-panel/apps/?q=abms&status=draft HTTP/1.1" 200 6890
+INFO 2026-02-08 04:30:40 log 14780 7740 "GET /static/js/theme.js HTTP/1.1" 304 0
+INFO 2026-02-08 04:30:47 log 14780 3756 "GET /?id=d61d4cd7-857b-42f3-84c6-018f15276b1e&vscodeBrowserReqId=1770503446699 HTTP/1.1" 200 7354
+INFO 2026-02-08 04:30:53 log 14780 7740 "GET /admin-panel/apps/?q=abms&status=draft HTTP/1.1" 200 6890
+INFO 2026-02-08 04:30:56 log 14780 7740 "GET /admin-panel/apps/?q=abms&status=draft HTTP/1.1" 200 6890
+INFO 2026-02-08 04:31:01 log 14780 7740 "GET /admin-panel/apps/?q=abms&status=draft HTTP/1.1" 200 6890
+INFO 2026-02-08 04:31:01 log 14780 7740 "GET /static/js/theme.js HTTP/1.1" 304 0
+INFO 2026-02-08 04:31:05 log 14780 7740 "GET /admin-panel/apps/?q=abms&status=draft HTTP/1.1" 200 6890
+INFO 2026-02-08 04:31:08 log 14780 7740 "GET /admin-panel/apps/ HTTP/1.1" 200 11490
+INFO 2026-02-08 04:31:12 log 14780 7740 "GET /admin-panel/apps/ HTTP/1.1" 200 11490
+INFO 2026-02-08 04:34:50 log 14780 4240 "GET /admin-panel/apps/ HTTP/1.1" 200 11490
+INFO 2026-02-08 04:34:50 log 14780 4240 "GET /static/js/theme.js HTTP/1.1" 304 0
+ERROR 2026-02-08 04:34:57 log 14780 4240 "GET /admin-panel/dashboard/ HTTP/1.1" 500 222077
+INFO 2026-02-08 04:37:47 autoreload 7412 4780 Watching for file changes with StatReloader
+INFO 2026-02-08 04:38:09 log 14780 14224 "GET /?id=d61d4cd7-857b-42f3-84c6-018f15276b1e&vscodeBrowserReqId=1770503889533 HTTP/1.1" 200 7354
+INFO 2026-02-08 04:38:41 log 14780 14224 "GET /admin-panel/dashboard/?id=d61d4cd7-857b-42f3-84c6-018f15276b1e&vscodeBrowserReqId=1770503921976 HTTP/1.1" 302 0
+INFO 2026-02-08 04:38:41 log 14780 14224 "GET /accounts/login/?next=/admin-panel/dashboard/%3Fid%3Dd61d4cd7-857b-42f3-84c6-018f15276b1e%26vscodeBrowserReqId%3D1770503921976 HTTP/1.1" 200 4594
+INFO 2026-02-08 04:38:56 log 14780 6728 "GET /admin-panel/dashboard/ HTTP/1.1" 200 27168
+INFO 2026-02-08 04:38:56 log 14780 6728 "GET /static/js/theme.js HTTP/1.1" 200 2194
+INFO 2026-02-08 04:39:01 log 14780 6728 "GET /admin-panel/users/ HTTP/1.1" 200 11551
+INFO 2026-02-08 04:39:05 log 14780 6728 "GET /admin-panel/categories/ HTTP/1.1" 200 9652
+INFO 2026-02-08 04:39:05 log 14780 6728 "GET /static/js/theme.js HTTP/1.1" 304 0
+INFO 2026-02-08 04:39:07 log 14780 6728 "GET /admin-panel/dashboard/ HTTP/1.1" 200 27168
+INFO 2026-02-08 04:39:12 log 14780 6728 "GET /admin-panel/analytics/reports/ HTTP/1.1" 200 4970
+ERROR 2026-02-08 04:39:19 log 14780 6728 "GET /admin-panel/apps/pending/ HTTP/1.1" 500 81310
+INFO 2026-02-08 04:39:24 log 14780 6728 "GET / HTTP/1.1" 200 8248
+INFO 2026-02-08 04:39:24 log 14780 6728 "GET /static/js/theme.js HTTP/1.1" 304 0
+INFO 2026-02-08 04:41:03 autoreload 400 15780 Watching for file changes with StatReloader
+INFO 2026-02-08 04:41:04 log 14780 6728 "GET / HTTP/1.1" 200 8248
+INFO 2026-02-08 04:41:04 log 14780 6728 "GET /static/js/theme.js HTTP/1.1" 200 1982
+INFO 2026-02-08 04:41:11 log 14780 6728 "GET / HTTP/1.1" 200 8248
+INFO 2026-02-08 04:41:11 log 14780 6728 "GET /static/js/theme.js HTTP/1.1" 304 0
+INFO 2026-02-08 04:41:12 log 14780 6728 "GET /categories/ HTTP/1.1" 200 5039
+INFO 2026-02-08 04:41:12 log 14780 10660 "GET /static/css/categories_list.css HTTP/1.1" 200 1170
+INFO 2026-02-08 04:41:14 log 14780 6728 "GET /support/ HTTP/1.1" 200 23470
+INFO 2026-02-08 04:41:14 log 14780 10660 "GET /static/js/theme.js HTTP/1.1" 304 0
+INFO 2026-02-08 04:41:21 log 14780 14224 "GET /?id=d61d4cd7-857b-42f3-84c6-018f15276b1e&vscodeBrowserReqId=1770504081654 HTTP/1.1" 200 7354
+INFO 2026-02-08 04:41:22 log 14780 6728 "GET / HTTP/1.1" 200 8248
+INFO 2026-02-08 04:41:22 log 14780 10660 "GET /static/js/theme.js HTTP/1.1" 304 0
+INFO 2026-02-08 04:41:32 log 14780 6728 "GET / HTTP/1.1" 200 8248
+INFO 2026-02-08 04:41:32 log 14780 10660 "GET /static/js/theme.js HTTP/1.1" 304 0
+INFO 2026-02-08 04:45:01 autoreload 14288 14420 Watching for file changes with StatReloader
+INFO 2026-02-08 04:45:12 log 14780 14224 "GET /?id=d61d4cd7-857b-42f3-84c6-018f15276b1e&vscodeBrowserReqId=1770504312125 HTTP/1.1" 200 7354
+INFO 2026-02-08 04:45:26 log 14780 3044 "GET / HTTP/1.1" 200 8248
+INFO 2026-02-08 04:45:26 log 14780 3044 "GET /static/js/theme.js HTTP/1.1" 200 4186
+INFO 2026-02-08 04:45:35 log 14780 3044 "GET /accounts/profile/ HTTP/1.1" 200 12555
+INFO 2026-02-08 04:45:35 log 14780 3044 "GET /static/js/theme.js HTTP/1.1" 304 0
+INFO 2026-02-08 04:45:37 log 14780 3044 "GET /categories/ HTTP/1.1" 200 5039
+INFO 2026-02-08 04:45:37 log 14780 3056 "GET /static/css/categories_list.css HTTP/1.1" 304 0
+INFO 2026-02-08 04:45:38 log 14780 3044 "GET /apps/ HTTP/1.1" 200 7506
+INFO 2026-02-08 04:45:38 log 14780 3056 "GET /static/css/app_list.css HTTP/1.1" 200 3600
+INFO 2026-02-08 04:45:45 log 14780 3044 "GET /admin-panel/dashboard/ HTTP/1.1" 200 27168
+INFO 2026-02-08 04:45:45 log 14780 3056 "GET /static/js/theme.js HTTP/1.1" 304 0
+INFO 2026-02-08 04:45:49 log 14780 3044 "GET /categories/ HTTP/1.1" 200 5039
+INFO 2026-02-08 04:45:50 log 14780 3044 "GET /apps/ HTTP/1.1" 200 7506
+INFO 2026-02-08 04:45:52 log 14780 3044 "GET / HTTP/1.1" 200 8248
+INFO 2026-02-08 04:45:52 log 14780 3056 "GET /static/js/theme.js HTTP/1.1" 304 0
+INFO 2026-02-08 04:46:50 autoreload 16868 16872 Watching for file changes with StatReloader
+INFO 2026-02-08 04:47:01 log 14780 3044 "GET / HTTP/1.1" 200 8237
+INFO 2026-02-08 04:47:01 log 14780 3056 "GET /static/js/theme.js HTTP/1.1" 200 3135
+INFO 2026-02-08 04:47:02 log 14780 14224 "GET /?id=d61d4cd7-857b-42f3-84c6-018f15276b1e&vscodeBrowserReqId=1770504421996 HTTP/1.1" 200 7343
+INFO 2026-02-08 04:47:04 log 14780 3044 "GET / HTTP/1.1" 200 8237
+INFO 2026-02-08 04:47:20 log 14780 3044 "GET / HTTP/1.1" 200 8237
+INFO 2026-02-08 04:47:20 log 14780 3056 "GET /static/js/theme.js HTTP/1.1" 304 0
+INFO 2026-02-08 04:47:29 autoreload 15036 9948 Watching for file changes with StatReloader
+INFO 2026-02-08 04:47:40 log 15036 16920 "GET /?id=d61d4cd7-857b-42f3-84c6-018f15276b1e&vscodeBrowserReqId=1770504460190 HTTP/1.1" 200 7343
+INFO 2026-02-08 04:48:04 autoreload 16844 16840 Watching for file changes with StatReloader
+INFO 2026-02-08 04:48:06 log 16844 16696 "GET / HTTP/1.1" 200 8237
+INFO 2026-02-08 04:48:06 log 16844 16696 "GET /static/js/theme.js HTTP/1.1" 304 0
+INFO 2026-02-08 04:48:11 log 16844 16696 "GET / HTTP/1.1" 200 8237
+INFO 2026-02-08 04:48:16 log 16844 16696 "GET /support/ HTTP/1.1" 200 23470
+INFO 2026-02-08 04:48:18 log 16844 16696 "GET / HTTP/1.1" 200 8237
+INFO 2026-02-08 04:48:19 log 16844 16696 "GET /categories/ HTTP/1.1" 200 5039
+INFO 2026-02-08 04:48:19 log 16844 16696 "GET /static/js/theme.js HTTP/1.1" 304 0
+INFO 2026-02-08 04:48:19 log 16844 16696 "GET /static/css/categories_list.css HTTP/1.1" 304 0
+INFO 2026-02-08 04:48:20 log 16844 16696 "GET /apps/ HTTP/1.1" 200 7495
+INFO 2026-02-08 04:48:20 log 16844 17124 "GET /static/css/app_list.css HTTP/1.1" 304 0
+INFO 2026-02-08 04:48:21 log 16844 16696 "GET / HTTP/1.1" 200 8237
+INFO 2026-02-08 04:48:22 log 16844 16696 "GET / HTTP/1.1" 200 8237
+INFO 2026-02-08 04:50:26 autoreload 6712 14504 Watching for file changes with StatReloader
+INFO 2026-02-08 04:50:26 log 16844 716 "GET / HTTP/1.1" 200 8237
+INFO 2026-02-08 04:50:26 log 16844 716 "GET /static/js/theme.js HTTP/1.1" 200 4540
+INFO 2026-02-08 04:50:33 log 16844 716 "GET / HTTP/1.1" 200 8237
+INFO 2026-02-08 04:50:33 log 16844 716 "GET /static/js/theme.js HTTP/1.1" 304 0
+INFO 2026-02-08 04:50:35 log 16844 716 "GET / HTTP/1.1" 200 8237
+INFO 2026-02-08 04:50:35 log 16844 716 "GET /static/js/theme.js HTTP/1.1" 304 0
+INFO 2026-02-08 04:50:39 log 16844 716 "GET / HTTP/1.1" 200 8237
+INFO 2026-02-08 04:50:39 log 16844 716 "GET /static/js/theme.js HTTP/1.1" 304 0
+INFO 2026-02-08 04:50:40 log 16844 716 "GET / HTTP/1.1" 200 8237
+INFO 2026-02-08 04:50:40 log 16844 716 "GET / HTTP/1.1" 200 8237
+INFO 2026-02-08 04:50:40 log 16844 716 "GET / HTTP/1.1" 200 8237
+INFO 2026-02-08 04:50:41 log 16844 716 "GET / HTTP/1.1" 200 8237
+INFO 2026-02-08 04:50:41 log 16844 16500 "GET /static/js/theme.js HTTP/1.1" 304 0
+INFO 2026-02-08 04:50:41 log 16844 716 "GET /categories/ HTTP/1.1" 200 5039
+INFO 2026-02-08 04:50:41 log 16844 16500 "GET /static/css/categories_list.css HTTP/1.1" 304 0
+INFO 2026-02-08 04:50:42 log 16844 716 "GET /apps/ HTTP/1.1" 200 7495
+INFO 2026-02-08 04:50:42 log 16844 16500 "GET /static/css/app_list.css HTTP/1.1" 304 0
+INFO 2026-02-08 04:50:45 log 16844 15116 "GET /?id=d61d4cd7-857b-42f3-84c6-018f15276b1e&vscodeBrowserReqId=1770504645620 HTTP/1.1" 200 7343
+INFO 2026-02-08 04:50:49 log 16844 15116 "GET /apps/upload/?id=d61d4cd7-857b-42f3-84c6-018f15276b1e&vscodeBrowserReqId=1770504649803 HTTP/1.1" 302 0
+INFO 2026-02-08 04:50:49 log 16844 15116 "GET /accounts/login/?next=/apps/upload/%3Fid%3Dd61d4cd7-857b-42f3-84c6-018f15276b1e%26vscodeBrowserReqId%3D1770504649803 HTTP/1.1" 200 4594
+INFO 2026-02-08 04:51:02 log 16844 716 "GET /apps/ HTTP/1.1" 200 7495
+INFO 2026-02-08 04:51:02 log 16844 16500 "GET /static/js/theme.js HTTP/1.1" 304 0
+INFO 2026-02-08 04:55:14 autoreload 15616 17352 Watching for file changes with StatReloader
+INFO 2026-02-08 04:55:17 log 16844 4720 "GET /apps/ HTTP/1.1" 200 7495
+INFO 2026-02-08 04:55:17 log 16844 16900 "GET /static/css/app_list.css HTTP/1.1" 304 0
+INFO 2026-02-08 04:55:17 log 16844 4720 "GET /static/js/theme.js HTTP/1.1" 200 1860
+INFO 2026-02-08 04:55:21 log 16844 4720 "GET /apps/ HTTP/1.1" 200 7495
+INFO 2026-02-08 04:55:37 log 16844 15116 "GET /?id=d61d4cd7-857b-42f3-84c6-018f15276b1e&vscodeBrowserReqId=1770504937765 HTTP/1.1" 200 7343
+INFO 2026-02-08 04:56:41 log 16844 4720 "GET /apps/ HTTP/1.1" 200 7495
+INFO 2026-02-08 04:56:41 log 16844 16900 "GET /static/js/theme.js HTTP/1.1" 200 4039
+INFO 2026-02-08 04:56:45 log 16844 4720 "GET /apps/ HTTP/1.1" 200 7495
+INFO 2026-02-08 04:56:45 log 16844 16900 "GET /static/js/theme.js HTTP/1.1" 304 0
+INFO 2026-02-08 04:56:59 log 16844 4720 "GET /apps/ HTTP/1.1" 200 7495
+WARNING 2026-02-08 04:56:59 log 16844 16900 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 04:57:00 log 16844 4720 "GET /apps/ HTTP/1.1" 200 7495
+WARNING 2026-02-08 04:57:00 log 16844 4720 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 04:57:08 log 16844 6420 "GET /admin-panel/apps/ HTTP/1.1" 200 20728
+WARNING 2026-02-08 04:57:08 log 16844 6420 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 04:57:11 log 16844 16332 "GET /admin-panel/dashboard/ HTTP/1.1" 200 27168
+WARNING 2026-02-08 04:57:11 log 16844 16332 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 04:57:15 log 16844 11392 "GET /admin-panel/dashboard/ HTTP/1.1" 200 27168
+WARNING 2026-02-08 04:57:15 log 16844 11392 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 04:57:23 log 16844 14112 "GET /admin-panel/dashboard/ HTTP/1.1" 200 27168
+WARNING 2026-02-08 04:57:23 log 16844 14112 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 04:57:57 log 16844 2428 "GET /admin-panel/dashboard/ HTTP/1.1" 200 27168
+WARNING 2026-02-08 04:57:57 log 16844 2428 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 04:58:35 log 16844 16748 "GET /admin-panel/apps/ HTTP/1.1" 200 12315
+WARNING 2026-02-08 04:58:35 log 16844 16748 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 04:58:41 log 16844 17220 "GET /admin-panel/apps/?q=&status=draft HTTP/1.1" 200 7449
+WARNING 2026-02-08 04:58:41 log 16844 17220 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 04:58:43 log 16844 11480 "GET /admin-panel/apps/ HTTP/1.1" 200 12315
+WARNING 2026-02-08 04:58:43 log 16844 11480 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 04:58:44 log 16844 10892 "GET /apps/upload/ HTTP/1.1" 200 15953
+WARNING 2026-02-08 04:58:44 log 16844 10892 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 04:58:44 log 16844 14308 "GET /static/css/app_detail.css HTTP/1.1" 200 1852
+INFO 2026-02-08 04:59:34 autoreload 16844 16840 C:\Users\juhan\Desktop\jndroid.store\backend\apps\urls.py changed, reloading.
+INFO 2026-02-08 04:59:35 autoreload 5976 8076 Watching for file changes with StatReloader
+INFO 2026-02-08 04:59:38 log 5976 17332 "GET /admin-panel/apps/ HTTP/1.1" 200 12315
+WARNING 2026-02-08 04:59:38 log 5976 17332 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 05:00:56 log 5976 16672 "GET /accounts/profile/ HTTP/1.1" 200 12555
+WARNING 2026-02-08 05:00:56 log 5976 16672 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 05:02:00 autoreload 5976 8076 C:\Users\juhan\Desktop\jndroid.store\backend\accounts\forms.py changed, reloading.
+INFO 2026-02-08 05:02:01 autoreload 32 8600 Watching for file changes with StatReloader
+INFO 2026-02-08 05:03:03 autoreload 32 8600 C:\Users\juhan\Desktop\jndroid.store\backend\accounts\views.py changed, reloading.
+INFO 2026-02-08 05:03:03 autoreload 14772 12096 Watching for file changes with StatReloader
+INFO 2026-02-08 05:03:19 autoreload 14772 12096 C:\Users\juhan\Desktop\jndroid.store\backend\accounts\views.py changed, reloading.
+INFO 2026-02-08 05:03:19 autoreload 14952 4400 Watching for file changes with StatReloader
+INFO 2026-02-08 05:03:23 autoreload 14952 4400 C:\Users\juhan\Desktop\jndroid.store\backend\accounts\urls.py changed, reloading.
+INFO 2026-02-08 05:03:24 autoreload 14700 1292 Watching for file changes with StatReloader
+INFO 2026-02-08 05:04:13 autoreload 14700 1292 C:\Users\juhan\Desktop\jndroid.store\backend\config\settings.py changed, reloading.
+INFO 2026-02-08 05:04:13 autoreload 17404 16456 Watching for file changes with StatReloader
+INFO 2026-02-08 05:09:53 log 17404 11732 "GET /accounts/profile/ HTTP/1.1" 200 12513
+WARNING 2026-02-08 05:09:53 log 17404 11732 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 05:09:55 log 17404 7996 "GET /accounts/password-reset/ HTTP/1.1" 302 0
+INFO 2026-02-08 05:09:55 log 17404 7996 "GET /accounts/profile/ HTTP/1.1" 200 12513
+WARNING 2026-02-08 05:09:55 log 17404 7996 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 05:09:59 log 17404 11296 "GET /accounts/password-reset/ HTTP/1.1" 302 0
+INFO 2026-02-08 05:09:59 log 17404 11296 "GET /accounts/profile/ HTTP/1.1" 200 12513
+WARNING 2026-02-08 05:09:59 log 17404 11296 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 05:10:04 log 17404 10188 "GET /accounts/password-reset/ HTTP/1.1" 302 0
+INFO 2026-02-08 05:10:04 log 17404 10188 "GET /accounts/profile/ HTTP/1.1" 200 12513
+WARNING 2026-02-08 05:10:04 log 17404 10188 "GET /static/js/theme.js HTTP/1.1" 404 1847
+WARNING 2026-02-08 05:10:04 log 17404 4724 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 05:10:09 log 17404 16604 "POST /accounts/logout/ HTTP/1.1" 302 0
+INFO 2026-02-08 05:10:09 log 17404 16604 "GET / HTTP/1.1" 200 7343
+WARNING 2026-02-08 05:10:09 log 17404 16604 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 05:10:11 log 17404 7968 "GET /accounts/login/ HTTP/1.1" 200 5085
+WARNING 2026-02-08 05:10:11 log 17404 5976 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 05:10:13 log 17404 7968 "GET /accounts/password-reset/ HTTP/1.1" 200 4525
+WARNING 2026-02-08 05:10:13 log 17404 7968 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 05:10:32 log 17404 16348 "GET /accounts/login/ HTTP/1.1" 200 4796
+WARNING 2026-02-08 05:10:33 log 17404 16348 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 05:10:37 log 17404 10464 "GET /accounts/signup/ HTTP/1.1" 200 5009
+WARNING 2026-02-08 05:10:37 log 17404 10464 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 05:11:31 log 17404 17276 "POST /accounts/signup/ HTTP/1.1" 200 5009
+WARNING 2026-02-08 05:11:31 log 17404 17276 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 05:11:35 log 17404 16596 "GET /accounts/login/ HTTP/1.1" 200 4796
+WARNING 2026-02-08 05:11:35 log 17404 16596 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 05:11:40 log 17404 11216 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2026-02-08 05:11:40 log 17404 11216 "GET / HTTP/1.1" 200 8232
+WARNING 2026-02-08 05:11:40 log 17404 11216 "GET /static/js/theme.js HTTP/1.1" 404 1847
+ERROR 2026-02-08 05:11:45 log 17404 13968 "GET /accounts/profile/ HTTP/1.1" 500 210841
+INFO 2026-02-08 05:12:21 autoreload 17404 16456 C:\Users\juhan\Desktop\jndroid.store\backend\accounts\urls.py changed, reloading.
+INFO 2026-02-08 05:12:22 autoreload 14460 16992 Watching for file changes with StatReloader
+ERROR 2026-02-08 05:12:24 log 14460 16288 "GET /accounts/profile/ HTTP/1.1" 500 210052
+ERROR 2026-02-08 05:12:25 log 14460 16288 "GET /accounts/profile/ HTTP/1.1" 500 210052
+INFO 2026-02-08 05:12:28 log 14460 16288 "POST /accounts/logout/ HTTP/1.1" 302 0
+INFO 2026-02-08 05:12:28 log 14460 16288 "GET / HTTP/1.1" 200 7343
+WARNING 2026-02-08 05:12:28 log 14460 16288 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 05:12:29 log 14460 15332 "GET /accounts/login/ HTTP/1.1" 200 4883
+WARNING 2026-02-08 05:12:29 log 14460 15332 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 05:12:32 log 14460 13972 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2026-02-08 05:12:32 log 14460 13972 "GET / HTTP/1.1" 200 8237
+WARNING 2026-02-08 05:12:32 log 14460 13972 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 05:12:33 log 14460 17336 "GET /accounts/profile/ HTTP/1.1" 200 12837
+WARNING 2026-02-08 05:12:33 log 14460 17336 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 05:14:27 autoreload 14460 16992 C:\Users\juhan\Desktop\jndroid.store\backend\accounts\forms.py changed, reloading.
+INFO 2026-02-08 05:14:28 autoreload 16712 7744 Watching for file changes with StatReloader
+INFO 2026-02-08 05:38:31 autoreload 16712 7744 C:\Users\juhan\Desktop\jndroid.store\backend\config\settings.py changed, reloading.
+INFO 2026-02-08 05:38:32 autoreload 13284 13276 Watching for file changes with StatReloader
+INFO 2026-02-08 05:38:38 autoreload 13284 13276 C:\Users\juhan\Desktop\jndroid.store\backend\config\settings.py changed, reloading.
+INFO 2026-02-08 05:38:39 autoreload 17364 7504 Watching for file changes with StatReloader
+INFO 2026-02-08 05:38:48 autoreload 17364 7504 C:\Users\juhan\Desktop\jndroid.store\backend\config\urls.py changed, reloading.
+INFO 2026-02-08 05:38:49 autoreload 11368 13712 Watching for file changes with StatReloader
+INFO 2026-02-08 05:38:54 autoreload 11368 13712 C:\Users\juhan\Desktop\jndroid.store\backend\accounts\views.py changed, reloading.
+INFO 2026-02-08 05:38:55 autoreload 16228 16140 Watching for file changes with StatReloader
+INFO 2026-02-08 05:41:21 autoreload 16228 16140 C:\Users\juhan\Desktop\jndroid.store\backend\config\settings.py changed, reloading.
+INFO 2026-02-08 05:41:21 autoreload 12844 12840 Watching for file changes with StatReloader
+INFO 2026-02-08 05:42:01 autoreload 12844 12840 C:\Users\juhan\Desktop\jndroid.store\backend\accounts\views.py changed, reloading.
+INFO 2026-02-08 05:42:02 autoreload 10704 5456 Watching for file changes with StatReloader
+INFO 2026-02-08 05:42:09 autoreload 10704 5456 C:\Users\juhan\Desktop\jndroid.store\backend\accounts\views.py changed, reloading.
+INFO 2026-02-08 05:42:11 autoreload 2860 11352 Watching for file changes with StatReloader
+INFO 2026-02-08 05:43:46 autoreload 2860 11352 C:\Users\juhan\Desktop\jndroid.store\backend\config\settings.py changed, reloading.
+INFO 2026-02-08 05:43:47 autoreload 2748 12596 Watching for file changes with StatReloader
+INFO 2026-02-08 05:44:40 autoreload 2748 12596 C:\Users\juhan\Desktop\jndroid.store\backend\config\settings.py changed, reloading.
+INFO 2026-02-08 05:44:41 autoreload 11704 15200 Watching for file changes with StatReloader
+INFO 2026-02-08 05:45:27 autoreload 15912 6420 Watching for file changes with StatReloader
+INFO 2026-02-08 05:50:39 log 11704 3840 "GET / HTTP/1.1" 200 8237
+WARNING 2026-02-08 05:50:39 log 11704 3840 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 05:50:41 log 11704 7656 "GET /accounts/profile/ HTTP/1.1" 200 12555
+WARNING 2026-02-08 05:50:41 log 11704 13720 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 05:50:46 log 11704 7656 "POST /accounts/logout/ HTTP/1.1" 302 0
+INFO 2026-02-08 05:50:46 log 11704 7656 "GET / HTTP/1.1" 200 7343
+WARNING 2026-02-08 05:50:47 log 11704 7656 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 05:50:48 log 11704 16332 "GET /accounts/signup/ HTTP/1.1" 200 5298
+WARNING 2026-02-08 05:50:48 log 11704 16332 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 05:50:50 log 11704 16484 "GET /accounts/signup/ HTTP/1.1" 200 5009
+WARNING 2026-02-08 05:50:50 log 11704 16484 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 05:51:01 log 11704 9660 "POST /accounts/signup/ HTTP/1.1" 200 5009
+WARNING 2026-02-08 05:51:01 log 11704 9660 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 05:54:29 autoreload 11704 15200 C:\Users\juhan\Desktop\jndroid.store\backend\accounts\apps.py changed, reloading.
+INFO 2026-02-08 05:54:29 autoreload 7696 4880 Watching for file changes with StatReloader
+INFO 2026-02-08 05:54:32 autoreload 7696 4880 C:\Users\juhan\Desktop\jndroid.store\backend\config\settings.py changed, reloading.
+INFO 2026-02-08 05:54:33 autoreload 9616 15948 Watching for file changes with StatReloader
+ERROR 2026-02-08 05:59:41 log 9616 864 "POST /accounts/signup/ HTTP/1.1" 500 193327
+ERROR 2026-02-08 05:59:50 log 9616 864 "POST /accounts/signup/ HTTP/1.1" 500 193327
+ERROR 2026-02-08 05:59:52 log 9616 864 "GET /accounts/signup/ HTTP/1.1" 500 192197
+ERROR 2026-02-08 05:59:53 log 9616 864 "GET /accounts/signup/ HTTP/1.1" 500 192197
+INFO 2026-02-08 05:59:56 log 9616 864 "GET / HTTP/1.1" 200 7343
+WARNING 2026-02-08 05:59:56 log 9616 864 "GET /static/js/theme.js HTTP/1.1" 404 1847
+ERROR 2026-02-08 05:59:58 log 9616 17348 "GET /accounts/signup/ HTTP/1.1" 500 192197
+ERROR 2026-02-08 06:00:00 log 9616 17348 "GET /accounts/signup/ HTTP/1.1" 500 192197
+INFO 2026-02-08 06:04:05 log 9616 13264 "GET /accounts/signup/ HTTP/1.1" 200 5419
+WARNING 2026-02-08 06:04:05 log 9616 13264 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 06:12:02 log 9616 15132 "GET /accounts/signup/ HTTP/1.1" 200 8999
+WARNING 2026-02-08 06:12:02 log 9616 15132 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 06:12:12 log 9616 14196 "GET /accounts/login/ HTTP/1.1" 200 7737
+WARNING 2026-02-08 06:12:12 log 9616 14196 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 06:12:14 log 9616 7504 "GET /accounts/signup/ HTTP/1.1" 200 8999
+WARNING 2026-02-08 06:12:14 log 9616 7504 "GET /static/js/theme.js HTTP/1.1" 404 1847
+ERROR 2026-02-08 06:13:10 log 9616 8584 "POST /accounts/signup/ HTTP/1.1" 500 90659
+INFO 2026-02-08 06:13:56 autoreload 9616 15948 C:\Users\juhan\Desktop\jndroid.store\backend\accounts\views.py changed, reloading.
+INFO 2026-02-08 06:13:57 autoreload 8756 12792 Watching for file changes with StatReloader
+INFO 2026-02-08 06:14:08 autoreload 8756 12792 C:\Users\juhan\Desktop\jndroid.store\backend\accounts\views.py changed, reloading.
+INFO 2026-02-08 06:14:09 autoreload 2416 13556 Watching for file changes with StatReloader
+INFO 2026-02-08 06:14:58 log 2416 15544 "GET /accounts/signup/ HTTP/1.1" 200 8999
+INFO 2026-02-08 06:15:01 log 2416 15544 "GET /accounts/signup/ HTTP/1.1" 200 8999
+WARNING 2026-02-08 06:15:01 log 2416 15544 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 06:15:06 log 2416 16348 "POST /accounts/signup/ HTTP/1.1" 200 9206
+WARNING 2026-02-08 06:15:06 log 2416 16348 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 06:15:24 log 2416 17220 "GET /accounts/login/ HTTP/1.1" 200 7737
+WARNING 2026-02-08 06:15:24 log 2416 17220 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 06:15:29 log 2416 15404 "POST /accounts/login/ HTTP/1.1" 302 0
+INFO 2026-02-08 06:15:29 log 2416 15404 "GET / HTTP/1.1" 200 8232
+WARNING 2026-02-08 06:15:29 log 2416 15404 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 06:15:38 log 2416 14912 "GET /admin-panel/dashboard/ HTTP/1.1" 200 27163
+WARNING 2026-02-08 06:15:38 log 2416 14912 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 06:15:40 log 2416 14532 "GET /admin-panel/users/ HTTP/1.1" 200 14223
+WARNING 2026-02-08 06:15:40 log 2416 14532 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 06:15:55 log 2416 16784 "GET /admin-panel/users/6/edit/ HTTP/1.1" 200 7329
+WARNING 2026-02-08 06:15:55 log 2416 16784 "GET /static/js/theme.js HTTP/1.1" 404 1847
+ERROR 2026-02-08 06:15:59 log 2416 9988 "POST /admin-panel/users/6/edit/ HTTP/1.1" 500 109493
+INFO 2026-02-08 06:16:15 log 2416 9988 "GET /admin-panel/users/6/edit/ HTTP/1.1" 200 7339
+INFO 2026-02-08 06:16:16 log 2416 9988 "GET /admin-panel/users/6/edit/ HTTP/1.1" 200 7048
+WARNING 2026-02-08 06:16:16 log 2416 9988 "GET /static/js/theme.js HTTP/1.1" 404 1847
+ERROR 2026-02-08 06:16:20 log 2416 3068 "POST /admin-panel/users/6/edit/ HTTP/1.1" 500 109493
+INFO 2026-02-08 06:16:21 log 2416 3068 "GET /admin-panel/users/6/edit/ HTTP/1.1" 200 7339
+INFO 2026-02-08 06:16:23 log 2416 3068 "GET /admin-panel/users/6/edit/ HTTP/1.1" 200 7048
+WARNING 2026-02-08 06:16:23 log 2416 3068 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 06:16:23 autoreload 2416 13556 C:\Users\juhan\Desktop\jndroid.store\backend\core\views.py changed, reloading.
+INFO 2026-02-08 06:16:24 autoreload 13532 12956 Watching for file changes with StatReloader
+INFO 2026-02-08 06:16:28 autoreload 13532 12956 C:\Users\juhan\Desktop\jndroid.store\backend\core\views.py changed, reloading.
+INFO 2026-02-08 06:16:29 autoreload 12720 14980 Watching for file changes with StatReloader
+INFO 2026-02-08 06:16:36 log 12720 10128 "GET /admin-panel/users/6/edit/ HTTP/1.1" 200 7048
+WARNING 2026-02-08 06:16:36 log 12720 10128 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 06:16:38 log 12720 17276 "POST /admin-panel/users/6/edit/ HTTP/1.1" 302 0
+INFO 2026-02-08 06:16:38 log 12720 17276 "GET /admin-panel/users/ HTTP/1.1" 200 14224
+WARNING 2026-02-08 06:16:38 log 12720 17276 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 06:16:39 autoreload 12720 14980 C:\Users\juhan\Desktop\jndroid.store\backend\core\views.py changed, reloading.
+INFO 2026-02-08 06:16:40 autoreload 13292 3164 Watching for file changes with StatReloader
+INFO 2026-02-08 06:16:42 autoreload 13292 3164 C:\Users\juhan\Desktop\jndroid.store\backend\core\views.py changed, reloading.
+INFO 2026-02-08 06:16:43 autoreload 888 17144 Watching for file changes with StatReloader
+WARNING 2026-02-08 06:16:44 log 888 8136 "POST /accounts/logout/ HTTP/1.1" 403 2503
+WARNING 2026-02-08 06:16:50 log 888 8136 "POST /accounts/logout/ HTTP/1.1" 403 2503
+INFO 2026-02-08 06:16:52 log 888 8136 "GET /admin-panel/apps/ HTTP/1.1" 200 12310
+WARNING 2026-02-08 06:16:52 log 888 8136 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 06:16:55 log 888 6668 "POST /accounts/logout/ HTTP/1.1" 302 0
+INFO 2026-02-08 06:16:55 log 888 6668 "GET / HTTP/1.1" 200 7343
+WARNING 2026-02-08 06:16:55 log 888 6668 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 06:16:56 log 888 13064 "GET /accounts/login/ HTTP/1.1" 200 8025
+WARNING 2026-02-08 06:16:57 log 888 2260 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 06:17:02 log 888 13064 "GET /accounts/signup/ HTTP/1.1" 200 8999
+WARNING 2026-02-08 06:17:02 log 888 13064 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 06:17:32 log 888 17268 "POST /accounts/signup/ HTTP/1.1" 302 0
+INFO 2026-02-08 06:17:32 log 888 17268 "GET /accounts/email-verification-sent/ HTTP/1.1" 200 8131
+WARNING 2026-02-08 06:17:32 log 888 17268 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 06:18:00 log 888 9336 "GET /accounts/confirm-email/NA:1vosUS:TTz31VY9bTgPqUWulTLLnEqHhEtilaJt_tggPxXOpnY/ HTTP/1.1" 302 0
+INFO 2026-02-08 06:18:00 log 888 9336 "GET / HTTP/1.1" 200 8237
+WARNING 2026-02-08 06:18:00 log 888 5908 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 06:18:00 log 888 9336 "GET /static/css/styles.css HTTP/1.1" 200 8259
+INFO 2026-02-08 06:18:00 log 888 14932 "GET /static/js/common.js HTTP/1.1" 200 1580
+INFO 2026-02-08 06:18:00 log 888 13864 "GET /static/css/home.css HTTP/1.1" 200 4066
+WARNING 2026-02-08 06:18:00 log 888 13864 "GET /favicon.ico HTTP/1.1" 404 4163
+INFO 2026-02-08 06:18:16 autoreload 888 17144 C:\Users\juhan\Desktop\jndroid.store\backend\accounts\apps.py changed, reloading.
+INFO 2026-02-08 06:18:17 autoreload 13760 15244 Watching for file changes with StatReloader
+INFO 2026-02-08 06:21:13 log 13760 9524 "GET /accounts/signup/ HTTP/1.1" 200 6790
+WARNING 2026-02-08 06:21:13 log 13760 824 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 06:21:13 log 13760 9524 "GET /static/css/styles.css HTTP/1.1" 200 8259
+INFO 2026-02-08 06:21:13 log 13760 15128 "GET /static/css/review_form.css HTTP/1.1" 200 2199
+INFO 2026-02-08 06:21:13 log 13760 6868 "GET /static/js/common.js HTTP/1.1" 200 1580
+WARNING 2026-02-08 06:21:13 log 13760 15128 "GET /favicon.ico HTTP/1.1" 404 4163
+INFO 2026-02-08 06:21:26 log 13760 9524 "GET /accounts/login/ HTTP/1.1" 200 7737
+WARNING 2026-02-08 06:21:26 log 13760 15128 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 06:21:30 log 13760 9524 "GET /accounts/signup/ HTTP/1.1" 200 6790
+WARNING 2026-02-08 06:21:30 log 13760 6868 "GET /static/js/theme.js HTTP/1.1" 404 1847
+INFO 2026-02-08 06:23:52 autoreload 13760 15244 C:\Users\juhan\Desktop\jndroid.store\backend\accounts\views.py changed, reloading.
+INFO 2026-02-08 06:23:53 autoreload 10736 12632 Watching for file changes with StatReloader
+INFO 2026-02-08 06:24:00 autoreload 10736 12632 C:\Users\juhan\Desktop\jndroid.store\backend\accounts\urls.py changed, reloading.
+INFO 2026-02-08 06:24:02 autoreload 1076 16936 Watching for file changes with StatReloader
+INFO 2026-02-08 06:25:40 autoreload 1076 16936 C:\Users\juhan\Desktop\jndroid.store\backend\accounts\views.py changed, reloading.
+INFO 2026-02-08 06:25:41 autoreload 13832 13524 Watching for file changes with StatReloader

@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Edit App - Admin{% endblock %}
+
+{% block content %}
+<div style="padding:20px; max-width:900px; margin:0 auto;">
+  <!-- Header -->
+  <div style="margin-bottom:32px;">
+    <a href="{% url 'admin_panel:apps_list' %}" style="display:inline-flex; align-items:center; gap:8px; color:#3b82f6; text-decoration:none; margin-bottom:20px; font-size:14px;">
+      &larr; Back to Apps
+    </a>
+    <h1 style="margin:0 0 8px; font-size:32px;">Edit App</h1>
+    <p style="color:var(--muted);">{{ app.title }} (ID: {{ app.pk }})</p>
+  </div>
+
+  <!-- Messages -->
+  {% if messages %}
+    <div style="margin-bottom:16px;">
+      {% for message in messages %}
+        <div style="padding:12px; border-radius:12px; margin-bottom:8px; background:rgba(34,197,94,0.15); border:1px solid rgba(34,197,94,0.3); color:rgba(34,197,94,0.9);">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Edit Form -->
+  <form method="post" style="display:grid; gap:24px;">
+    {% csrf_token %}
+
+    <!-- Basic Information -->
+    <div style="padding:20px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:12px;">
+      <h3 style="margin:0 0 20px; font-size:18px;">Basic Information</h3>
+      
+      <!-- Title -->
+      <div style="margin-bottom:16px;">
+        <label style="display:block; margin-bottom:8px; font-weight:500;">App Title *</label>
+        <input type="text" name="title" value="{{ app.title }}" required style="width:100%; padding:10px 12px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box; font-size:14px;">
+      </div>
+
+      <!-- Short Description -->
+      <div style="margin-bottom:16px;">
+        <label style="display:block; margin-bottom:8px; font-weight:500;">Short Description</label>
+        <input type="text" name="short_description" value="{{ app.short_description }}" placeholder="Brief one-liner description" style="width:100%; padding:10px 12px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box; font-size:14px;">
+      </div>
+
+      <!-- Full Description -->
+      <div style="margin-bottom:16px;">
+        <label style="display:block; margin-bottom:8px; font-weight:500;">Full Description</label>
+        <textarea name="description" rows="6" style="width:100%; padding:10px 12px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box; font-size:14px; font-family:inherit; resize:vertical;">{{ app.description }}</textarea>
+      </div>
+
+      <!-- Developer (Read-only) -->
+      <div style="margin-bottom:16px;">
+        <label style="display:block; margin-bottom:8px; font-weight:500;">Developer</label>
+        <input type="text" value="{{ app.owner.username }} ({{ app.owner.email }})" disabled style="width:100%; padding:10px 12px; background:rgba(255,255,255,0.02); border:1px solid var(--line); border-radius:8px; color:var(--muted); box-sizing:border-box; font-size:14px;">
+      </div>
+    </div>
+
+    <!-- Technical Details -->
+    <div style="padding:20px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:12px;">
+      <h3 style="margin:0 0 20px; font-size:18px;">Technical Details</h3>
+      
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:16px;">
+        <!-- Platform -->
+        <div>
+          <label style="display:block; margin-bottom:8px; font-weight:500;">Platform</label>
+          <select name="platform" style="width:100%; padding:10px 12px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box; font-size:14px;">
+            {% for value, label in platforms %}
+              <option value="{{ value }}" {% if app.platform == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Version -->
+        <div>
+          <label style="display:block; margin-bottom:8px; font-weight:500;">Version</label>
+          <input type="text" name="version" value="{{ app.version }}" placeholder="e.g., 1.0.0" style="width:100%; padding:10px 12px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box; font-size:14px;">
+        </div>
+
+        <!-- Size (MB) -->
+        <div>
+          <label style="display:block; margin-bottom:8px; font-weight:500;">Size (MB)</label>
+          <input type="number" name="size_mb" value="{{ app.size_mb }}" step="0.01" min="0" style="width:100%; padding:10px 12px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box; font-size:14px;">
+        </div>
+
+        <!-- Category (Read-only) -->
+        <div>
+          <label style="display:block; margin-bottom:8px; font-weight:500;">Category</label>
+          <input type="text" value="{{ app.category.name }}" disabled style="width:100%; padding:10px 12px; background:rgba(255,255,255,0.02); border:1px solid var(--line); border-radius:8px; color:var(--muted); box-sizing:border-box; font-size:14px;">
+        </div>
+      </div>
+
+      <!-- Download Link -->
+      <div style="margin-top:16px;">
+        <label style="display:block; margin-bottom:8px; font-weight:500;">Download Link (External)</label>
+        <input type="url" name="download_link" value="{{ app.download_link }}" placeholder="https://..." style="width:100%; padding:10px 12px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box; font-size:14px;">
+        <div style="font-size:12px; color:var(--muted); margin-top:4px;">Optional: Link to Google Play, App Store, or other download source</div>
+      </div>
+    </div>
+
+    <!-- Store Information -->
+    <div style="padding:20px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:12px;">
+      <h3 style="margin:0 0 20px; font-size:18px;">Store Information</h3>
+      
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:16px;">
+        <!-- Store Name -->
+        <div>
+          <label style="display:block; margin-bottom:8px; font-weight:500;">Store Name</label>
+          <input type="text" name="store_name" value="{{ app.store_name }}" placeholder="e.g., Google Play Store" style="width:100%; padding:10px 12px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box; font-size:14px;">
+        </div>
+
+        <!-- Store Email -->
+        <div>
+          <label style="display:block; margin-bottom:8px; font-weight:500;">Store Email</label>
+          <input type="email" name="store_email" value="{{ app.store_email }}" placeholder="store@example.com" style="width:100%; padding:10px 12px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box; font-size:14px;">
+        </div>
+      </div>
+    </div>
+
+    <!-- Media -->
+    <div style="padding:20px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:12px;">
+      <h3 style="margin:0 0 20px; font-size:18px;">Media</h3>
+      
+      <!-- Cover Image -->
+      <div style="margin-bottom:16px;">
+        <label style="display:block; margin-bottom:8px; font-weight:500;">Cover Image</label>
+        {% if app.cover_image %}
+          <div style="margin-bottom:12px;">
+            <img src="{{ app.cover_image.url }}" style="max-width:200px; max-height:300px; border-radius:8px; border:1px solid var(--line);">
+          </div>
+        {% endif %}
+        <input type="file" name="cover_image" accept="image/*" style="width:100%; padding:10px 12px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box; font-size:14px;">
+        <div style="font-size:12px; color:var(--muted); margin-top:4px;">Leave empty to keep current image</div>
+      </div>
+
+      <!-- APK File Info (Read-only) -->
+      {% if app.apk_file %}
+        <div>
+          <label style="display:block; margin-bottom:8px; font-weight:500;">APK File (Read-only)</label>
+          <input type="text" value="{{ app.apk_file.name }}" disabled style="width:100%; padding:10px 12px; background:rgba(255,255,255,0.02); border:1px solid var(--line); border-radius:8px; color:var(--muted); box-sizing:border-box; font-size:14px;">
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Publish Status -->
+    <div style="padding:20px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:12px;">
+      <h3 style="margin:0 0 20px; font-size:18px;">Publish Status</h3>
+      
+      <label style="display:flex; align-items:center; gap:12px; cursor:pointer; padding:16px; background:rgba(255,255,255,0.02); border:1px solid var(--line); border-radius:8px;">
+        <input type="checkbox" name="is_published" {% if app.is_published %}checked{% endif %} style="width:20px; height:20px; cursor:pointer; accent-color:#3b82f6;">
+        <div>
+          <div style="font-weight:500; font-size:15px;">Publish this app</div>
+          <div style="color:var(--muted); font-size:13px; margin-top:2px;">
+            {% if app.is_published %}
+              This app is currently visible to all users
+            {% else %}
+              This app is in draft mode and not visible to users
+            {% endif %}
+          </div>
+        </div>
+      </label>
+    </div>
+
+    <!-- Statistics (Read-only) -->
+    <div style="padding:20px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:12px;">
+      <h3 style="margin:0 0 20px; font-size:18px;">App Statistics</h3>
+      
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:16px;">
+        <div style="padding:12px; background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.2); border-radius:8px;">
+          <div style="font-size:24px; font-weight:bold; color:#3b82f6;">{{ app.downloads }}</div>
+          <div style="color:var(--muted); font-size:13px; margin-top:4px;">Total Downloads</div>
+        </div>
+        <div style="padding:12px; background:rgba(249,115,22,0.1); border:1px solid rgba(249,115,22,0.2); border-radius:8px;">
+          <div style="font-size:24px; font-weight:bold; color:#f97316;">{{ app.reviews.count }}</div>
+          <div style="color:var(--muted); font-size:13px; margin-top:4px;">Total Reviews</div>
+        </div>
+        <div style="padding:12px; background:rgba(251,191,36,0.1); border:1px solid rgba(251,191,36,0.2); border-radius:8px;">
+          <div style="font-size:24px; font-weight:bold; color:#fbbf24;">★ 4.5</div>
+          <div style="color:var(--muted); font-size:13px; margin-top:4px;">Average Rating</div>
+        </div>
+        <div style="padding:12px; background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.2); border-radius:8px;">
+          <div style="font-size:24px; font-weight:bold; color:#22c55e;">{{ app.created_at|date:"M d, Y" }}</div>
+          <div style="color:var(--muted); font-size:13px; margin-top:4px;">Uploaded</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div style="display:flex; gap:12px; margin-top:32px;">
+      <button type="submit" style="padding:12px 24px; background:#3b82f6; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:500; font-size:14px;">
+        Save Changes
+      </button>
+      <a href="{% url 'admin_panel:apps_list' %}" style="padding:12px 24px; background:rgba(255,255,255,0.04); color:var(--text); border:1px solid var(--line); border-radius:8px; text-decoration:none; font-weight:500; font-size:14px;">
+        Cancel
+      </a>
+      <form method="post" action="{% url 'admin_panel:mark_app_for_deletion' pk=app.pk %}" style="display:inline; margin-left:auto;">
+        {% csrf_token %}
+        <button type="button" onclick="openDeleteModal(this.closest('form'), '{{ app.title }}')" style="padding:12px 24px; background:rgba(251,113,133,0.15); color:rgba(251,113,133,0.9); border:1px solid rgba(251,113,133,0.3); border-radius:8px; cursor:pointer; font-weight:500; font-size:14px;">
+          Delete App
+        </button>
+      </form>
+    </div>
+  </form>
+</div>
+
+<!-- Delete Modal -->
+{% include "admin/delete_modal.html" %}
+
+{% endblock %}

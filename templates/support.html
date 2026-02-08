@@ -1,0 +1,671 @@
+{% extends "base.html" %}
+
+{% block title %}Support & Community Guidelines - JN App Store{% endblock %}
+
+{% block content %}
+<style>
+  :root {
+    --primary: #007BFF;
+    --danger: #DC3545;
+    --success: #28A745;
+    --warning: #FFC107;
+    --info: #17A2B8;
+    --bg: #F8F9FA;
+    --bg-secondary: #E9ECEF;
+    --text: #212529;
+    --muted: #6C757D;
+    --line: #DEE2E6;
+    --radius: 8px;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .hero {
+    background: linear-gradient(135deg, var(--primary), #0056b3);
+    color: white;
+    padding: 60px 20px;
+    border-radius: var(--radius);
+    text-align: center;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  .hero h1 {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .hero p {
+    font-size: 18px;
+    opacity: 0.95;
+  }
+
+  .section {
+    background: white;
+    padding: 30px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    margin-bottom: 30px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+
+  .section-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid var(--primary);
+    color: var(--text);
+  }
+
+  .subsection-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 20px;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  .guidelines-list {
+    list-style: none;
+  }
+
+  .guideline-item {
+    padding: 16px;
+    margin-bottom: 12px;
+    background: var(--bg);
+    border-left: 4px solid var(--primary);
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+
+  .guideline-item:hover {
+    background: #e8f0ff;
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
+  }
+
+  .guideline-item strong {
+    color: var(--primary);
+    display: block;
+    margin-bottom: 4px;
+    font-size: 15px;
+  }
+
+  .guideline-item p {
+    color: var(--text);
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .faq-item {
+    margin-bottom: 16px;
+    padding: 16px;
+    background: var(--bg);
+    border-radius: 4px;
+    border-left: 4px solid var(--success);
+  }
+
+  .faq-question {
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+    font-size: 15px;
+  }
+
+  .faq-answer {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .contact-box {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .contact-card {
+    background: var(--bg);
+    padding: 20px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    text-align: center;
+    transition: all 0.2s;
+  }
+
+  .contact-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-color: var(--primary);
+  }
+
+  .contact-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+  }
+
+  .contact-card h3 {
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .contact-card p {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .contact-card a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: 8px;
+    display: inline-block;
+  }
+
+  .contact-card a:hover {
+    text-decoration: underline;
+  }
+
+  .do-box {
+    background: #d4edda;
+    border-left: 4px solid var(--success);
+    padding: 16px;
+    border-radius: 4px;
+    margin: 12px 0;
+  }
+
+  .do-box strong {
+    color: #155724;
+  }
+
+  .do-box p {
+    color: #155724;
+    margin: 0;
+  }
+
+  .dont-box {
+    background: #f8d7da;
+    border-left: 4px solid var(--danger);
+    padding: 16px;
+    border-radius: 4px;
+    margin: 12px 0;
+  }
+
+  .dont-box strong {
+    color: #721c24;
+  }
+
+  .dont-box p {
+    color: #721c24;
+    margin: 0;
+  }
+
+  .btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 16px;
+  }
+
+  .btn-primary {
+    background: var(--primary);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: #0056b3;
+  }
+
+  .btn-secondary {
+    background: var(--bg-secondary);
+    color: var(--text);
+    border: 1px solid var(--line);
+  }
+
+  .btn-secondary:hover {
+    background: #d3d4d8;
+  }
+
+  .breadcrumb {
+    margin-bottom: 30px;
+  }
+
+  .breadcrumb a {
+    color: var(--primary);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .breadcrumb span {
+    color: var(--muted);
+    margin: 0 8px;
+  }
+
+  .toc {
+    background: var(--bg);
+    padding: 20px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    margin-bottom: 30px;
+  }
+
+  .toc h3 {
+    font-size: 16px;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  .toc ul {
+    list-style: none;
+  }
+
+  .toc li {
+    margin-bottom: 8px;
+  }
+
+  .toc a {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+  .toc a:hover {
+    text-decoration: underline;
+  }
+
+  .info-alert {
+    background: #cfe2ff;
+    border-left: 4px solid var(--info);
+    padding: 16px;
+    border-radius: 4px;
+    margin: 20px 0;
+  }
+
+  .info-alert p {
+    color: #084298;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 16px;
+    }
+
+    .hero {
+      padding: 40px 20px;
+    }
+
+    .hero h1 {
+      font-size: 26px;
+    }
+
+    .hero p {
+      font-size: 16px;
+    }
+
+    .section {
+      padding: 20px;
+    }
+
+    .section-title {
+      font-size: 22px;
+    }
+
+    .contact-box {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="container">
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a href="{% url 'home' %}">🏠 Home</a>
+    <span>/</span>
+    <span>Support & Guidelines</span>
+  </div>
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <h1>🤝 Support & Community Guidelines</h1>
+    <p>Build a better community together. Follow our guidelines to keep JN App Store safe and welcoming.</p>
+  </div>
+
+  <!-- Table of Contents -->
+  <div class="toc">
+    <h3>📑 Quick Navigation</h3>
+    <ul>
+      <li><a href="#community">Community Standards</a></li>
+      <li><a href="#app-guidelines">App Developer Guidelines</a></li>
+      <li><a href="#content-policy">Content Policy</a></li>
+      <li><a href="#security">Security & Privacy</a></li>
+      <li><a href="#reporting">Reporting Issues</a></li>
+      <li><a href="#faq">Frequently Asked Questions</a></li>
+      <li><a href="{% url 'community_guidelines' %}">📖 Full Community Guidelines</a></li>
+      <li><a href="#contact">Contact Support</a></li>
+    </ul>
+  </div>
+
+  <!-- Community Standards -->
+  <div class="section" id="community">
+    <h2 class="section-title">🌟 Community Standards</h2>
+    <p>To maintain a positive and respectful community, all members must follow these standards:</p>
+
+    <ul class="guidelines-list">
+      <li class="guideline-item">
+        <strong>✅ Be Respectful</strong>
+        <p>Treat all community members with courtesy and respect. Disagreements are okay, but personal attacks are not.</p>
+      </li>
+      <li class="guideline-item">
+        <strong>✅ No Spam or Harassment</strong>
+        <p>Don't post repetitive messages, unsolicited advertising, or harassing content. Respect others' time and privacy.</p>
+      </li>
+      <li class="guideline-item">
+        <strong>✅ Authentic Feedback</strong>
+        <p>Provide honest and constructive reviews. Help developers improve by giving detailed feedback.</p>
+      </li>
+      <li class="guideline-item">
+        <strong>✅ No Illegal Content</strong>
+        <p>Don't share or promote illegal content, malware, or anything that violates laws.</p>
+      </li>
+      <li class="guideline-item">
+        <strong>✅ Protect Privacy</strong>
+        <p>Never share personal information of others without consent. Report any privacy violations.</p>
+      </li>
+      <li class="guideline-item">
+        <strong>✅ Stay On Topic</strong>
+        <p>Keep discussions relevant to the app or category. Use appropriate channels for different topics.</p>
+      </li>
+    </ul>
+  </div>
+
+  <!-- App Developer Guidelines -->
+  <div class="section" id="app-guidelines">
+    <h2 class="section-title">👨‍💻 App Developer Guidelines</h2>
+    <p>Guidelines for uploading and maintaining apps on JN App Store:</p>
+
+    <div class="subsection-title">DO's:</div>
+    <div class="do-box">
+      <strong>✓ Provide Clear Descriptions</strong>
+      <p>Write detailed app descriptions so users understand what your app does and its features.</p>
+    </div>
+    <div class="do-box">
+      <strong>✓ Keep Apps Updated</strong>
+      <p>Regularly update your apps with bug fixes, improvements, and new features. Maintain version history.</p>
+    </div>
+    <div class="do-box">
+      <strong>✓ Respond to Reviews</strong>
+      <p>Engage with user feedback. Address issues, thank reviewers, and ask for specific feedback on improvements.</p>
+    </div>
+    <div class="do-box">
+      <strong>✓ Use Accurate Metadata</strong>
+      <p>Ensure app title, category, size, and version information are accurate and up-to-date.</p>
+    </div>
+    <div class="do-box">
+      <strong>✓ Transparent About Permissions</strong>
+      <p>Clearly state what permissions your app requires and why. Be transparent about data usage.</p>
+    </div>
+
+    <div class="subsection-title">DON'Ts:</div>
+    <div class="dont-box">
+      <strong>✗ No Misleading Information</strong>
+      <p>Don't use screenshots or descriptions that misrepresent your app's functionality.</p>
+    </div>
+    <div class="dont-box">
+      <strong>✗ No Malware or Spyware</strong>
+      <p>Your app must not contain malware, spyware, or any code that harms user devices or steals data.</p>
+    </div>
+    <div class="dont-box">
+      <strong>✗ No Excessive Ads</strong>
+      <p>Ads should enhance user experience, not overwhelm it. Disclose ad practices clearly.</p>
+    </div>
+    <div class="dont-box">
+      <strong>✗ No Copyright Infringement</strong>
+      <p>Don't use copyrighted content without proper permission or licensing.</p>
+    </div>
+    <div class="dont-box">
+      <strong>✗ No Hateful or Offensive Content</strong>
+      <p>Apps must not contain content that promotes hate, discrimination, or violence.</p>
+    </div>
+  </div>
+
+  <!-- Content Policy -->
+  <div class="section" id="content-policy">
+    <h2 class="section-title">📋 Content Policy</h2>
+
+    <div class="subsection-title">Prohibited Content:</div>
+    <ul class="guidelines-list">
+      <li class="guideline-item">
+        <strong>Illegal Activities</strong>
+        <p>Apps or content related to illegal activities, including drug manufacturing, distribution, or use.</p>
+      </li>
+      <li class="guideline-item">
+        <strong>Hate Speech & Discrimination</strong>
+        <p>Content promoting hatred based on race, ethnicity, religion, gender, sexual orientation, or disability.</p>
+      </li>
+      <li class="guideline-item">
+        <strong>Violence & Harm</strong>
+        <p>Content that encourages or glorifies violence, self-harm, or dangerous activities.</p>
+      </li>
+      <li class="guideline-item">
+        <strong>Sexual Content</strong>
+        <p>Explicit sexual content, non-consensual intimate images, or child sexual abuse material.</p>
+      </li>
+      <li class="guideline-item">
+        <strong>Fraud & Scams</strong>
+        <p>Content designed to defraud, deceive, or scam users.</p>
+      </li>
+      <li class="guideline-item">
+        <strong>Misinformation</strong>
+        <p>Deliberately false or misleading information that could cause harm.</p>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Security & Privacy -->
+  <div class="section" id="security">
+    <h2 class="section-title">🔒 Security & Privacy</h2>
+
+    <div class="subsection-title">For Users:</div>
+    <ul class="guidelines-list">
+      <li class="guideline-item">
+        <strong>Verify Before Installing</strong>
+        <p>Check app reviews, permissions, and developer information before installation. Download only from trusted sources.</p>
+      </li>
+      <li class="guideline-item">
+        <strong>Report Suspicious Apps</strong>
+        <p>If an app seems malicious or violates policies, report it immediately to our moderation team.</p>
+      </li>
+      <li class="guideline-item">
+        <strong>Keep Your Device Secure</strong>
+        <p>Use strong passwords, enable two-factor authentication, and keep your device updated.</p>
+      </li>
+      <li class="guideline-item">
+        <strong>Protect Your Data</strong>
+        <p>Never share sensitive information like passwords or payment details in reviews or messages.</p>
+      </li>
+    </ul>
+
+    <div class="subsection-title">For Developers:</div>
+    <ul class="guidelines-list">
+      <li class="guideline-item">
+        <strong>Data Protection</strong>
+        <p>Protect user data with encryption and secure practices. Have a clear privacy policy.</p>
+      </li>
+      <li class="guideline-item">
+        <strong>Minimal Permissions</strong>
+        <p>Request only necessary permissions. Explain why each permission is needed.</p>
+      </li>
+      <li class="guideline-item">
+        <strong>Secure Updates</strong>
+        <p>Provide security updates promptly when vulnerabilities are discovered.</p>
+      </li>
+      <li class="guideline-item">
+        <strong>Transparency</strong>
+        <p>Be transparent about data collection, third-party services, and analytics usage.</p>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Reporting Issues -->
+  <div class="section" id="reporting">
+    <h2 class="section-title">🚩 Reporting Issues</h2>
+    
+    <div class="info-alert">
+      <p><strong>ℹ️ Found a problem?</strong> We take violations seriously and act quickly on reports. Your feedback helps us maintain a safe community.</p>
+    </div>
+
+    <p><strong>What you can report:</strong></p>
+    <ul class="guidelines-list">
+      <li class="guideline-item">
+        <strong>Malicious Apps</strong>
+        <p>Apps containing malware, spyware, or attempting to harm devices or steal data.</p>
+      </li>
+      <li class="guideline-item">
+        <strong>Policy Violations</strong>
+        <p>Apps or reviews violating community standards or content policies.</p>
+      </li>
+      <li class="guideline-item">
+        <strong>Spam & Abuse</strong>
+        <p>Repetitive messages, fake reviews, or harassing behavior.</p>
+      </li>
+      <li class="guideline-item">
+        <strong>Copyright Issues</strong>
+        <p>Apps or content infringing on intellectual property rights.</p>
+      </li>
+      <li class="guideline-item">
+        <strong>Security Vulnerabilities</strong>
+        <p>Discovered security flaws or privacy concerns in apps.</p>
+      </li>
+    </ul>
+
+    <p style="margin-top: 20px;"><strong>How to Report:</strong></p>
+    <ol style="margin-left: 20px;">
+      <li>Click the app or review you want to report</li>
+      <li>Look for the "Report" or "Flag" button</li>
+      <li>Select the reason for reporting</li>
+      <li>Provide detailed information and submit</li>
+      <li>Our team will review and take appropriate action</li>
+    </ol>
+  </div>
+
+  <!-- FAQ -->
+  <div class="section" id="faq">
+    <h2 class="section-title">❓ Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-question">Q: How long does app review take?</div>
+      <div class="faq-answer">A: Most apps are reviewed within 24-48 hours. Complex apps may take longer. We'll notify you via email when your app is approved or rejected.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Q: Can I appeal a rejected app?</div>
+      <div class="faq-answer">A: Yes! If your app is rejected, we'll explain why. You can fix the issues and resubmit. Contact support if you believe the rejection was incorrect.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Q: How do I update my app?</div>
+      <div class="faq-answer">A: Log in to your dashboard, go to "My Apps," select the app, and upload the new version. You can add version notes and release information.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Q: Is it free to upload apps?</div>
+      <div class="faq-answer">A: Yes! JN App Store is free for developers. You can upload unlimited apps without any fees.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Q: How can I report a suspicious app?</div>
+      <div class="faq-answer">A: Use the report button on the app page. Select "Malicious/Spyware" and provide details. Our moderation team investigates reports promptly.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Q: Why was my review deleted?</div>
+      <div class="faq-answer">A: Reviews violating community standards are removed. This includes spam, hate speech, or off-topic content. Read our guidelines to ensure your reviews comply.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Q: How do I delete my account?</div>
+      <div class="faq-answer">A: Go to your account settings and select "Delete Account." Note: This will remove all your data and apps cannot be recovered.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question">Q: Is my data safe on JN App Store?</div>
+      <div class="faq-answer">A: Yes! We use industry-standard encryption and security practices. Read our Privacy Policy for details on data handling.</div>
+    </div>
+  </div>
+
+  <!-- Contact Support -->
+  <div class="section" id="contact">
+    <h2 class="section-title">📞 Contact & Support</h2>
+    <p>Can't find your answer? Reach out to our support team. We're here to help!</p>
+
+    <div class="contact-box">
+      <div class="contact-card">
+        <div class="contact-icon">📧</div>
+        <h3>Email Support</h3>
+        <p>Send us your questions or concerns</p>
+        <a href="mailto:support@jnappstore.com">support@jnappstore.com</a>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-icon">💬</div>
+        <h3>Live Chat</h3>
+        <p>Chat with our team in real-time</p>
+        <a href="#">Start Chat</a>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-icon">🐛</div>
+        <h3>Report a Bug</h3>
+        <p>Found a bug? Help us improve</p>
+        <a href="{% url 'report_bug' %}">Report Bug</a>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-icon">❤️</div>
+        <h3>Feedback</h3>
+        <p>Share your suggestions and ideas</p>
+        <a href="#">Send Feedback</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Info -->
+  <div class="section">
+    <p style="color: var(--muted); font-size: 14px; text-align: center;">
+      Last updated: February 2, 2026<br>
+      <a href="{% url 'home' %}" style="color: var(--primary); text-decoration: none;">← Back to Home</a>
+    </p>
+  </div>
+</div>
+
+{% endblock %}

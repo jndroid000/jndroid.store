@@ -1,0 +1,15 @@
+{% autoescape off %}
+ডিয়ার {{ user.first_name|default:user.username }},
+
+আপনার JN App Store অ্যাকাউন্ট যাচাই করতে নিম্নলিখিত লিঙ্কটি ক্লিক করুন:
+
+{{ activate_url }}
+
+এই লিঙ্কটি ৭ দিনের মধ্যে মেয়াদ উত্তীর্ণ হবে।
+
+যদি আপনি এই অ্যাকাউন্ট তৈরি করেননি, তাহলে এই ইমেইল অনুকূল করুন।
+
+---
+My Project Team
+support@jnappstore.com
+{% endautoescape %}

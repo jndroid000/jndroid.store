@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}ইমেইল যাচাইকরণ সফল - JN App Store{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/review_form.css' %}">{% endblock %}
+
+{% block content %}
+<div class="reviewFormContainer" style="max-width: 600px;">
+  <div style="text-align: center; margin-bottom: 40px;">
+    <div style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--brand2), #22c55e); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; box-shadow: 0 18px 40px rgba(34, 197, 94, 0.25);">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+        <path d="M20 6L9 17l-5-5"/>
+      </svg>
+    </div>
+    <h1 style="margin: 0 0 12px; color: var(--text); font-size: 28px; font-weight: 600;">ইমেইল যাচাইকরণ সফল!</h1>
+    <p style="color: var(--muted); margin: 0; font-size: 15px;">আপনার অ্যাকাউন্ট সক্রিয় হয়েছে এবং সম্পূর্ণভাবে যাচাই করা হয়েছে।</p>
+  </div>
+
+  <div style="background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 32px 24px; margin-bottom: 24px;">
+    <div style="display: flex; align-items: center; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--line);">
+      <div style="width: 44px; height: 44px; background: rgba(34, 197, 94, 0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 16px;">
+        <span style="font-size: 20px;">✓</span>
+      </div>
+      <div>
+        <div style="color: var(--text); font-weight: 500; font-size: 14px;">ইমেইল যাচাইকৃত</div>
+        <div style="color: var(--muted); font-size: 13px; margin-top: 2px;">{{ email }}</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 24px;">
+      <h3 style="color: var(--text); font-size: 14px; font-weight: 600; margin: 0 0 12px;">আপনার অ্যাকাউন্ট এখন প্রস্তুত। আপনি এখন:</h3>
+      <ul style="margin: 0; padding: 0; list-style: none; color: var(--muted); font-size: 14px;">
+        <li style="margin-bottom: 8px; display: flex; align-items: center;">
+          <span style="color: var(--brand2); font-weight: 600; margin-right: 8px;">✓</span>
+          অ্যাপ স্টোরে লগইন করতে পারবেন
+        </li>
+        <li style="margin-bottom: 8px; display: flex; align-items: center;">
+          <span style="color: var(--brand2); font-weight: 600; margin-right: 8px;">✓</span>
+          আপনার অ্যাপ আপলোড করতে পারবেন
+        </li>
+        <li style="margin-bottom: 8px; display: flex; align-items: center;">
+          <span style="color: var(--brand2); font-weight: 600; margin-right: 8px;">✓</span>
+          কমিউনিটিতে রিভিউ যোগ করতে পারবেন
+        </li>
+        <li style="display: flex; align-items: center;">
+          <span style="color: var(--brand2); font-weight: 600; margin-right: 8px;">✓</span>
+          শীঘ্রই ডিভেলপার প্যানেল অ্যাক্সেস পাবেন
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+    {% if next_url %}
+      <a href="{{ next_url }}" class="btn primary" style="flex: 1; display: block; text-align: center; padding: 12px 24px; background: linear-gradient(135deg, var(--brand), #4f46e5); color: white; border-radius: 12px; text-decoration: none; font-weight: 600; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 18px 40px rgba(124,92,255,0.25); transition: opacity 0.2s;">আপনার প্রোফাইলে যান</a>
+    {% else %}
+      <a href="{% url 'accounts:profile' %}" class="btn primary" style="flex: 1; display: block; text-align: center; padding: 12px 24px; background: linear-gradient(135deg, var(--brand), #4f46e5); color: white; border-radius: 12px; text-decoration: none; font-weight: 600; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 18px 40px rgba(124,92,255,0.25); transition: opacity 0.2s;">আপনার প্রোফাইলে যান</a>
+    {% endif %}
+    <a href="/" class="btn secondary" style="flex: 1; display: block; text-align: center; padding: 12px 24px; background: var(--card); color: var(--text); border: 1px solid var(--line); border-radius: 12px; text-decoration: none; font-weight: 600; transition: background 0.2s;">হোমে ফিরুন</a>
+  </div>
+
+  <div style="background: rgba(124, 92, 255, 0.08); border: 1px solid rgba(124, 92, 255, 0.2); border-radius: 12px; padding: 16px; text-align: center; color: var(--muted); font-size: 13px;">
+    💡 টিপ: আপনার বন্ধুদের JN App Store এ আমন্ত্রণ জানান এবং একসাথে অ্যাপ আবিষ্কার করুন।
+  </div>
+</div>
+{% endblock %}

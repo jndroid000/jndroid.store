@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Create User - Admin{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/review_form.css' %}">{% endblock %}
+
+{% block content %}
+<div style="padding:20px; max-width:600px; margin:0 auto;">
+  <!-- Header -->
+  <div style="margin-bottom:32px;">
+    <a href="{% url 'admin_panel:users_list' %}" style="display:inline-flex; align-items:center; gap:8px; color:#3b82f6; text-decoration:none; margin-bottom:20px;">
+      <span>←</span> Back to Users
+    </a>
+    <h1 style="margin:0 0 8px; font-size:32px;">Create New User</h1>
+  </div>
+
+  <!-- Messages -->
+  {% if messages %}
+    <div style="margin-bottom:16px;">
+      {% for message in messages %}
+        <div style="padding:12px; border-radius:12px; margin-bottom:8px; background:rgba({% if message.tags == 'error' %}251,113,133{% else %}34,197,94{% endif %},0.15); border:1px solid rgba({% if message.tags == 'error' %}251,113,133{% else %}34,197,94{% endif %},0.3); color:rgba({% if message.tags == 'error' %}251,113,133{% else %}34,197,94{% endif %},0.9);">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Form -->
+  <form method="post" class="reviewForm">
+    {% csrf_token %}
+    
+    <div class="formGroup">
+      <label for="username">Username *</label>
+      <input type="text" name="username" id="username" placeholder="Enter username" required style="width:100%; padding:10px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box;">
+    </div>
+
+    <div class="formGroup">
+      <label for="email">Email Address *</label>
+      <input type="email" name="email" id="email" placeholder="user@example.com" required style="width:100%; padding:10px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box;">
+    </div>
+
+    <div class="formGroup">
+      <label for="password">Password *</label>
+      <input type="password" name="password" id="password" placeholder="Enter a strong password" required style="width:100%; padding:10px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box;">
+      <p style="color:var(--muted); font-size:13px; margin:4px 0 0;">Min 8 characters recommended</p>
+    </div>
+
+    <div class="formGroup">
+      <label for="first_name">First Name</label>
+      <input type="text" name="first_name" id="first_name" placeholder="Optional" style="width:100%; padding:10px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box;">
+    </div>
+
+    <div class="formGroup">
+      <label for="last_name">Last Name</label>
+      <input type="text" name="last_name" id="last_name" placeholder="Optional" style="width:100%; padding:10px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box;">
+    </div>
+
+    <div class="formGroup">
+      <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+        <input type="checkbox" name="is_staff" style="width:18px; height:18px; cursor:pointer;">
+        <span>Make this user an admin</span>
+      </label>
+    </div>
+
+    <div style="display:flex; gap:12px; margin-top:32px;">
+      <button type="submit" class="btn primary" style="flex:1; padding:12px;">Create User</button>
+      <a href="{% url 'admin_panel:users_list' %}" class="btn secondary" style="flex:1; padding:12px; text-align:center; text-decoration:none;">Cancel</a>
+    </div>
+  </form>
+</div>
+
+<style>
+  .formGroup {
+    margin-bottom: 24px;
+  }
+  .formGroup label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 14px;
+  }
+</style>
+{% endblock %}

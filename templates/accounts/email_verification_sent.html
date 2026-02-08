@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}ইমেইল যাচাইকরণ - JN App Store{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/review_form.css' %}">
+<style>
+  .verificationContainer {
+    max-width: 520px;
+    margin: 40px auto;
+    padding: 0 16px;
+  }
+  
+  .verificationCard {
+    background: var(--card-bg, #fff);
+    border-radius: 16px;
+    padding: 40px 32px;
+    border: 1px solid var(--border, #e5e7eb);
+    text-align: center;
+  }
+  
+  .verificationIcon {
+    font-size: 56px;
+    margin-bottom: 20px;
+    animation: bounce 2s infinite;
+  }
+  
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  
+  .verificationCard h1 {
+    font-size: 26px;
+    margin: 0 0 12px;
+    color: #1f2937;
+  }
+  
+  .verificationCard p {
+    color: #6b7280;
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  
+  .stepsBox {
+    background: rgba(59, 130, 246, 0.05);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 12px;
+    padding: 24px;
+    margin: 24px 0;
+    text-align: left;
+  }
+  
+  .stepsBox h3 {
+    margin: 0 0 16px;
+    color: #1f2937;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  
+  .stepsBox ol {
+    margin: 0;
+    padding-left: 24px;
+    color: #475569;
+    line-height: 1.8;
+    font-size: 14px;
+  }
+  
+  .stepsBox ol li {
+    margin-bottom: 10px;
+  }
+  
+  .stepsBox ol li strong {
+    color: #1f2937;
+  }
+  
+  .warningBox {
+    background: rgba(249, 115, 22, 0.05);
+    border: 1px solid rgba(249, 115, 22, 0.2);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 24px 0;
+    text-align: left;
+  }
+  
+  .warningBox h4 {
+    margin: 0 0 8px;
+    color: #b45309;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  
+  .warningBox ul {
+    margin: 0;
+    padding-left: 20px;
+    color: #92400e;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  
+  .warningBox ul li {
+    margin-bottom: 6px;
+  }
+  
+  .successBox {
+    background: rgba(34, 197, 94, 0.05);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 24px 0;
+    color: #166534;
+    font-size: 13px;
+    text-align: center;
+  }
+  
+  .footerLinks {
+    margin-top: 24px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .footerLinks a {
+    padding: 10px 16px;
+    border-radius: 8px;
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--brand, #667eea);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  
+  .footerLinks a:hover {
+    background: rgba(59, 130, 246, 0.2);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="verificationContainer">
+  <div class="verificationCard">
+    <div class="verificationIcon">📧</div>
+    
+    <h1>ইমেইল যাচাইকরণ প্রয়োজন</h1>
+    <p>আপনার অ্যাকাউন্ট সক্রিয় করতে আপনার ইমেইলে পাঠানো লিঙ্কটি ক্লিক করুন</p>
+    
+    <div class="stepsBox">
+      <h3>✓ সফলভাবে সাইন আপ করেছেন!</h3>
+      <p style="font-size: 14px; color: #475569; margin: 12px 0 0;">এখন শুধু আপনার ইমেইল যাচাই করুন:</p>
+      <ol>
+        <li>আপনার <strong>ইমেইল ইনবক্স</strong> খুলুন</li>
+        <li><strong>"My Project"</strong> থেকে ইমেইল খুঁজুন</li>
+        <li><strong>"ইমেইল যাচাই করুন"</strong> বাটনে ক্লিক করুন</li>
+        <li>আপনার অ্যাকাউন্ট তৎক্ষণাৎ সক্রিয় হবে ও আপনি হোমে পাঠাবেন</li>
+      </ol>
+    </div>
+    
+    <div class="successBox">
+      💡 যাচাইকরণ লিঙ্ক <strong>7 দিনের</strong> জন্য বৈধ থাকবে
+    </div>
+    
+    <div class="warningBox">
+      <h4>❓ ইমেইল পাচ্ছেন না?</h4>
+      <ul>
+        <li><strong>স্প্যাম/জাঙ্ক ফোল্ডার</strong> চেক করুন</li>
+        <li>Gmail এ <strong>"প্রমোশন" ট্যাব</strong> দেখুন</li>
+        <li>আপনার ইমেইল ঠিকানা সঠিক কিনা যাচাই করুন</li>
+        <li>কয়েক মিনিট অপেক্ষা করে পুনরায় চেক করুন</li>
+      </ul>
+    </div>
+    
+    <div class="footerLinks">
+      <a href="{% url 'home' %}">← হোম পেজে যান</a>
+      <a href="{% url 'support' %}">সাহায্য খুঁজুন</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

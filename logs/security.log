@@ -1,0 +1,2 @@
+WARNING 2026-02-08 06:16:44 log 888 8136 Forbidden (CSRF token from POST incorrect.): /accounts/logout/
+WARNING 2026-02-08 06:16:50 log 888 8136 Forbidden (CSRF token from POST incorrect.): /accounts/logout/

@@ -1,0 +1,134 @@
+/* Review form styles */
+.reviewFormContainer {
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.pageHeader {
+  padding: 32px 0 24px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 32px;
+}
+
+.pageHeader h1 {
+  margin: 0 0 8px;
+  font-size: 36px;
+}
+
+.pageHeader p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.reviewForm {
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: var(--radius2);
+  padding: 24px;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.formGroup select,
+.formGroup textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 12px;
+  color: var(--text);
+  font-size: 14px;
+  font-family: inherit;
+  transition: background .12s ease, border-color .12s ease;
+}
+
+.formGroup select:focus,
+.formGroup textarea:focus {
+  outline: none;
+  background: var(--card2);
+  border-color: var(--brand);
+}
+
+.formGroup textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.formGroup select option {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.stars {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.star {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  cursor: pointer;
+  font-size: 16px;
+  transition: all .12s ease;
+  display: grid;
+  place-items: center;
+}
+
+.star:hover {
+  background: rgba(124,92,255,0.16);
+  border-color: var(--brand);
+}
+
+.star.active {
+  background: rgba(124,92,255,0.26);
+  border-color: var(--brand);
+  color: var(--brand);
+}
+
+.formActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.formActions .btn {
+  flex: 1;
+}
+
+.formActions .btn.secondary {
+  background: transparent;
+  border: 1px solid var(--line);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .reviewFormContainer {
+    padding: 0 16px;
+  }
+
+  .reviewForm {
+    padding: 18px;
+  }
+
+  .pageHeader h1 {
+    font-size: 28px;
+  }
+
+  .formActions {
+    flex-direction: column;
+  }
+}

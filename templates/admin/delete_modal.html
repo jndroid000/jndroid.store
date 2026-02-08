@@ -1,0 +1,71 @@
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+  <div style="background:var(--bg); border:1px solid var(--line); border-radius:12px; padding:24px; max-width:400px; width:90%; margin:auto; box-shadow:0 10px 40px rgba(0,0,0,0.3);">
+    <!-- Close Button -->
+    <div style="text-align:right; margin-bottom:12px;">
+      <button onclick="closeDeleteModal()" style="background:none; border:none; color:var(--muted); font-size:24px; cursor:pointer; padding:0;">&times;</button>
+    </div>
+
+    <!-- Title -->
+    <h2 style="margin:0 0 8px; font-size:20px; color:#ef4444;">Delete <span id="deleteItemName"></span>?</h2>
+    
+    <!-- Message -->
+    <p style="color:var(--muted); margin:0 0 20px; font-size:14px; line-height:1.5;">
+      This item will be marked for deletion. An admin must approve it before it's permanently removed.
+    </p>
+
+    <!-- Warning -->
+    <div style="padding:12px; background:rgba(251,191,36,0.1); border:1px solid rgba(251,191,36,0.3); border-radius:8px; margin-bottom:20px;">
+      <div style="font-size:13px; color:rgba(251,191,36,0.9); font-weight:500;">⚠️ This action cannot be undone.</div>
+    </div>
+
+    <!-- Actions -->
+    <div style="display:flex; gap:12px;">
+      <button onclick="confirmDelete()" style="flex:1; padding:12px; background:#ef4444; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:500; font-size:14px;">
+        Delete
+      </button>
+      <button onclick="closeDeleteModal()" style="flex:1; padding:12px; background:rgba(255,255,255,0.04); color:var(--text); border:1px solid var(--line); border-radius:8px; cursor:pointer; font-weight:500; font-size:14px;">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+let deleteForm = null;
+let deleteItemName = '';
+
+function openDeleteModal(form, itemName) {
+  deleteForm = form;
+  deleteItemName = itemName;
+  document.getElementById('deleteItemName').textContent = itemName;
+  document.getElementById('deleteModal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDeleteModal() {
+  document.getElementById('deleteModal').style.display = 'none';
+  document.body.style.overflow = 'auto';
+  deleteForm = null;
+}
+
+function confirmDelete() {
+  if (deleteForm) {
+    deleteForm.submit();
+  }
+}
+
+// Close modal when clicking outside
+document.getElementById('deleteModal')?.addEventListener('click', function(e) {
+  if (e.target === this) {
+    closeDeleteModal();
+  }
+});
+
+// Close modal on Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeDeleteModal();
+  }
+});
+</script>

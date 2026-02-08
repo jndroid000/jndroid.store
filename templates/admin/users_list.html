@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Users Management - Admin{% endblock %}
+
+{% block content %}
+<div style="padding:20px;">
+  <!-- Header -->
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:32px;">
+    <div>
+      <h1 style="margin:0 0 8px; font-size:32px;">Users Management</h1>
+      <p style="color:var(--muted);">Total: {{ users|length }} users</p>
+    </div>
+    <a href="{% url 'admin_panel:dashboard' %}" class="btn secondary" style="padding:10px 20px;">← Back to Dashboard</a>
+  </div>
+
+  <!-- Search -->
+  <div style="margin-bottom:20px; display:flex; gap:12px;">
+    <input type="text" placeholder="Search users by username or email..." style="flex:1; padding:10px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text);">
+  </div>
+
+  <!-- Users Table -->
+  <div style="overflow-x:auto; border:1px solid var(--line); border-radius:12px;">
+    <table style="width:100%; border-collapse:collapse; font-size:14px;">
+      <thead>
+        <tr style="background:rgba(255,255,255,0.04); border-bottom:1px solid var(--line);">
+          <th style="padding:12px; text-align:left; color:var(--muted); font-weight:500;">Username</th>
+          <th style="padding:12px; text-align:left; color:var(--muted); font-weight:500;">Email</th>
+          <th style="padding:12px; text-align:center; color:var(--muted); font-weight:500;">Apps</th>
+          <th style="padding:12px; text-align:center; color:var(--muted); font-weight:500;">Joined</th>
+          <th style="padding:12px; text-align:center; color:var(--muted); font-weight:500;">Status</th>
+          <th style="padding:12px; text-align:center; color:var(--muted); font-weight:500;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+          <tr style="border-bottom:1px solid var(--line); hover:background:rgba(255,255,255,0.02);">
+            <td style="padding:12px;">
+              <div style="font-weight:500;">{{ user.username }}</div>
+              {% if user.is_staff %}<span style="color:rgba(251,191,36,0.9); font-size:11px;">ADMIN</span>{% endif %}
+            </td>
+            <td style="padding:12px;">{{ user.email }}</td>
+            <td style="padding:12px; text-align:center;">{{ user.apps.count }}</td>
+            <td style="padding:12px; text-align:center; color:var(--muted); font-size:12px;">{{ user.date_joined|date:"M d, Y" }}</td>
+            <td style="padding:12px; text-align:center;">
+              {% if user.is_active %}
+                <span style="padding:4px 8px; background:rgba(34,197,94,0.15); border:1px solid rgba(34,197,94,0.3); color:rgba(34,197,94,0.9); border-radius:4px; font-size:12px;">Active</span>
+              {% else %}
+                <span style="padding:4px 8px; background:rgba(251,113,133,0.15); border:1px solid rgba(251,113,133,0.3); color:rgba(251,113,133,0.9); border-radius:4px; font-size:12px;">Inactive</span>
+              {% endif %}
+            </td>
+            <td style="padding:12px; text-align:center;">
+              <div style="display:flex; gap:6px; justify-content:center;">
+                <a href="{% url 'admin_panel:users_edit' pk=user.pk %}" class="btn secondary" style="padding:6px 10px; font-size:12px;">Edit</a>
+                <button type="button" class="btn" style="padding:6px 10px; font-size:12px; background:rgba(251,113,133,0.15); border:1px solid rgba(251,113,133,0.3); color:rgba(251,113,133,0.9); cursor:pointer;">Deactivate</button>
+              </div>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="6" style="padding:32px; text-align:center; color:var(--muted);">No users found</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

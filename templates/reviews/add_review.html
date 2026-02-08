@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Review - {{ app.title }}{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/review_form.css' %}">{% endblock %}
+
+{% block content %}
+<div class="reviewFormContainer">
+  <div style="margin-bottom:32px;">
+    <h1 style="margin:0 0 8px;">{{ app.title }}</h1>
+    <p style="color:var(--muted); margin:0;">Write or update your review</p>
+  </div>
+
+  <form method="post" class="reviewForm">
+    {% csrf_token %}
+
+    <div class="formGroup">
+      <label>Rating (1-5 stars)</label>
+      <select name="rating" style="width:100%;">
+        <option value="5">⭐⭐⭐⭐⭐ 5 Stars</option>
+        <option value="4">⭐⭐⭐⭐ 4 Stars</option>
+        <option value="3">⭐⭐⭐ 3 Stars</option>
+        <option value="2">⭐⭐ 2 Stars</option>
+        <option value="1">⭐ 1 Star</option>
+      </select>
+    </div>
+
+    <div class="formGroup">
+      <label>Your Review (Optional)</label>
+      <textarea name="comment" placeholder="Share your thoughts about this app..." rows="6" style="resize:vertical;"></textarea>
+    </div>
+
+    <div class="formActions">
+      <button type="submit" class="btn primary">Save Review</button>
+      <a href="{% url 'apps:detail' app.slug %}" class="btn secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Edit Category - Admin{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/review_form.css' %}">{% endblock %}
+
+{% block content %}
+<div style="padding:20px; max-width:600px; margin:0 auto;">
+  <!-- Header -->
+  <div style="margin-bottom:32px;">
+    <a href="{% url 'admin_panel:categories_list' %}" style="display:inline-flex; align-items:center; gap:8px; color:#3b82f6; text-decoration:none; margin-bottom:20px;">
+      <span>←</span> Back to Categories
+    </a>
+    <h1 style="margin:0 0 8px; font-size:32px;">Edit Category</h1>
+    <p style="color:var(--muted);">{{ category.name }}</p>
+  </div>
+
+  <!-- Messages -->
+  {% if messages %}
+    <div style="margin-bottom:16px;">
+      {% for message in messages %}
+        <div style="padding:12px; border-radius:12px; margin-bottom:8px; background:rgba(34,197,94,0.15); border:1px solid rgba(34,197,94,0.3); color:rgba(34,197,94,0.9);">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Form -->
+  <form method="post" class="reviewForm">
+    {% csrf_token %}
+    
+    <div class="formGroup">
+      <label for="name">Category Name *</label>
+      <input type="text" name="name" id="name" value="{{ category.name }}" required style="width:100%; padding:10px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box;">
+    </div>
+
+    <div class="formGroup">
+      <label for="description">Description</label>
+      <textarea name="description" id="description" style="width:100%; padding:10px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box; min-height:100px;">{{ category.description }}</textarea>
+    </div>
+
+    <div style="padding:16px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:12px; margin-bottom:24px;">
+      <div style="color:var(--muted); font-size:13px;">
+        <strong>Apps in this category:</strong> {{ category.apps.count }}
+      </div>
+    </div>
+
+    <div style="display:flex; gap:12px;">
+      <button type="submit" class="btn primary" style="flex:1; padding:12px;">Save Changes</button>
+      <a href="{% url 'admin_panel:categories_list' %}" class="btn secondary" style="flex:1; padding:12px; text-align:center; text-decoration:none;">Cancel</a>
+    </div>
+  </form>
+</div>
+
+<style>
+  .formGroup {
+    margin-bottom: 24px;
+  }
+  .formGroup label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 14px;
+  }
+  textarea {
+    resize: vertical;
+  }
+</style>
+{% endblock %}
