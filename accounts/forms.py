@@ -155,7 +155,9 @@ class LoginForm(forms.Form):
                     self.unverified_email = user.email
                     raise forms.ValidationError('UNVERIFIED_EMAIL')
                 
-                # User is verified, set authenticated user
+                # User is verified, set authenticated user with backend
+                # Required when multiple backends are configured
+                user.backend = 'django.contrib.auth.backends.ModelBackend'
                 self.user = user
             else:
                 # Password is incorrect

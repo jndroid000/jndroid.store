@@ -18,53 +18,15 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 # ==================== DEVELOPMENT TOOLS ====================
-# Installed apps for development only
-if DEBUG:
-    INSTALLED_APPS += [
-        # 'debug_toolbar',  # Uncomment if you install django-debug-toolbar
-    ]
-    
-    MIDDLEWARE += [
-        # 'debug_toolbar.middleware.DebugToolbarMiddleware',  # Uncomment if you install django-debug-toolbar
-    ]
-
-# Allow internal IPs for debug toolbar
-INTERNAL_IPS = [
-    'localhost',
-    '127.0.0.1',
-]
 
 # ==================== EMAIL BACKEND (Development) ====================
-# Use console email backend for development - emails print to console
+# Emails print to console
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-# Optional: Use file backend to save emails to files
-# EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-# EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'
-
 # ==================== DATABASE (Development) ====================
-# SQLite is fine for development
-# To use PostgreSQL in development, uncomment below and install psycopg2
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'jndroid_dev',
-#         'USER': 'postgres',
-#         'PASSWORD': 'password',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
+# SQLite (inherited from base.py)
 
 # ==================== LOGGING (Development) ====================
-LOGGING['loggers']['django']['level'] = 'DEBUG'
-LOGGING['loggers']['apps']['level'] = 'DEBUG'
-LOGGING['loggers']['accounts']['level'] = 'DEBUG'
-
-# Print all SQL queries to console in development
-# Uncomment if you want to see all database queries
-# LOGGING['loggers']['django.db.backends'] = {
-#     'handlers': ['console'],
-#     'level': 'DEBUG',
-#     'propagate': False,
-# }
+LOGGING['loggers']['django']['level'] = 'INFO'
+LOGGING['loggers']['apps']['level'] = 'INFO'
+LOGGING['loggers']['accounts']['level'] = 'INFO'

@@ -10,13 +10,13 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # ==================== CORE SETTINGS ====================
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS]
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'Asia/Dhaka'  # Bangladesh timezone
+TIME_ZONE = 'Asia/Dhaka'
 USE_I18N = True
 USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-SITE_ID = 1
 
 # ==================== APPLICATION DEFINITION ====================
 INSTALLED_APPS = [
@@ -101,7 +101,10 @@ LOGOUT_REDIRECT_URL = '/'
 # ==================== STATIC & MEDIA FILES ====================
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [BASE_DIR / 'static']
+# Only add static directory if it exists (prevents errors in production)
+STATICFILES_DIRS = []
+if (BASE_DIR / 'static').exists():
+    STATICFILES_DIRS = [BASE_DIR / 'static']
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
@@ -117,21 +120,27 @@ SERVER_EMAIL = 'JN App Store Server <jndroid000@gmail.com>'
 ACCOUNT_EMAIL_SUBJECT_PREFIX = '[JN App Store] '
 
 # ==================== DJANGO-ALLAUTH CONFIGURATION ====================
+# Allauth authentication settings (updated for latest django-allauth)
+ACCOUNT_LOGIN_METHOD = 'email'  # Allow both email and username
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
-ACCOUNT_EMAIL_REQUIRED = True  # Email is required during signup
+
+# Email verification
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # Require email verification
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True  # Auto-verify when clicking link
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7  # Link expires in 7 days
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True  # Auto-login after email confirmation
 ACCOUNT_SESSION_REMEMBER = True
+
+# Custom signup form
 ACCOUNT_FORMS = {
     'signup': 'accounts.forms.SignUpForm',
 }
 
-EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/'
-EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/'
-
 # ==================== LOGGING CONFIGURATION ====================
+# Ensure logs directory exists
+LOG_DIR = BASE_DIR / 'logs'
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -147,24 +156,17 @@ LOGGING = {
             'datefmt': '%Y-%m-%d %H:%M:%S',
         },
     },
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse',
-        },
-        'require_debug_true': {
-            '()': 'django.utils.log.RequireDebugTrue',
-        },
-    },
+    'filters': {},
     'handlers': {
         'console': {
-            'level': 'DEBUG',
+            'level': 'INFO',  # Changed from DEBUG for cleaner output
             'class': 'logging.StreamHandler',
             'formatter': 'simple',
         },
         'file': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': BASE_DIR / 'logs' / 'django.log',
+            'filename': LOG_DIR / 'django.log',
             'maxBytes': 1024 * 1024 * 10,  # 10 MB
             'backupCount': 5,
             'formatter': 'verbose',
@@ -172,7 +174,7 @@ LOGGING = {
         'error_file': {
             'level': 'ERROR',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': BASE_DIR / 'logs' / 'errors.log',
+            'filename': LOG_DIR / 'errors.log',
             'maxBytes': 1024 * 1024 * 10,  # 10 MB
             'backupCount': 5,
             'formatter': 'verbose',
@@ -180,7 +182,7 @@ LOGGING = {
         'security_file': {
             'level': 'WARNING',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': BASE_DIR / 'logs' / 'security.log',
+            'filename': LOG_DIR / 'security.log',
             'maxBytes': 1024 * 1024 * 5,  # 5 MB
             'backupCount': 5,
             'formatter': 'verbose',

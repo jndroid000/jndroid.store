@@ -27,7 +27,7 @@ def login_view(request):
         form = LoginForm(request.POST)
         if form.is_valid():
             # User is authenticated in form.clean()
-            login(request, form.user)
+            login(request, form.user, backend='django.contrib.auth.backends.ModelBackend')
             messages.success(request, 'Login successful!')
             
             # Redirect to next page or home
@@ -65,12 +65,30 @@ def signup_view(request):
             user.save()
             
             # Create EmailAddress record for django-allauth
-            email_address = EmailAddress.objects.create(
-                user=user,
-                email=user.email,
-                verified=False,
-                primary=True
-            )
+            # Use get_or_create to avoid IntegrityError if it already exists
+            try:
+                email_address, created = EmailAddress.objects.get_or_create(
+                    user=user,
+                    email=user.email,
+                    defaults={
+                        'verified': False,
+                        'primary': True
+                    }
+                )
+                
+                # If it already existed but wasn't primary, make it primary
+                if not created and not email_address.primary:
+                    # Delete other primary emails for this user
+                    EmailAddress.objects.filter(user=user, primary=True).exclude(id=email_address.id).delete()
+                    # Update this one to be primary
+                    email_address.primary = True
+                    email_address.verified = False
+                    email_address.save()
+                    
+            except Exception as e:
+                print(f"[ERROR] Failed to create EmailAddress during signup: {e}")
+                messages.error(request, 'Account created but email setup failed. Please contact support.')
+                return redirect('accounts:email-verification-sent')
             
             # Send verification email manually
             try:
@@ -104,7 +122,7 @@ def signup_view(request):
                 )
             except Exception as e:
                 # Log error but don't fail signup
-                print(f"Error sending confirmation email: {e}")
+                print(f"[ERROR] Error sending confirmation email: {e}")
             
             messages.success(
                 request,

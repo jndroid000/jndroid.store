@@ -4,3 +4,4 @@ asgiref==3.11.1
 sqlparse==0.5.5
 tzdata==2025.3
 django-allauth==0.61.1
+psycopg2-binary==2.9.9  # PostgreSQL adapter for production

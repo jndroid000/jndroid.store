@@ -18,10 +18,12 @@ if not SECRET_KEY or SECRET_KEY == 'change-me-in-production-please':
         'Then set it as an environment variable: export SECRET_KEY=<generated-key>'
     )
 
-# Set allowed hosts from environment variable
-ALLOWED_HOSTS = [h.strip() for h in os.getenv('ALLOWED_HOSTS', 'jndroid.store,www.jndroid.store').split(',') if h.strip()]
+# ALLOWED_HOSTS is inherited from base.py and configured via DJANGO_ALLOWED_HOSTS env variable
 
 # ==================== SECURITY HEADERS ====================
+# Use this if behind a reverse proxy (nginx/Apache)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
@@ -32,62 +34,34 @@ SECURE_HSTS_SECONDS = 31536000  # 1 year
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
-# Security middleware settings
-SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_SECURITY_POLICY = {
-    "default-src": ("'self'",),
-}
+
 
 # ==================== EMAIL BACKEND (Production) ====================
-# Use SMTP for production (Gmail configured in base.py)
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
-# Note: EMAIL_HOST_USER and EMAIL_HOST_PASSWORD should be set via environment variables
-# export EMAIL_HOST_USER=your-email@gmail.com
-# export EMAIL_HOST_PASSWORD=your-app-password
+# SMTP configured via environment variables
 
 # ==================== DATABASE (Production) ====================
-# Example PostgreSQL configuration (recommended for production)
-# If using PostgreSQL, also update BASE_DIR/requirements.txt to include psycopg2
 DATABASES = {
     'default': {
-        'ENGINE': os.getenv('DATABASE_ENGINE', 'django.db.backends.sqlite3'),
-        'NAME': os.getenv('DATABASE_NAME', BASE_DIR / 'db.sqlite3'),
-        'USER': os.getenv('DATABASE_USER', ''),
+        'ENGINE': os.getenv('DATABASE_ENGINE', 'django.db.backends.postgresql'),
+        'NAME': os.getenv('DATABASE_NAME', 'jndroid_production'),
+        'USER': os.getenv('DATABASE_USER', 'postgres'),
         'PASSWORD': os.getenv('DATABASE_PASSWORD', ''),
-        'HOST': os.getenv('DATABASE_HOST', ''),
-        'PORT': os.getenv('DATABASE_PORT', ''),
+        'HOST': os.getenv('DATABASE_HOST', 'localhost'),
+        'PORT': os.getenv('DATABASE_PORT', '5432'),
+        'CONN_MAX_AGE': 600,
     }
 }
 
 # ==================== CACHING (Production) ====================
-# Use Redis or in-memory cache for production
 CACHES = {
     'default': {
-        'BACKEND': os.getenv(
-            'CACHE_BACKEND',
-            'django.core.cache.backends.locmem.LocMemCache'
-        ),
-        'LOCATION': os.getenv('CACHE_LOCATION', 'unique-snowflake'),
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     }
 }
 
 # ==================== STATIC & MEDIA FILES (Production) ====================
-# IMPORTANT: Run this before deployment:
-# python manage.py collectstatic --noinput
-#
-# STATIC_ROOT is inherited from base.py (set to 'staticfiles' directory)
-STATICFILES_DIRS = []  # Clear development static paths
-
-# For serving static files with a web server (nginx/apache):
-# - Set up web server to serve /static/ from the STATIC_ROOT directory
-# - Or use a CDN service like AWS S3, Cloudinary, etc.
-#
-# For CDN deployment (AWS S3, Cloudinary, etc.), uncomment and configure:
-# AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
-# AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME', 'us-east-1')
-# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
+# Run before deployment: python manage.py collectstatic --noinput
+STATICFILES_DIRS = []
 
 # ==================== LOGGING (Production) ====================
 # Production logging - remove console output, keep file logging only
@@ -112,31 +86,12 @@ LOGGING['root']['handlers'] = ['file']  # Remove console from root
 # Disable SQL query logging in production
 LOGGING['loggers'].pop('django.db.backends', None)
 
-# ==================== ADMIN & MAINTENANCE ====================
+# ==================== ADMIN ====================
 ADMINS = [
     ('JN Admin', os.getenv('ADMIN_EMAIL', 'admin@jndroid.store')),
 ]
-
-# These are sent to admins when errors occur
 MANAGERS = ADMINS
 
-# ==================== EMAIL ERROR REPORTING ====================
-# Send 500 error emails to admins (set EMAIL correctly above)
-SEND_BROKEN_LINK_EMAILS = True
-
-# ==================== ADDITIONAL SECURITY SETTINGS ====================
-# Prevent framing of the site (clickjacking protection)
+# ==================== SECURITY ====================
 X_FRAME_OPTIONS = 'DENY'
-
-# Referrer Policy
 SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
-
-# Permissions Policy (formerly Feature Policy)
-PERMISSIONS_POLICY = {
-    'geolocation': [],
-    'microphone': [],
-    'camera': [],
-}
-
-# ==================== ADDITIONAL PRODUCTION SETTINGS ====================
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
