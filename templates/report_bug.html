@@ -3,7 +3,314 @@
 {% block title %}Report a Bug - JN App Store{% endblock %}
 
 {% block content %}
-<style>
+<div class="container">
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a href="{% url 'home' %}">🏠 Home</a>
+    <span>/</span>
+    <a href="{% url 'support' %}">Support</a>
+    <span>/</span>
+    <span>Report Bug</span>
+  </div>
+
+  <!-- Hero Section -->
+  <div class="page-hero">
+    <div class="page-hero-content">
+      <h1>🐛 Report a Bug</h1>
+      <p>Help us improve JN App Store. Found an issue? We'd love to hear about it!</p>
+    </div>
+  </div>
+
+  <!-- Quick Info -->
+  <div class="notice">
+    <p><strong>ℹ️ Important:</strong> Your bug report helps us make JN App Store better for everyone. Thank you for reporting issues!</p>
+  </div>
+
+  <!-- Why Report Bugs -->
+  <div class="page-section">
+    <h2 class="section-title">💡 Why Report Bugs?</h2>
+    <div class="content-grid">
+      <div class="content-card">
+        <div style="font-size: 28px; margin-bottom: 12px;">🛡️</div>
+        <h4>Security Issues</h4>
+        <p>Help us identify and fix security vulnerabilities that could affect users.</p>
+      </div>
+
+      <div class="content-card">
+        <div style="font-size: 28px; margin-bottom: 12px;">⚡</div>
+        <h4>Performance</h4>
+        <p>Report slow features, crashes, or unusual behavior you encounter.</p>
+      </div>
+
+      <div class="content-card">
+        <div style="font-size: 28px; margin-bottom: 12px;">🎨</div>
+        <h4>UI/UX Issues</h4>
+        <p>Tell us about confusing interfaces, broken buttons, or display problems.</p>
+      </div>
+
+      <div class="content-card">
+        <div style="font-size: 28px; margin-bottom: 12px;">📱</div>
+        <h4>Compatibility</h4>
+        <p>Report issues on specific devices, browsers, or operating systems.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- How to Report -->
+  <div class="page-section">
+    <h2 class="section-title">📝 How to Report a Bug</h2>
+    
+    <div style="list-style: none; counter-reset: step-counter;">
+      <div style="padding: 16px; margin-bottom: 16px; background: color-mix(in srgb, var(--card) 90%, var(--brand) 10%); border-radius: 12px; border-left: 4px solid var(--brand); display: flex; align-items: flex-start; gap: 12px;">
+        <div style="width: 28px; height: 28px; background: var(--brand); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">1</div>
+        <div>
+          <strong style="color: var(--text);">Email Our Team</strong><br>
+          <span style="color: var(--muted); font-size: 14px;">Send a detailed email to <strong>bugs@jnappstore.com</strong></span>
+        </div>
+      </div>
+
+      <div style="padding: 16px; margin-bottom: 16px; background: color-mix(in srgb, var(--card) 90%, var(--brand) 10%); border-radius: 12px; border-left: 4px solid var(--brand); display: flex; align-items: flex-start; gap: 12px;">
+        <div style="width: 28px; height: 28px; background: var(--brand); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">2</div>
+        <div>
+          <strong style="color: var(--text);">Describe the Issue</strong><br>
+          <span style="color: var(--muted); font-size: 14px;">Clearly explain what happened and what you expected to happen</span>
+        </div>
+      </div>
+
+      <div style="padding: 16px; margin-bottom: 16px; background: color-mix(in srgb, var(--card) 90%, var(--brand) 10%); border-radius: 12px; border-left: 4px solid var(--brand); display: flex; align-items: flex-start; gap: 12px;">
+        <div style="width: 28px; height: 28px; background: var(--brand); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">3</div>
+        <div>
+          <strong style="color: var(--text);">Provide Steps to Reproduce</strong><br>
+          <span style="color: var(--muted); font-size: 14px;">List exact steps to reproduce the bug so we can verify it</span>
+        </div>
+      </div>
+
+      <div style="padding: 16px; margin-bottom: 16px; background: color-mix(in srgb, var(--card) 90%, var(--brand) 10%); border-radius: 12px; border-left: 4px solid var(--brand); display: flex; align-items: flex-start; gap: 12px;">
+        <div style="width: 28px; height: 28px; background: var(--brand); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">4</div>
+        <div>
+          <strong style="color: var(--text);">Attach Evidence</strong><br>
+          <span style="color: var(--muted); font-size: 14px;">Include screenshots, error messages, or video recordings</span>
+        </div>
+      </div>
+
+      <div style="padding: 16px; margin-bottom: 16px; background: color-mix(in srgb, var(--card) 90%, var(--brand) 10%); border-radius: 12px; border-left: 4px solid var(--brand); display: flex; align-items: flex-start; gap: 12px;">
+        <div style="width: 28px; height: 28px; background: var(--brand); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">5</div>
+        <div>
+          <strong style="color: var(--text);">System Information</strong><br>
+          <span style="color: var(--muted); font-size: 14px;">Mention your device, browser version, and operating system</span>
+        </div>
+      </div>
+
+      <div style="padding: 16px; background: color-mix(in srgb, var(--card) 90%, var(--brand) 10%); border-radius: 12px; border-left: 4px solid var(--brand); display: flex; align-items: flex-start; gap: 12px;">
+        <div style="width: 28px; height: 28px; background: var(--brand); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">6</div>
+        <div>
+          <strong style="color: var(--text);">We Respond</strong><br>
+          <span style="color: var(--muted); font-size: 14px;">Our team will investigate and get back to you within 2-3 business days</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bug Report Template -->
+  <div class="page-section">
+    <h2 class="section-title">📋 Bug Report Template</h2>
+    <p>Use this template to help us understand your issue better:</p>
+
+    <div style="background: rgba(0,0,0,0.2); border-left: 4px solid var(--brand); padding: 16px; border-radius: 12px; margin: 16px 0; font-family: 'Courier New', monospace; font-size: 13px; overflow-x: auto; color: var(--text);">
+<strong>Subject:</strong> [BUG] Brief description of the issue
+
+<strong>Environment:</strong>
+- Device: [e.g., Windows 10, iPhone 12]
+- Browser: [e.g., Chrome 96, Safari 15]
+- JN App Store: Web/Mobile
+
+<strong>Steps to Reproduce:</strong>
+1. Go to [page/feature]
+2. Click on [element]
+3. Observe [unexpected behavior]
+
+<strong>Expected Behavior:</strong>
+What should have happened?
+
+<strong>Actual Behavior:</strong>
+What actually happened instead?
+
+<strong>Screenshots/Video:</strong>
+[Attach images or video]
+
+<strong>Additional Notes:</strong>
+Any other relevant information
+    </div>
+  </div>
+
+  <!-- Good vs Bad Examples -->
+  <div class="page-section">
+    <h2 class="section-title">✅ Good vs ❌ Bad Bug Reports</h2>
+
+    <div style="margin-bottom: 20px;">
+      <h3 style="color: var(--brand2); margin-bottom: 8px;">✅ GOOD Bug Report</h3>
+      <div style="background: color-mix(in srgb, var(--brand2) 10%, transparent); border-left: 4px solid var(--brand2); padding: 16px; border-radius: 12px; font-size: 13px; font-family: 'Courier New', monospace;">
+<strong>Subject:</strong> [BUG] App download button unresponsive on mobile
+
+<strong>Issue:</strong> When I try to download an app on the CapCut detail page using my iPhone 12 in Safari, the download button doesn't respond when clicked.
+
+<strong>Steps:</strong>
+1. Visit /apps/capcut/
+2. Scroll to the download button
+3. Tap the green download button
+4. Nothing happens (button shows no loading state)
+
+<strong>Expected:</strong> The download should start or show a loading indicator
+
+<strong>Device:</strong> iPhone 12, iOS 15.6, Safari 15
+
+<strong>Attachment:</strong> Screenshot showing the unresponsive button
+      </div>
+    </div>
+
+    <div>
+      <h3 style="color: var(--danger); margin-bottom: 8px;">❌ BAD Bug Report</h3>
+      <div style="background: color-mix(in srgb, var(--danger) 10%, transparent); border-left: 4px solid var(--danger); padding: 16px; border-radius: 12px; font-size: 13px; font-family: 'Courier New', monospace;">
+<strong>Subject:</strong> The app is broken
+
+<strong>Issue:</strong> It doesn't work. Please fix it.
+
+<strong>Device:</strong> Phone
+
+→ <strong>Why it's bad:</strong> No specific details, no steps to reproduce, no information about what browser/device, no description of what's actually wrong
+      </div>
+    </div>
+  </div>
+
+  <!-- What We Can Fix -->
+  <div class="page-section">
+    <h2 class="section-title">🔧 Types of Bugs We Fix</h2>
+
+    <div class="content-grid">
+      <div class="content-card">
+        <div style="font-size: 28px; margin-bottom: 12px;">⚠️</div>
+        <h4>Critical Issues</h4>
+        <p>Security vulnerabilities, crashes, and data loss. Priority: Immediate</p>
+      </div>
+
+      <div class="content-card">
+        <div style="font-size: 28px; margin-bottom: 12px;">🔴</div>
+        <h4>High Priority</h4>
+        <p>Major features broken, unable to use core functionality</p>
+      </div>
+
+      <div class="content-card">
+        <div style="font-size: 28px; margin-bottom: 12px;">🟡</div>
+        <h4>Medium Priority</h4>
+        <p>Minor visual issues, UI glitches, performance degradation</p>
+      </div>
+
+      <div class="content-card">
+        <div style="font-size: 28px; margin-bottom: 12px;">🔵</div>
+        <h4>Low Priority</h4>
+        <p>Cosmetic issues, typos, enhancement suggestions</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- What We Can't Fix -->
+  <div class="page-section">
+    <h2 class="section-title">⚠️ What We Can't Help With</h2>
+
+    <div class="notice warning">
+      <p><strong>Account Issues:</strong> For login, password reset, or account-related problems, please contact support@jnappstore.com</p>
+    </div>
+
+    <div class="notice warning">
+      <p><strong>App-Specific Issues:</strong> If a third-party app is crashing or misbehaving, contact the app developer instead</p>
+    </div>
+
+    <div class="notice warning">
+      <p><strong>Feature Requests:</strong> These aren't bugs. Send feature requests to suggestions@jnappstore.com</p>
+    </div>
+
+    <div class="notice warning">
+      <p><strong>Malware Reports:</strong> Found a malicious app? Use the "Report" button on the app page instead</p>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="page-section">
+    <h2 class="section-title">❓ Frequently Asked Questions</h2>
+
+    <div class="definition-item">
+      <div class="definition-term">Q: How long does it take to fix a bug?</div>
+      <div class="definition-text">A: It depends on severity. Critical issues are fixed within hours. Major bugs within 1-2 days. Minor issues within 1-2 weeks.</div>
+    </div>
+
+    <div class="definition-item">
+      <div class="definition-term">Q: Will I be notified when my bug is fixed?</div>
+      <div class="definition-text">A: Yes! We'll send you an email notification when your reported bug is fixed in a new release.</div>
+    </div>
+
+    <div class="definition-item">
+      <div class="definition-term">Q: Can I track my bug report?</div>
+      <div class="definition-text">A: We'll provide a reference number via email. Include this when you need to check status.</div>
+    </div>
+
+    <div class="definition-item">
+      <div class="definition-term">Q: Should I post bugs on social media?</div>
+      <div class="definition-text">A: Please report through this system for faster resolution. Social media posts may be delayed or missed.</div>
+    </div>
+
+    <div class="definition-item">
+      <div class="definition-term">Q: What if I'm not sure if it's a bug?</div>
+      <div class="definition-text">A: Go ahead and report it anyway! Our team will determine if it's a bug or expected behavior.</div>
+    </div>
+
+    <div class="definition-item">
+      <div class="definition-term">Q: Can I suggest improvements while reporting?</div>
+      <div class="definition-text">A: Yes! Include improvement suggestions in your report. We value constructive feedback.</div>
+    </div>
+  </div>
+
+  <!-- Contact Section -->
+  <div class="page-section">
+    <h2 class="section-title">📞 Contact Us</h2>
+    <p>Choose the best way to report your bug:</p>
+
+    <div class="content-grid">
+      <div class="content-card">
+        <div style="font-size: 28px; margin-bottom: 12px;">🐛</div>
+        <h4>Bug Reports</h4>
+        <p>Send detailed bug reports with screenshots</p>
+        <a href="mailto:bugs@jnappstore.com" style="color: var(--brand); font-weight: 600; text-decoration: none;">bugs@jnappstore.com</a>
+      </div>
+
+      <div class="content-card">
+        <div style="font-size: 28px; margin-bottom: 12px;">💬</div>
+        <h4>Live Chat</h4>
+        <p>Chat with support team in real-time</p>
+        <a href="#" style="color: var(--brand); font-weight: 600; text-decoration: none;">Start Chat</a>
+      </div>
+
+      <div class="content-card">
+        <div style="font-size: 28px; margin-bottom: 12px;">📧</div>
+        <h4>General Support</h4>
+        <p>For other inquiries and questions</p>
+        <a href="mailto:support@jnappstore.com" style="color: var(--brand); font-weight: 600; text-decoration: none;">support@jnappstore.com</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer CTA -->
+  <div class="page-section" style="text-align: center;">
+    <h3 style="margin-bottom: 12px;">Thank You!</h3>
+    <p style="color: var(--muted); margin-bottom: 20px;">Your bug reports make JN App Store safer and better every day!</p>
+    <a href="{% url 'support' %}" style="display: inline-block; padding:12px 24px; background: color-mix(in srgb, var(--card) 95%, var(--brand) 5%); color: var(--text); text-decoration: none; border: 1px solid var(--line); border-radius:8px; font-weight: 600; transition:.12s;">← Back to Support</a>
+  </div>
+
+  <div style="text-align: center; margin-top: 40px; padding: 20px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line);">
+    <p>Last updated: February 2, 2026 | <a href="{% url 'home' %}" style="color: var(--brand); text-decoration: none;">← Back to Home</a></p>
+  </div>
+</div>
+
+{% endblock %}
   :root {
     --primary: #007BFF;
     --danger: #DC3545;

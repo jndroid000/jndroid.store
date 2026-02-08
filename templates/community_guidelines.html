@@ -3,308 +3,6 @@
 {% block title %}Community Guidelines - JN App Store{% endblock %}
 
 {% block content %}
-<style>
-  :root {
-    --primary: #007BFF;
-    --danger: #DC3545;
-    --success: #28A745;
-    --warning: #FFC107;
-    --info: #17A2B8;
-    --bg: #F8F9FA;
-    --bg-secondary: #E9ECEF;
-    --text: #212529;
-    --muted: #6C757D;
-    --line: #DEE2E6;
-    --radius: 8px;
-  }
-
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
-  }
-
-  .container {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-
-  .hero {
-    background: linear-gradient(135deg, var(--primary), #0056b3);
-    color: white;
-    padding: 60px 20px;
-    border-radius: var(--radius);
-    text-align: center;
-    margin-bottom: 40px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  }
-
-  .hero h1 {
-    font-size: 36px;
-    font-weight: 700;
-    margin-bottom: 12px;
-  }
-
-  .hero p {
-    font-size: 18px;
-    opacity: 0.95;
-  }
-
-  .section {
-    background: white;
-    padding: 30px;
-    border-radius: var(--radius);
-    border: 1px solid var(--line);
-    margin-bottom: 30px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  }
-
-  .section-title {
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 20px;
-    padding-bottom: 12px;
-    border-bottom: 3px solid var(--primary);
-    color: var(--text);
-  }
-
-  .subsection-title {
-    font-size: 18px;
-    font-weight: 700;
-    margin-top: 20px;
-    margin-bottom: 12px;
-    color: var(--text);
-  }
-
-  .guidelines-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-    margin-bottom: 20px;
-  }
-
-  .guideline-card {
-    background: var(--bg);
-    padding: 20px;
-    border-radius: var(--radius);
-    border-left: 4px solid var(--primary);
-    transition: all 0.2s;
-  }
-
-  .guideline-card:hover {
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
-    transform: translateY(-2px);
-  }
-
-  .guideline-icon {
-    font-size: 28px;
-    margin-bottom: 10px;
-  }
-
-  .guideline-title {
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 8px;
-    font-size: 15px;
-  }
-
-  .guideline-text {
-    color: var(--muted);
-    font-size: 14px;
-    line-height: 1.5;
-  }
-
-  .do-dont-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin: 20px 0;
-  }
-
-  .do-box {
-    background: #d4edda;
-    border-left: 4px solid var(--success);
-    padding: 16px;
-    border-radius: 4px;
-  }
-
-  .do-box strong {
-    color: #155724;
-  }
-
-  .do-box p {
-    color: #155724;
-    margin: 0;
-    font-size: 14px;
-  }
-
-  .dont-box {
-    background: #f8d7da;
-    border-left: 4px solid var(--danger);
-    padding: 16px;
-    border-radius: 4px;
-  }
-
-  .dont-box strong {
-    color: #721c24;
-  }
-
-  .dont-box p {
-    color: #721c24;
-    margin: 0;
-    font-size: 14px;
-  }
-
-  .code-block {
-    background: #f5f5f5;
-    border-left: 4px solid var(--muted);
-    padding: 16px;
-    border-radius: 4px;
-    margin: 16px 0;
-    font-family: 'Courier New', monospace;
-    font-size: 13px;
-    overflow-x: auto;
-  }
-
-  .highlight-box {
-    background: #cfe2ff;
-    border-left: 4px solid var(--info);
-    padding: 16px;
-    border-radius: 4px;
-    margin: 20px 0;
-  }
-
-  .highlight-box p {
-    color: #084298;
-    margin: 0;
-    font-size: 14px;
-  }
-
-  .toc {
-    background: var(--bg);
-    padding: 20px;
-    border-radius: var(--radius);
-    border: 1px solid var(--line);
-    margin-bottom: 30px;
-  }
-
-  .toc h3 {
-    font-size: 16px;
-    margin-bottom: 12px;
-    color: var(--text);
-  }
-
-  .toc ul {
-    list-style: none;
-  }
-
-  .toc li {
-    margin-bottom: 8px;
-  }
-
-  .toc a {
-    color: var(--primary);
-    text-decoration: none;
-    font-size: 14px;
-  }
-
-  .toc a:hover {
-    text-decoration: underline;
-  }
-
-  .btn {
-    padding: 12px 24px;
-    border: none;
-    border-radius: 4px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-decoration: none;
-    display: inline-block;
-    margin-top: 16px;
-  }
-
-  .btn-primary {
-    background: var(--primary);
-    color: white;
-  }
-
-  .btn-primary:hover {
-    background: #0056b3;
-  }
-
-  .btn-secondary {
-    background: var(--bg-secondary);
-    color: var(--text);
-    border: 1px solid var(--line);
-  }
-
-  .btn-secondary:hover {
-    background: #d3d4d8;
-  }
-
-  .breadcrumb {
-    margin-bottom: 30px;
-  }
-
-  .breadcrumb a {
-    color: var(--primary);
-    text-decoration: none;
-  }
-
-  .breadcrumb a:hover {
-    text-decoration: underline;
-  }
-
-  .breadcrumb span {
-    color: var(--muted);
-    margin: 0 8px;
-  }
-
-  @media (max-width: 768px) {
-    .container {
-      padding: 16px;
-    }
-
-    .hero {
-      padding: 40px 20px;
-    }
-
-    .hero h1 {
-      font-size: 26px;
-    }
-
-    .hero p {
-      font-size: 16px;
-    }
-
-    .section {
-      padding: 20px;
-    }
-
-    .section-title {
-      font-size: 22px;
-    }
-
-    .guidelines-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .do-dont-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-</style>
-
 <div class="container">
   <!-- Breadcrumb -->
   <div class="breadcrumb">
@@ -316,15 +14,17 @@
   </div>
 
   <!-- Hero Section -->
-  <div class="hero">
-    <h1>🌍 Community Guidelines</h1>
-    <p>Our commitment to a safe, respectful, and inclusive community for everyone</p>
+  <div class="page-hero">
+    <div class="page-hero-content">
+      <h1>🌍 Community Guidelines</h1>
+      <p>Our commitment to a safe, respectful, and inclusive community for everyone</p>
+    </div>
   </div>
 
   <!-- Table of Contents -->
-  <div class="toc">
-    <h3>📑 Quick Navigation</h3>
-    <ul>
+  <div class="table-of-contents">
+    <div class="toc-title">📑 Quick Navigation</div>
+    <ul class="toc-list">
       <li><a href="#core-values">Core Values</a></li>
       <li><a href="#user-conduct">User Conduct</a></li>
       <li><a href="#content-standards">Content Standards</a></li>
@@ -335,274 +35,290 @@
   </div>
 
   <!-- Core Values -->
-  <div class="section" id="core-values">
+  <div class="page-section" id="core-values">
     <h2 class="section-title">💎 Our Core Values</h2>
     <p>JN App Store is built on these fundamental principles:</p>
 
-    <div class="guidelines-grid">
-      <div class="guideline-card">
-        <div class="guideline-icon">🛡️</div>
-        <div class="guideline-title">Safety First</div>
-        <div class="guideline-text">We prioritize user security and protect against malware, scams, and harmful content.</div>
+    <div class="content-grid">
+      <div class="content-card">
+        <div style="font-size: 28px; margin-bottom: 10px;">🛡️</div>
+        <h4>Safety First</h4>
+        <p>We prioritize user security and protect against malware, scams, and harmful content.</p>
       </div>
 
-      <div class="guideline-card">
-        <div class="guideline-icon">🤝</div>
-        <div class="guideline-title">Respect & Inclusion</div>
-        <div class="guideline-text">Everyone deserves respect. We don't tolerate discrimination, harassment, or hate speech.</div>
+      <div class="content-card">
+        <div style="font-size: 28px; margin-bottom: 10px;">🤝</div>
+        <h4>Respect & Inclusion</h4>
+        <p>Everyone deserves respect. We don't tolerate discrimination, harassment, or hate speech.</p>
       </div>
 
-      <div class="guideline-card">
-        <div class="guideline-icon">✨</div>
-        <div class="guideline-title">Transparency</div>
-        <div class="guideline-text">Honest communication and clear policies build trust with our community.</div>
+      <div class="content-card">
+        <div style="font-size: 28px; margin-bottom: 10px;">✨</div>
+        <h4>Transparency</h4>
+        <p>Honest communication and clear policies build trust with our community.</p>
       </div>
 
-      <div class="guideline-card">
-        <div class="guideline-icon">🚀</div>
-        <div class="guideline-title">Innovation</div>
-        <div class="guideline-text">We encourage creativity while maintaining standards and best practices.</div>
+      <div class="content-card">
+        <div style="font-size: 28px; margin-bottom: 10px;">🚀</div>
+        <h4>Innovation</h4>
+        <p>We encourage creativity while maintaining standards and best practices.</p>
       </div>
 
-      <div class="guideline-card">
-        <div class="guideline-icon">🌱</div>
-        <div class="guideline-title">Growth</div>
-        <div class="guideline-text">Continuous improvement through feedback and community engagement.</div>
+      <div class="content-card">
+        <div style="font-size: 28px; margin-bottom: 10px;">🌱</div>
+        <h4>Growth</h4>
+        <p>Continuous improvement through feedback and community engagement.</p>
       </div>
 
-      <div class="guideline-card">
-        <div class="guideline-icon">⚖️</div>
-        <div class="guideline-title">Fairness</div>
-        <div class="guideline-text">Consistent application of rules with appeals for disputed decisions.</div>
+      <div class="content-card">
+        <div style="font-size: 28px; margin-bottom: 10px;">⚖️</div>
+        <h4>Fairness</h4>
+        <p>Consistent application of rules with appeals for disputed decisions.</p>
       </div>
     </div>
   </div>
 
   <!-- User Conduct -->
-  <div class="section" id="user-conduct">
+  <div class="page-section" id="user-conduct">
     <h2 class="section-title">👥 User Conduct</h2>
     <p>All users must follow these behavioral standards to maintain a positive community:</p>
 
-    <div class="subsection-title">✅ Expected Behavior</div>
-    <div class="do-box">
-      <strong>Be Respectful</strong>
-      <p>Treat others with courtesy regardless of disagreements. Foster constructive conversations.</p>
-    </div>
-    <div class="do-box">
-      <strong>Give Honest Feedback</strong>
-      <p>Share genuine reviews and ratings. Help developers improve with specific, helpful comments.</p>
-    </div>
-    <div class="do-box">
-      <strong>Follow the Rules</strong>
-      <p>Read and adhere to these guidelines and platform terms of service.</p>
-    </div>
-    <div class="do-box">
-      <strong>Report Issues</strong>
-      <p>Use the report function for violations. Don't engage with problematic content.</p>
+    <div class="subsection">
+      <div class="subsection-title">✅ Expected Behavior</div>
+      <div class="notice">
+        <strong>Be Respectful</strong>
+        <p>Treat others with courtesy regardless of disagreements. Foster constructive conversations.</p>
+      </div>
+      <div class="notice">
+        <strong>Give Honest Feedback</strong>
+        <p>Share genuine reviews and ratings. Help developers improve with specific, helpful comments.</p>
+      </div>
+      <div class="notice">
+        <strong>Follow the Rules</strong>
+        <p>Read and adhere to these guidelines and platform terms of service.</p>
+      </div>
+      <div class="notice">
+        <strong>Report Issues</strong>
+        <p>Use the report function for violations. Don't engage with problematic content.</p>
+      </div>
     </div>
 
-    <div class="subsection-title">❌ Prohibited Behavior</div>
-    <div class="dont-box">
-      <strong>Harassment & Bullying</strong>
-      <p>No targeting, threatening, or degrading comments toward individuals or groups.</p>
-    </div>
-    <div class="dont-box">
-      <strong>Spam & Manipulation</strong>
-      <p>No repetitive messages, fake reviews, or attempts to manipulate ratings.</p>
-    </div>
-    <div class="dont-box">
-      <strong>Impersonation</strong>
-      <p>Don't pretend to be someone else, especially developers or platform staff.</p>
-    </div>
-    <div class="dont-box">
-      <strong>Privacy Violations</strong>
-      <p>Never share others' personal information without consent.</p>
-    </div>
-    <div class="dont-box">
-      <strong>Illegal Activities</strong>
-      <p>No promotion of illegal content or services.</p>
+    <div class="subsection">
+      <div class="subsection-title">❌ Prohibited Behavior</div>
+      <div class="notice danger">
+        <strong>Harassment & Bullying</strong>
+        <p>No targeting, threatening, or degrading comments toward individuals or groups.</p>
+      </div>
+      <div class="notice danger">
+        <strong>Spam & Manipulation</strong>
+        <p>No repetitive messages, fake reviews, or attempts to manipulate ratings.</p>
+      </div>
+      <div class="notice danger">
+        <strong>Impersonation</strong>
+        <p>Don't pretend to be someone else, especially developers or platform staff.</p>
+      </div>
+      <div class="notice danger">
+        <strong>Privacy Violations</strong>
+        <p>Never share others' personal information without consent.</p>
+      </div>
+      <div class="notice danger">
+        <strong>Illegal Activities</strong>
+        <p>No promotion of illegal content or services.</p>
+      </div>
     </div>
   </div>
 
   <!-- Content Standards -->
-  <div class="section" id="content-standards">
+  <div class="page-section" id="content-standards">
     <h2 class="section-title">📝 Content Standards</h2>
 
-    <div class="subsection-title">What's NOT Allowed</div>
+    <div class="subsection">
+      <div class="subsection-title">What's NOT Allowed</div>
 
-    <div class="highlight-box">
-      <p><strong>🚫 Hate Speech & Discrimination:</strong> Content targeting race, ethnicity, religion, gender, sexual orientation, disability, or national origin.</p>
+      <div class="notice">
+        <p><strong>🚫 Hate Speech & Discrimination:</strong> Content targeting race, ethnicity, religion, gender, sexual orientation, disability, or national origin.</p>
+      </div>
+
+      <div class="notice">
+        <p><strong>🚫 Violence & Self-Harm:</strong> Glorifying, promoting, or encouraging violence or self-harm.</p>
+      </div>
+
+      <div class="notice">
+        <p><strong>🚫 Sexual Content:</strong> Explicit sexual material, non-consensual intimate images, or child sexual abuse material.</p>
+      </div>
+
+      <div class="notice">
+        <p><strong>🚫 Fraud & Scams:</strong> Deceptive schemes, fake giveaways, or money-making scams.</p>
+      </div>
+
+      <div class="notice">
+        <p><strong>🚫 Misinformation:</strong> Deliberately false information intended to harm or mislead.</p>
+      </div>
+
+      <div class="notice">
+        <p><strong>🚫 Copyright Infringement:</strong> Using copyrighted material without permission or proper licensing.</p>
+      </div>
     </div>
 
-    <div class="highlight-box">
-      <p><strong>🚫 Violence & Self-Harm:</strong> Glorifying, promoting, or encouraging violence or self-harm.</p>
-    </div>
-
-    <div class="highlight-box">
-      <p><strong>🚫 Sexual Content:</strong> Explicit sexual material, non-consensual intimate images, or child sexual abuse material.</p>
-    </div>
-
-    <div class="highlight-box">
-      <p><strong>🚫 Fraud & Scams:</strong> Deceptive schemes, fake giveaways, or money-making scams.</p>
-    </div>
-
-    <div class="highlight-box">
-      <p><strong>🚫 Misinformation:</strong> Deliberately false information intended to harm or mislead.</p>
-    </div>
-
-    <div class="highlight-box">
-      <p><strong>🚫 Copyright Infringement:</strong> Using copyrighted material without permission or proper licensing.</p>
-    </div>
-
-    <div class="subsection-title">What's Encouraged</div>
-    <div class="do-box">
-      <strong>Thoughtful Discussion</strong>
-      <p>Share different perspectives respectfully. Debate ideas, not individuals.</p>
-    </div>
-    <div class="do-box">
-      <strong>Constructive Criticism</strong>
-      <p>Provide specific, actionable feedback to help others improve.</p>
-    </div>
-    <div class="do-box">
-      <strong>Supporting Others</strong>
-      <p>Help fellow community members. Share knowledge and experiences.</p>
+    <div class="subsection">
+      <div class="subsection-title">What's Encouraged</div>
+      <div class="notice success">
+        <strong>Thoughtful Discussion</strong>
+        <p>Share different perspectives respectfully. Debate ideas, not individuals.</p>
+      </div>
+      <div class="notice success">
+        <strong>Constructive Criticism</strong>
+        <p>Provide specific, actionable feedback to help others improve.</p>
+      </div>
+      <div class="notice success">
+        <strong>Supporting Others</strong>
+        <p>Help fellow community members. Share knowledge and experiences.</p>
+      </div>
     </div>
   </div>
 
   <!-- Developer Expectations -->
-  <div class="section" id="developer-expectations">
+  <div class="page-section" id="developer-expectations">
     <h2 class="section-title">👨‍💻 Developer Expectations</h2>
     <p>Developers agree to maintain high standards when publishing on JN App Store:</p>
 
-    <div class="subsection-title">Developer Responsibilities</div>
+    <div class="subsection">
+      <div class="subsection-title">Developer Responsibilities</div>
 
-    <div class="do-box">
-      <strong>Accurate Metadata</strong>
-      <p>Ensure app title, description, screenshots, and version info are accurate and current.</p>
+      <div class="notice success">
+        <strong>Accurate Metadata</strong>
+        <p>Ensure app title, description, screenshots, and version info are accurate and current.</p>
+      </div>
+
+      <div class="notice success">
+        <strong>Security</strong>
+        <p>No malware, spyware, viruses, or code designed to harm devices or steal data.</p>
+      </div>
+
+      <div class="notice success">
+        <strong>Privacy Compliance</strong>
+        <p>Have a clear privacy policy. Be transparent about data collection and usage.</p>
+      </div>
+
+      <div class="notice success">
+        <strong>Respond to Users</strong>
+        <p>Address user concerns and feedback professionally and promptly.</p>
+      </div>
+
+      <div class="notice success">
+        <strong>Regular Updates</strong>
+        <p>Fix bugs, release security patches, and maintain version history.</p>
+      </div>
     </div>
 
-    <div class="do-box">
-      <strong>Security</strong>
-      <p>No malware, spyware, viruses, or code designed to harm devices or steal data.</p>
-    </div>
+    <div class="subsection">
+      <div class="subsection-title">Developer Prohibitions</div>
 
-    <div class="do-box">
-      <strong>Privacy Compliance</strong>
-      <p>Have a clear privacy policy. Be transparent about data collection and usage.</p>
-    </div>
+      <div class="notice danger">
+        <strong>No Misleading Apps</strong>
+        <p>Screenshots, descriptions, or functionality must match what users actually get.</p>
+      </div>
 
-    <div class="do-box">
-      <strong>Respond to Users</strong>
-      <p>Address user concerns and feedback professionally and promptly.</p>
-    </div>
+      <div class="notice danger">
+        <strong>No Excessive Ads</strong>
+        <p>Ad density should enhance, not diminish, user experience.</p>
+      </div>
 
-    <div class="do-box">
-      <strong>Regular Updates</strong>
-      <p>Fix bugs, release security patches, and maintain version history.</p>
-    </div>
+      <div class="notice danger">
+        <strong>No Unauthorized Permissions</strong>
+        <p>Request only necessary permissions. Explain why each is needed.</p>
+      </div>
 
-    <div class="subsection-title">Developer Prohibitions</div>
-
-    <div class="dont-box">
-      <strong>No Misleading Apps</strong>
-      <p>Screenshots, descriptions, or functionality must match what users actually get.</p>
-    </div>
-
-    <div class="dont-box">
-      <strong>No Excessive Ads</strong>
-      <p>Ad density should enhance, not diminish, user experience.</p>
-    </div>
-
-    <div class="dont-box">
-      <strong>No Unauthorized Permissions</strong>
-      <p>Request only necessary permissions. Explain why each is needed.</p>
-    </div>
-
-    <div class="dont-box">
-      <strong>No Illegal Content</strong>
-      <p>Apps promoting illegal activities will be removed.</p>
+      <div class="notice danger">
+        <strong>No Illegal Content</strong>
+        <p>Apps promoting illegal activities will be removed.</p>
+      </div>
     </div>
   </div>
 
   <!-- Enforcement -->
-  <div class="section" id="enforcement">
+  <div class="page-section" id="enforcement">
     <h2 class="section-title">⚖️ Enforcement & Consequences</h2>
 
-    <div class="subsection-title">Levels of Enforcement</div>
+    <div class="subsection">
+      <div class="subsection-title">Levels of Enforcement</div>
 
-    <div class="code-block">
-      <strong>Level 1: Warning</strong>
-      <p>First minor violation - user/developer receives a warning</p>
+      <div class="definition-item">
+        <strong style="color: var(--text); display: block; margin-bottom: 8px;">Level 1: Warning</strong>
+        <p style="color: var(--muted); margin: 0;">First minor violation - user/developer receives a warning</p>
+      </div>
+
+      <div class="definition-item">
+        <strong style="color: var(--text); display: block; margin-bottom: 8px;">Level 2: Suspension (24-72 hours)</strong>
+        <p style="color: var(--muted); margin: 0;">Repeated violations or moderate offenses result in temporary suspension</p>
+      </div>
+
+      <div class="definition-item">
+        <strong style="color: var(--text); display: block; margin-bottom: 8px;">Level 3: Extended Suspension (1-30 days)</strong>
+        <p style="color: var(--muted); margin: 0;">Serious violations lead to extended account suspension</p>
+      </div>
+
+      <div class="definition-item">
+        <strong style="color: var(--text); display: block; margin-bottom: 8px;">Level 4: Permanent Ban</strong>
+        <p style="color: var(--muted); margin: 0;">Severe or repeated violations result in permanent removal</p>
+      </div>
     </div>
 
-    <div class="code-block">
-      <strong>Level 2: Suspension (24-72 hours)</strong>
-      <p>Repeated violations or moderate offenses result in temporary suspension</p>
+    <div class="subsection">
+      <div class="subsection-title">What Gets Enforced?</div>
+      <ul class="content-list">
+        <li><strong>Spam & Manipulation:</strong> Fake reviews, vote manipulation, repetitive posts</li>
+        <li><strong>Harassment:</strong> Targeting, threats, hate speech</li>
+        <li><strong>Malware:</strong> Infected apps, viruses, spyware</li>
+        <li><strong>Privacy Violations:</strong> Sharing personal information, unauthorized data collection</li>
+        <li><strong>Fraud:</strong> Scams, deceptive practices</li>
+        <li><strong>Policy Violations:</strong> Any breach of these guidelines</li>
+      </ul>
     </div>
-
-    <div class="code-block">
-      <strong>Level 3: Extended Suspension (1-30 days)</strong>
-      <p>Serious violations lead to extended account suspension</p>
-    </div>
-
-    <div class="code-block">
-      <strong>Level 4: Permanent Ban</strong>
-      <p>Severe or repeated violations result in permanent removal</p>
-    </div>
-
-    <div class="subsection-title">What Gets Enforced?</div>
-    <ul style="margin: 16px 0; padding-left: 20px;">
-      <li><strong>Spam & Manipulation:</strong> Fake reviews, vote manipulation, repetitive posts</li>
-      <li><strong>Harassment:</strong> Targeting, threats, hate speech</li>
-      <li><strong>Malware:</strong> Infected apps, viruses, spyware</li>
-      <li><strong>Privacy Violations:</strong> Sharing personal information, unauthorized data collection</li>
-      <li><strong>Fraud:</strong> Scams, deceptive practices</li>
-      <li><strong>Policy Violations:</strong> Any breach of these guidelines</li>
-    </ul>
   </div>
 
   <!-- Appeals -->
-  <div class="section" id="appeals">
+  <div class="page-section" id="appeals">
     <h2 class="section-title">🔄 Appeals Process</h2>
 
     <p>We believe in fairness. If you feel a decision was unjust, follow these steps:</p>
 
-    <div class="do-dont-grid">
-      <div style="background: var(--bg); padding: 20px; border-radius: 4px;">
+    <div class="content-grid">
+      <div style="background: color-mix(in srgb, var(--card) 80%, var(--brand) 20%); padding: 20px; border-radius: 12px; border: 1px solid var(--line);">
         <strong style="color: var(--text); display: block; margin-bottom: 8px;">📧 Step 1: Contact Support</strong>
-        <p style="color: var(--muted); font-size: 14px;">Email our support team with details about your case.</p>
+        <p style="color: var(--muted); font-size: 14px; margin: 0;">Email our support team with details about your case.</p>
       </div>
 
-      <div style="background: var(--bg); padding: 20px; border-radius: 4px;">
+      <div style="background: color-mix(in srgb, var(--card) 80%, var(--brand) 20%); padding: 20px; border-radius: 12px; border: 1px solid var(--line);">
         <strong style="color: var(--text); display: block; margin-bottom: 8px;">📋 Step 2: Provide Evidence</strong>
-        <p style="color: var(--muted); font-size: 14px;">Include screenshots, messages, or context supporting your appeal.</p>
+        <p style="color: var(--muted); font-size: 14px; margin: 0;">Include screenshots, messages, or context supporting your appeal.</p>
       </div>
 
-      <div style="background: var(--bg); padding: 20px; border-radius: 4px;">
+      <div style="background: color-mix(in srgb, var(--card) 80%, var(--brand) 20%); padding: 20px; border-radius: 12px; border: 1px solid var(--line);">
         <strong style="color: var(--text); display: block; margin-bottom: 8px;">⏳ Step 3: Review</strong>
-        <p style="color: var(--muted); font-size: 14px;">Our team reviews your appeal within 5-7 business days.</p>
+        <p style="color: var(--muted); font-size: 14px; margin: 0;">Our team reviews your appeal within 5-7 business days.</p>
       </div>
 
-      <div style="background: var(--bg); padding: 20px; border-radius: 4px;">
+      <div style="background: color-mix(in srgb, var(--card) 80%, var(--brand) 20%); padding: 20px; border-radius: 12px; border: 1px solid var(--line);">
         <strong style="color: var(--text); display: block; margin-bottom: 8px;">✅ Step 4: Decision</strong>
-        <p style="color: var(--muted); font-size: 14px;">We'll notify you of the outcome with detailed explanation.</p>
+        <p style="color: var(--muted); font-size: 14px; margin: 0;">We'll notify you of the outcome with detailed explanation.</p>
       </div>
     </div>
 
-    <div class="highlight-box">
+    <div class="notice">
       <p><strong>Note:</strong> Multiple frivolous appeals may result in additional consequences. Please only appeal if you genuinely believe a mistake was made.</p>
     </div>
   </div>
 
   <!-- Footer CTA -->
-  <div class="section" style="text-align: center;">
+  <div class="page-section" style="text-align: center;">
     <h3 style="margin-bottom: 12px;">Have Questions?</h3>
     <p style="color: var(--muted); margin-bottom: 20px;">Visit our support page for more information or contact our team</p>
-    <a href="{% url 'support' %}" class="btn btn-primary">Go to Support Center</a>
+    <a href="{% url 'support' %}" style="display: inline-block; padding:12px 24px; background: var(--brand); color: white; text-decoration: none; border-radius:8px; font-weight: 600; transition:.12s;">Go to Support Center</a>
   </div>
 
   <div style="text-align: center; margin-top: 40px; padding: 20px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line);">
-    <p>Last updated: February 2, 2026 | <a href="{% url 'home' %}" style="color: var(--primary); text-decoration: none;">← Back to Home</a></p>
+    <p>Last updated: February 2, 2026 | <a href="{% url 'home' %}" style="color: var(--brand); text-decoration: none;">← Back to Home</a></p>
   </div>
 </div>
 
