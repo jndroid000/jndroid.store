@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # ==================== CORE SETTINGS ====================
 ALLOWED_HOSTS = []
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Dhaka'  # Bangladesh timezone
 USE_I18N = True
 USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -99,7 +99,8 @@ LOGIN_URL = 'accounts:login'
 LOGOUT_REDIRECT_URL = '/'
 
 # ==================== STATIC & MEDIA FILES ====================
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
@@ -110,10 +111,10 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'jndroid000@gmail.com')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'cbsv rvqu truu yjzt')  # Gmail App Password
-DEFAULT_FROM_EMAIL = 'jndroid <jndroid000@gmail.com>'
-SERVER_EMAIL = 'jndroid <jndroid000@gmail.com>'
-ACCOUNT_EMAIL_SUBJECT_PREFIX = '[My Project] '
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')  # Must be set via environment variable
+DEFAULT_FROM_EMAIL = 'JN App Store <jndroid000@gmail.com>'
+SERVER_EMAIL = 'JN App Store Server <jndroid000@gmail.com>'
+ACCOUNT_EMAIL_SUBJECT_PREFIX = '[JN App Store] '
 
 # ==================== DJANGO-ALLAUTH CONFIGURATION ====================
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
