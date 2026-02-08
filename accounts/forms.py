@@ -123,27 +123,46 @@ class LoginForm(forms.Form):
     
     def clean(self):
         """Authenticate user"""
+        from django.contrib.auth.hashers import check_password
+        
         cleaned_data = super().clean()
         username = cleaned_data.get('username')
         password = cleaned_data.get('password')
         
+        self.user = None
+        self.unverified_email = None
+        
         if username and password:
-            # Try to authenticate with username
-            self.user = authenticate(username=username, password=password)
-            
-            # If failed, try with email
-            if self.user is None:
+            # First, try to find user by username or email
+            user = None
+            try:
+                # Try username first
+                user = User.objects.get(username=username)
+            except User.DoesNotExist:
                 try:
+                    # Try email
                     user = User.objects.get(email=username)
-                    self.user = authenticate(username=user.username, password=password)
                 except User.DoesNotExist:
-                    pass
+                    # User doesn't exist
+                    raise forms.ValidationError('Invalid username/email or password')
             
-            # If still failed, raise error
-            if self.user is None:
+            # Now check password
+            if user and check_password(password, user.password):
+                # Password is correct
+                # Check if email is verified (is_active)
+                if not user.is_active:
+                    # Email is not verified - store email for modal display
+                    self.unverified_email = user.email
+                    raise forms.ValidationError('UNVERIFIED_EMAIL')
+                
+                # User is verified, set authenticated user
+                self.user = user
+            else:
+                # Password is incorrect
                 raise forms.ValidationError('Invalid username/email or password')
         
         return cleaned_data
+
 
 
 class ProfileUpdateForm(forms.ModelForm):

@@ -1,9 +1,170 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}লগইন - JN App Store{% endblock %}
-{% block extra_css %}<link rel="stylesheet" href="{% static 'css/review_form.css' %}">{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/review_form.css' %}">
+<style>
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .modal-overlay.active {
+    display: flex;
+  }
+  
+  .modal-content {
+    background: var(--bg);
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 500px;
+    width: 90%;
+    border: 1px solid var(--line);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.3s ease-out;
+  }
+  
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .modal-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, rgba(251,113,133,0.2), rgba(251,113,133,0.1));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    font-size: 40px;
+  }
+  
+  .modal-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  
+  .modal-subtitle {
+    color: var(--muted);
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  
+  .modal-email {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    margin-bottom: 24px;
+    color: var(--text);
+    font-weight: 500;
+    word-break: break-all;
+  }
+  
+  .modal-buttons {
+    display: flex;
+    gap: 12px;
+    flex-direction: column;
+  }
+  
+  .modal-btn {
+    padding: 12px 24px;
+    border-radius: 12px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 15px;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+  }
+  
+  .modal-btn-primary {
+    background: linear-gradient(135deg, var(--brand), #4f46e5);
+    color: white;
+    box-shadow: 0 18px 40px rgba(124,92,255,0.25);
+  }
+  
+  .modal-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 45px rgba(124,92,255,0.35);
+  }
+  
+  .modal-btn-secondary {
+    background: var(--card);
+    color: var(--text);
+    border: 1px solid var(--line);
+  }
+  
+  .modal-btn-secondary:hover {
+    background: rgba(255,255,255,0.08);
+  }
+  
+  .modal-info {
+    background: rgba(251,113,133,0.08);
+    border-left: 4px solid rgba(251,113,133,0.5);
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 20px;
+    line-height: 1.6;
+  }
+</style>
+{% endblock %}
 
 {% block content %}
+<!-- Email Verification Modal -->
+{% if unverified_email %}
+  <div class="modal-overlay active">
+    <div class="modal-content">
+      <div class="modal-icon">📧</div>
+      <div class="modal-title">ইমেইল যাচাইকরণ প্রয়োজন</div>
+      <div class="modal-subtitle">আপনার অ্যাকাউন্ট সক্রিয় করতে ইমেইল যাচাই করুন</div>
+      
+      <div class="modal-email">{{ unverified_email }}</div>
+      
+      <div class="modal-info">
+        ✓ আপনার অ্যাকাউন্ট তৈরি হয়েছে কিন্তু ইমেইল যাচাই হয়নি। আমরা আপনার ইমেইলে একটি যাচাইকরণ লিঙ্ক পাঠাব।
+      </div>
+      
+      <div class="modal-buttons" style="margin-top: 24px;">
+        <a href="/accounts/resend-verification/?email={{ unverified_email }}" class="modal-btn modal-btn-primary">
+          📬 যাচাইকরণ ইমেইল রিসেন্ড করুন
+        </a>
+        <button type="button" class="modal-btn modal-btn-secondary" onclick="document.querySelector('.modal-overlay').classList.remove('active'); document.querySelector('.login-form').style.display='block';">
+          ← ফিরে যান
+        </button>
+      </div>
+    </div>
+  </div>
+  <style>
+    .login-form { display: none !important; }
+  </style>
+{% endif %}
+
 <div class="reviewFormContainer">
   <div class="pageHeader">
     <h1>লগইন করুন</h1>
@@ -18,13 +179,15 @@
     {% endfor %}
   {% endif %}
 
-  <form method="post" class="reviewForm">
+  <form method="post" class="reviewForm login-form">
     {% csrf_token %}
 
     {% if form.non_field_errors %}
       <div style="background:rgba(251,113,133,0.15); border:1px solid rgba(251,113,133,0.3); border-radius:12px; padding:14px; margin-bottom:16px; color:rgba(251,113,133,0.9);">
         {% for error in form.non_field_errors %}
-          <p style="margin:4px 0;">{{ error }}</p>
+          {% if error != 'UNVERIFIED_EMAIL' %}
+            <p style="margin:4px 0;">{{ error|safe }}</p>
+          {% endif %}
         {% endfor %}
       </div>
     {% endif %}

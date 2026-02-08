@@ -122,6 +122,7 @@ def app_download(request, slug):
 
 
 @login_required(login_url='accounts:login')
+@login_required(login_url='accounts:login')
 def app_upload(request):
     """Upload a new app"""
     if request.method == 'POST':
@@ -138,6 +139,34 @@ def app_upload(request):
     context = {
         'form': form,
         'title': 'Upload New App',
+    }
+    return render(request, 'apps/app_upload.html', context)
+
+
+@login_required(login_url='accounts:login')
+def app_edit(request, slug):
+    """Edit an existing app (only owner can edit)"""
+    app = get_object_or_404(App, slug=slug)
+    
+    # Check if current user is the owner
+    if app.owner != request.user:
+        messages.error(request, 'You can only edit your own apps!')
+        return redirect('apps:detail', slug=app.slug)
+    
+    if request.method == 'POST':
+        form = AppUploadForm(request.POST, request.FILES, instance=app)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"App '{app.title}' updated successfully!")
+            return redirect('apps:detail', slug=app.slug)
+    else:
+        form = AppUploadForm(instance=app)
+    
+    context = {
+        'form': form,
+        'title': 'Edit App',
+        'app': app,
+        'is_edit': True,
     }
     return render(request, 'apps/app_upload.html', context)
 

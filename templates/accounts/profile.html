@@ -106,7 +106,7 @@
             <!-- Actions -->
             <div style="display:flex; gap:8px;">
               <a href="{% url 'apps:detail' slug=app.slug %}" class="btn secondary" style="flex:1; padding:8px; font-size:13px; text-align:center;">View</a>
-              <a href="{% url 'apps:admin_app_edit' slug=app.slug %}" class="btn secondary" style="flex:1; padding:8px; font-size:13px; text-align:center;">Edit</a>
+              <a href="{% url 'apps:edit' slug=app.slug %}" class="btn secondary" style="flex:1; padding:8px; font-size:13px; text-align:center;">Edit</a>
             </div>
           </div>
         {% endfor %}

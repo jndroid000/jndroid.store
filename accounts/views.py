@@ -21,6 +21,8 @@ def login_view(request):
     if request.user.is_authenticated:
         return redirect('home')
     
+    unverified_email = None
+    
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -31,12 +33,17 @@ def login_view(request):
             # Redirect to next page or home
             next_page = request.GET.get('next', 'home')
             return redirect(next_page)
+        else:
+            # Check if form has unverified email
+            if hasattr(form, 'unverified_email') and form.unverified_email:
+                unverified_email = form.unverified_email
     else:
         form = LoginForm()
     
     context = {
         'form': form,
         'title': 'Login',
+        'unverified_email': unverified_email,
     }
     return render(request, 'accounts/login.html', context)
 
@@ -197,6 +204,76 @@ def email_confirmation_view(request, key):
             'error_message': error_msg
         }
         return render(request, 'accounts/email_verification_failure.html', context)
+
+
+@require_http_methods(["GET"])
+@csrf_protect
+def resend_verification_email(request):
+    """Resend verification email to unverified users"""
+    email = request.GET.get('email', '').strip()
+    
+    if not email:
+        messages.error(request, 'ইমেইল ঠিকানা প্রদান করা হয়নি।')
+        return redirect('accounts:login')
+    
+    try:
+        user = User.objects.get(email=email)
+        
+        # If already verified, redirect to login
+        if user.is_active:
+            messages.info(request, 'এই ইমেইল ইতিমধ্যে যাচাই করা হয়েছে। আপনি এখন লগইন করতে পারেন।')
+            return redirect('accounts:login')
+        
+        # Get or create EmailAddress
+        email_address, created = EmailAddress.objects.get_or_create(
+            user=user,
+            email=email,
+            defaults={'verified': False, 'primary': True}
+        )
+        
+        # Send verification email
+        try:
+            confirmation = EmailConfirmationHMAC(email_address)
+            activate_url = request.build_absolute_uri(
+                f'/accounts/confirm-email/{confirmation.key}/'
+            )
+            
+            email_context = {
+                'user': user,
+                'activate_url': activate_url,
+                'email': user.email,
+            }
+            
+            subject = f"{settings.ACCOUNT_EMAIL_SUBJECT_PREFIX}ইমেইল যাচাইকরণ (পুনরায় পাঠানো)"
+            
+            html_message = render_to_string(
+                'account/email/email_confirmation_message.html',
+                email_context
+            )
+            
+            send_mail(
+                subject,
+                f'আপনার অ্যাকাউন্ট যাচাই করতে এই লিঙ্ক ভিজিট করুন: {activate_url}',
+                settings.DEFAULT_FROM_EMAIL,
+                [user.email],
+                html_message=html_message,
+                fail_silently=False,
+            )
+            
+            messages.success(
+                request,
+                f'যাচাইকরণ ইমেইল {user.email} এ পাঠানো হয়েছে। '
+                'দয়া করে আপনার ইনবক্স চেক করুন।'
+            )
+        except Exception as e:
+            print(f"Error resending email: {e}")
+            messages.error(request, 'ইমেইল পাঠানোর সময় সমস্যা হয়েছে। দয়া করে পরে চেষ্টা করুন।')
+        
+        return redirect('accounts:email-verification-sent')
+    
+    except User.DoesNotExist:
+        messages.error(request, 'এই ইমেইল দিয়ে কোনো অ্যাকাউন্ট নেই।')
+        return redirect('accounts:login')
 
 
 @require_http_methods(["POST"])
