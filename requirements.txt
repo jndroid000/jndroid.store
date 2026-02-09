@@ -13,6 +13,11 @@ django-allauth==0.61.1
 # Database
 psycopg2-binary==2.9.9  # PostgreSQL adapter for production
 
+# Production Server & Static Files
+gunicorn==21.2.0  # WSGI HTTP Server for VPS
+whitenoise==6.6.0  # Static files serving in production
+python-decouple==3.8  # Environment variables management
+
 # Development & Utilities
 django-extensions==3.2.3
 python-dotenv==1.0.0

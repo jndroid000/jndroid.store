@@ -1,1 +1,8 @@
 python manage.py runserver
+
+** remote URL দেখো = git remote -v  (venv er vitore)
+
+deactivate
+
+source venv/bin/activate
+

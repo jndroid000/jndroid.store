@@ -63,6 +63,13 @@ CACHES = {
 # Run before deployment: python manage.py collectstatic --noinput
 STATICFILES_DIRS = []
 
+# WhiteNoise configuration for serving static files efficiently
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# WhiteNoise settings
+WHITENOISE_COMPRESS_OFFLINE = True
+WHITENOISE_COMPRESSION_QUALITY = 80
+
 # ==================== LOGGING (Production) ====================
 # Production logging - remove console output, keep file logging only
 LOGGING['loggers']['django']['level'] = 'INFO'
