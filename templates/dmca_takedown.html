@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dmca_takedown_new.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="dmca-takedown">
+    <h1>DMCA / Takedown Policy</h1>
+    <p>We respect the intellectual property rights of others and expect our users to do the same. If you believe that your copyrighted work has been copied in a way that constitutes copyright infringement, please follow the procedure below to file a DMCA Takedown Notice.</p>
+
+    <h2>Filing a DMCA Takedown Notice</h2>
+    <p>To file a DMCA Takedown Notice, please provide the following information:</p>
+    <ul>
+        <li>Your name, address, telephone number, and email address.</li>
+        <li>A description of the copyrighted work that you claim has been infringed.</li>
+        <li>The URL or other identifying location of the material you claim is infringing.</li>
+        <li>A statement that you have a good faith belief that the use of the material is not authorized by the copyright owner, its agent, or the law.</li>
+        <li>A statement, under penalty of perjury, that the information in your notice is accurate and that you are the copyright owner or authorized to act on the copyright owner's behalf.</li>
+        <li>Your electronic or physical signature.</li>
+    </ul>
+
+    <h2>Contact Information</h2>
+    <p>DMCA Takedown Notices can be sent to:</p>
+    <ul>
+        <li>Email: dmca@example.com</li>
+        <li>Mail: JnDroid Store, Attn: DMCA Agent, 123 App Street, Dhaka, Bangladesh</li>
+    </ul>
+
+    <h2>Counter-Notification</h2>
+    <p>If you believe that your content was removed or disabled as a result of mistake or misidentification, you may file a counter-notification. To file a counter-notification, please provide the following information:</p>
+    <ul>
+        <li>Your name, address, telephone number, and email address.</li>
+        <li>A description of the material that was removed or disabled and the location where it appeared before it was removed or disabled.</li>
+        <li>A statement, under penalty of perjury, that you have a good faith belief that the material was removed or disabled as a result of mistake or misidentification.</li>
+        <li>Your consent to the jurisdiction of the federal court in your district, or if you are outside Bangladesh, the jurisdiction of the courts in Bangladesh.</li>
+        <li>Your electronic or physical signature.</li>
+    </ul>
+
+    <h2>Repeat Infringers</h2>
+    <p>We reserve the right to terminate user accounts that are repeat infringers of intellectual property rights.</p>
+
+    <h2>DMCA Takedown Notice Form</h2>
+    <p style="color: var(--muted); margin-bottom: 20px;">Please fill out all required fields. Providing false information may result in legal consequences.</p>
+    <form method="post" action="/dmca-takedown/submit/" class="dmca-form">
+        {% csrf_token %}
+        
+        <fieldset>
+            <legend>Your Information</legend>
+            <label for="name">Full Name: <span style="color: red;">*</span></label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email Address: <span style="color: red;">*</span></label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="phone">Phone Number: <span style="color: red;">*</span></label>
+            <input type="tel" id="phone" name="phone" required>
+
+            <label for="address">Address: <span style="color: red;">*</span></label>
+            <textarea id="address" name="address" rows="3" required placeholder="Full address including country"></textarea>
+        </fieldset>
+
+        <fieldset>
+            <legend>Copyright Information</legend>
+            <label for="copyrighted_work">Description of Copyrighted Work: <span style="color: red;">*</span></label>
+            <textarea id="copyrighted_work" name="copyrighted_work" rows="4" required placeholder="Describe the original copyrighted work (app, software, etc.)"></textarea>
+
+            <label for="original_url">URL/Link to Original Work (if available):</label>
+            <input type="url" id="original_url" name="original_url">
+
+            <label for="copyright_holder">Are you the copyright holder or authorized agent? <span style="color: red;">*</span></label>
+            <select id="copyright_holder" name="copyright_holder" required>
+                <option value="">-- Select --</option>
+                <option value="owner">I am the copyright holder</option>
+                <option value="agent">I am authorized to act on behalf of the copyright holder</option>
+            </select>
+        </fieldset>
+
+        <fieldset>
+            <legend>Infringing Material Details</legend>
+            <label for="app_name">Infringing App/Content Name: <span style="color: red;">*</span></label>
+            <input type="text" id="app_name" name="app_name" required placeholder="Name of the infringing app or content">
+
+            <label for="infringing_url">URL of Infringing Material: <span style="color: red;">*</span></label>
+            <input type="url" id="infringing_url" name="infringing_url" required placeholder="Direct link to the infringing app or content">
+
+            <label for="description">Detailed Description of Infringement: <span style="color: red;">*</span></label>
+            <textarea id="description" name="description" rows="5" required placeholder="Explain how your work is being infringed (e.g., copied code, stolen assets, duplicated app)"></textarea>
+
+            <label for="damages">What specific content is infringing? <span style="color: red;">*</span></label>
+            <textarea id="damages" name="damages" rows="4" required placeholder="Be specific about which parts/features/code are copied"></textarea>
+        </fieldset>
+
+        <fieldset>
+            <legend>Legal Declaration</legend>
+            <div style="background: #f0f0f0; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                <p style="margin: 0; color: #333; font-size: 14px;">
+                    <strong>Under penalty of perjury:</strong> I certify that:
+                </p>
+                <ul style="margin: 10px 0 0 20px; color: #555; font-size: 13px;">
+                    <li>I am the copyright owner or authorized to act on their behalf</li>
+                    <li>The information provided is accurate and complete</li>
+                    <li>My use of this notice is not frivolous or malicious</li>
+                    <li>I understand that false claims may result in legal action</li>
+                </ul>
+            </div>
+
+            <label for="good_faith">
+                <input type="checkbox" id="good_faith" name="good_faith" required>
+                I have a good faith belief that the use of the material is not authorized by the copyright owner or the law
+            </label>
+
+            <label for="perjury">
+                <input type="checkbox" id="perjury" name="perjury" required>
+                I declare, under penalty of perjury, that the information in this notice is accurate and that I am authorized to act on behalf of the copyright owner (if applicable)
+            </label>
+
+            <label for="signature">Your Full Name (Digital Signature): <span style="color: red;">*</span></label>
+            <input type="text" id="signature" name="signature" required placeholder="Type your full name as your digital signature">
+        </fieldset>
+
+        <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ffc107;">
+            <strong>⚠️ Important Notice:</strong>
+            <p style="margin: 10px 0 0;">False DMCA notices can result in legal liability. Please ensure all information is accurate before submitting. We verify all reports and may investigate abuse.</p>
+        </div>
+
+        <button type="submit" class="btn primary" style="width: 100%; padding: 12px; font-size: 16px;">Submit DMCA Takedown Notice</button>
+    </form>
+</div>
+{% endblock %}

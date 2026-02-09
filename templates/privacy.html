@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/privacy.css' %}">{% endblock %}
+
+{% block content %}
+<div class="container">
+  <!-- Hero Section -->
+  <div class="page-hero">
+    <div class="page-hero-content">
+      <h1>🔒 Privacy Policy</h1>
+      <p>Your privacy is critically important to us. Learn how we protect and manage your information.</p>
+    </div>
+  </div>
+
+  <!-- Last Updated -->
+  <div class="notice">
+    <p><strong>Last Updated:</strong> February 9, 2026 | This Privacy Policy explains how JnDroid Store collects, uses, and protects your data.</p>
+  </div>
+
+  <div class="privacy-policy">
+    <!-- Table of Contents -->
+    <div class="privacy-toc">
+      <div class="toc-title">📑 Table of Contents</div>
+      <ul class="toc-list">
+        <li><a href="#information-collect">1. Information We Collect</a></li>
+        <li><a href="#how-use">2. How We Use Your Information</a></li>
+        <li><a href="#third-party">3. Third-Party Services</a></li>
+        <li><a href="#cookies">4. Cookies & Tracking</a></li>
+        <li><a href="#security">5. Data Security</a></li>
+        <li><a href="#children">6. Children's Privacy</a></li>
+        <li><a href="#changes">7. Changes to Policy</a></li>
+        <li><a href="#contact">8. Contact Us</a></li>
+      </ul>
+    </div>
+
+    <!-- Section 1 -->
+    <div class="privacy-section" id="information-collect">
+      <h2 class="section-title">1. Information We Collect</h2>
+      <p>We collect information to provide better services to our users. This includes:</p>
+      <ul class="content-list">
+        <li><strong>Personal Information:</strong> Name, email address, phone number, profile information</li>
+        <li><strong>Device Information:</strong> Device type, operating system, browser type, IP address</li>
+        <li><strong>Usage Data:</strong> Pages visited, time spent, interactions, downloads, ratings</li>
+        <li><strong>Cookies & Tracking:</strong> Cookies and similar tracking technologies</li>
+      </ul>
+    </div>
+
+    <!-- Section 2 -->
+    <div class="privacy-section" id="how-use">
+      <h2 class="section-title">2. How We Use Your Information</h2>
+      <p>We use the information we collect in various ways, including to:</p>
+      <ul class="content-list">
+        <li>Provide, operate, and maintain our platform</li>
+        <li>Improve, personalize, and expand our services</li>
+        <li>Understand and analyze user behavior and preferences</li>
+        <li>Develop new products, services, features, and functionality</li>
+        <li>Send notifications and respond to user inquiries</li>
+        <li>Enforce our terms and prevent illegal activities</li>
+      </ul>
+    </div>
+
+    <!-- Section 3 -->
+    <div class="privacy-section" id="third-party">
+      <h2 class="section-title">3. Third-Party Services</h2>
+      <p>We may employ third-party companies and individuals to facilitate our platform, provide services on our behalf, or assist us in analyzing usage. These third parties have access to your personal data only to perform these tasks on our behalf and are obligated not to disclose or use it for any other purpose.</p>
+      <div class="highlight-box">
+        <strong>⚠️ Note:</strong> We do not sell or rent your personal data to third parties.
+      </div>
+    </div>
+
+    <!-- Section 4 -->
+    <div class="privacy-section" id="cookies">
+      <h2 class="section-title">4. Cookies & Tracking Technologies</h2>
+      <p>We use cookies and similar tracking technologies to track activity on our platform and hold certain information. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent. However, if you do not accept cookies, you may not be able to use some portions of our website.</p>
+    </div>
+
+    <!-- Section 5 -->
+    <div class="privacy-section" id="security">
+      <h2 class="section-title">5. Data Security</h2>
+      <p>The security of your data is important to us. While we strive to use commercially acceptable means to protect your personal data, we cannot guarantee its absolute security. We implement industry-standard security measures including encryption, secure servers, and access controls.</p>
+    </div>
+
+    <!-- Section 6 -->
+    <div class="privacy-section" id="children">
+      <h2 class="section-title">6. Children's Privacy</h2>
+      <p>Our platform does not address anyone under the age of 13. We do not knowingly collect personally identifiable information from children under 13. If you are a parent or guardian and you are aware that your child has provided us with personal data, please contact us. If we become aware that we have collected personal data from children without verification of parental consent, we take steps to remove that information from our servers.</p>
+    </div>
+
+    <!-- Section 7 -->
+    <div class="privacy-section" id="changes">
+      <h2 class="section-title">7. Changes to This Privacy Policy</h2>
+      <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date. You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.</p>
+    </div>
+
+    <!-- Section 8 -->
+    <div class="privacy-section" id="contact">
+      <h2 class="section-title">8. Contact Us</h2>
+      <p>If you have any questions about this Privacy Policy or our privacy practices:</p>
+      <div class="contact-box">
+        <ul class="content-list">
+          <li><strong>Email:</strong> support@jndroidstore.com</li>
+          <li><strong>Website:</strong> <a href="/">JnDroid Store</a></li>
+          <li><strong>Response Time:</strong> We aim to respond within 48 hours</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="privacy-footer">
+      <p>Thank you for trusting JnDroid Store with your information. Your privacy and security are our top priorities.</p>
+      <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--line);">
+        <a href="/" style="color: var(--brand); text-decoration: none; font-weight: 500;">← Back to Home</a>
+        <span style="color: var(--muted); margin: 0 12px;">•</span>
+        <a href="/community-guidelines/" style="color: var(--brand); text-decoration: none; font-weight: 500;">Community Guidelines</a>
+        <span style="color: var(--muted); margin: 0 12px;">•</span>
+        <a href="/terms-of-service/" style="color: var(--brand); text-decoration: none; font-weight: 500;">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

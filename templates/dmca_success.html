@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+<div class="dmca-success">
+    <div class="success-container">
+        <div class="success-icon">✓</div>
+        <h1>DMCA Notice Submitted Successfully</h1>
+        <p class="success-message">Thank you for submitting your DMCA takedown notice. We have received your report and will review it within 24-48 hours.</p>
+        
+        <div class="success-details">
+            <h2>What Happens Next?</h2>
+            <ul>
+                <li><strong>Review:</strong> Our team will verify the copyright claim and review the content in question.</li>
+                <li><strong>Action:</strong> If the claim is valid, we will take the necessary action to remove or disable access to the infringing content.</li>
+                <li><strong>Notification:</strong> We will send you a confirmation email with details of our investigation.</li>
+            </ul>
+        </div>
+
+        <div class="contact-info">
+            <h2>Have Questions?</h2>
+            <p>If you have any questions about your submission, please contact us at:</p>
+            <p><strong>Email:</strong> <a href="mailto:dmca@jndroid.com">dmca@jndroid.com</a></p>
+            <p><strong>Response Time:</strong> 24-48 hours</p>
+        </div>
+
+        <div class="action-buttons">
+            <a href="/" class="btn btn-primary">← Back to Home</a>
+            <a href="/privacy/" class="btn btn-secondary">Read Privacy Policy</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dmca_success.css' %}">
+{% endblock %}

@@ -1,94 +1,440 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Home - JN App Store{% endblock %}
-{% block extra_css %}<link rel="stylesheet" href="{% static 'css/home.css' %}">{% endblock %}
+{% block title %}Home - JnDroid Store{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock %}
 
 {% block content %}
-  <div class="hero">
-    <div class="heroGrid">
-      <div class="heroCard">
-        <div class="heroInner">
-          <span class="pill"><span class="dot"></span> Verified APK • Clean UI • Fast Download</span>
+  <!-- ==================== HERO SECTION ==================== -->
+  <div class="hero-wrapper">
+    <div class="hero-background">
+      <div class="hero-gradient grad-1"></div>
+      <div class="hero-gradient grad-2"></div>
+      <div class="hero-gradient grad-3"></div>
+    </div>
 
-          <h2 class="title">বাংলায় সহজ, দ্রুত এবং নিরাপদ APK হাব</h2>
-          <p class="subtitle">
-            JN App Store — এমন অ্যাপ খুঁজে পাও যেগুলো <b>Play Store-এ নেই</b>, বা <b>Old Version</b> দরকার,
-            বা <b>Lite</b> ব্যবহার করতে চাও — সবকিছু এক জায়গায়।
+    <div class="container">
+      <div class="hero-grid">
+        <!-- Left Content -->
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="badge-icon">✨</span>
+            <span>JnDroid Store - বাংলা ভাষায় APK হাব</span>
+          </div>
+
+          <h1 class="hero-title">
+            বাংলায় সহজ, দ্রুত এবং <span class="gradient-text">নিরাপদ</span> APK হাব
+          </h1>
+
+          <p class="hero-subtitle">
+            খুঁজে পান যেসব অ্যাপ Google Play Store-এ নেই, পুরানো সংস্করণ চান, বা Lite সংস্করণ দরকার — সবকিছু এক জায়গায়, কোনো লুকানো খরচ না।
           </p>
 
-          <div class="heroRow">
-            <a class="btn primary" href="{% url 'apps:list' %}">Start Exploring</a>
-            <a class="btn" href="{% url 'categories:list' %}">Browse Categories</a>
-            <span class="chip">No forced login</span>
-            <span class="chip">Bangla-friendly</span>
-            <span class="chip">Verified uploads</span>
+          <div class="hero-cta">
+            <a href="{% url 'apps:list' %}" class="btn btn-primary btn-lg">
+              <i class="fas fa-search"></i> অ্যাপ খুঁজুন এখনই
+            </a>
+            <a href="{% url 'categories:list' %}" class="btn btn-secondary btn-lg">
+              <i class="fas fa-th"></i> ক্যাটাগরি দেখুন
+            </a>
+          </div>
+
+          <div class="hero-features">
+            <div class="feature-chip">
+              <i class="fas fa-lock"></i>
+              <span>নিরাপদ</span>
+            </div>
+            <div class="feature-chip">
+              <i class="fas fa-thunderbolt"></i>
+              <span>দ্রুত</span>
+            </div>
+            <div class="feature-chip">
+              <i class="fas fa-globe"></i>
+              <span>বাংলা ভাষায়</span>
+            </div>
+            <div class="feature-chip">
+              <i class="fas fa-user-check"></i>
+              <span>লগইন ছাড়া</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Card -->
+        <div class="hero-card-wrapper">
+          <div class="hero-card glassmorphism">
+            <div class="card-content">
+              <div class="stat-item">
+                <div class="stat-icon">📊</div>
+                <div class="stat-info">
+                  <div class="stat-number">১০K+</div>
+                  <div class="stat-label">অ্যাপ উপলব্ধ</div>
+                </div>
+              </div>
+
+              <div class="stat-item">
+                <div class="stat-icon">👥</div>
+                <div class="stat-info">
+                  <div class="stat-number">১০০K+</div>
+                  <div class="stat-label">সক্রিয় ব্যবহারকারী</div>
+                </div>
+              </div>
+
+              <div class="stat-item">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-info">
+                  <div class="stat-number">৪.৮</div>
+                  <div class="stat-label">গড় রেটিং</div>
+                </div>
+              </div>
+
+              <div class="stat-item">
+                <div class="stat-icon">🚀</div>
+                <div class="stat-info">
+                  <div class="stat-number">২৪/৭</div>
+                  <div class="stat-label">সাপোর্ট</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="trust-badge">
+              <i class="fas fa-certificate"></i>
+              <span>সম্পূর্ণ যাচাইকৃত</span>
+            </div>
           </div>
         </div>
       </div>
-
-      <aside class="sideCard">
-        <div class="statGrid">
-          <div class="stat"><b>বিশ্বস্ত</b><span>APK হাব</span></div>
-          <div class="stat"><b>দ্রুত</b><span>ডাউনলোড</span></div>
-          <div class="stat"><b>সহজ</b><span>ইন্টারফেস</span></div>
-          <div class="stat"><b>সবসময়</b><span>সাপোর্ট</span></div>
-        </div>
-
-        <div class="safe">
-          <div class="badge">✓</div>
-          <div>
-            <b>নিরাপদ ডাউনলোড</b>
-            <p>সব অ্যাপ যাচাই করা এবং কমিউনিটি দ্বারা অনুমোদিত।</p>
-          </div>
-        </div>
-
-        <div class="card" style="background:var(--card)">
-          <h3 style="margin:0 0 8px;">Quick Links</h3>
-          <div class="heroRow" style="margin:0">
-            <a class="btn" href="{% url 'apps:list' %}">Browse Apps</a>
-            <a class="btn" href="{% url 'categories:list' %}">Categories</a>
-          </div>
-        </div>
-      </aside>
     </div>
   </div>
 
-  <section>
-    <div class="sectionTitle">
-      <div>
-        <h2>কেন মানুষ JN App Store ব্যবহার করে</h2>
-        <p>পরিষ্কার, পঠনযোগ্য ইন্টারফেস + যাচাইকৃত আপলোড।</p>
-      </div>
-    </div>
-
-    <div class="grid3">
-      <div class="card">
-        <div class="icon">⚡</div>
-        <h3>দ্রুত ডাউনলোড</h3>
-        <p>সরাসরি ডাউনলোড ফ্লো। অপ্রয়োজনীয় বিজ্ঞাপন নেই, কাজটা দ্রুত।</p>
+  <!-- ==================== WHY CHOOSE SECTION ==================== -->
+  <section class="section why-choose">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">কেন JnDroid Store বেছে নেবেন?</h2>
+        <p class="section-subtitle">আমরা শুধু একটি APK স্টোর নই — আমরা একটি সম্প্রদায়</p>
       </div>
 
-      <div class="card">
-        <div class="icon">🧩</div>
-        <h3>পুরানো ও লাইট সংস্করণ</h3>
-        <p>পুরানো ফোন/কম RAM-এর জন্য Lite বা পুরানো সংস্করণ সহজে পান।</p>
-      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon icon-1">
+            <i class="fas fa-rocket"></i>
+          </div>
+          <h3 class="feature-title">বিদ্যুৎ বেগ ডাউনলোড</h3>
+          <p class="feature-desc">সরাসরি সার্ভার থেকে অ্যাপ ডাউনলোড করুন। কোনো বিজ্ঞাপন, কোনো বিলম্ব নেই।</p>
+          <div class="feature-meta">⚡ গড়ে ৩০ সেকেন্ড</div>
+        </div>
 
-      <div class="card">
-        <div class="icon">🛡️</div>
-        <h3>রিপোর্ট এবং বিশ্বাস</h3>
-        <p>কমিউনিটি রিপোর্ট সিস্টেম। সমস্যা হলে তাৎক্ষণিক ব্যবস্থা।</p>
+        <div class="feature-card">
+          <div class="feature-icon icon-2">
+            <i class="fas fa-history"></i>
+          </div>
+          <h3 class="feature-title">পুরানো ও লাইট সংস্করণ</h3>
+          <p class="feature-desc">পুরানো ফোনের জন্য Lite সংস্করণ বা আগের ভার্সন খুঁজুন। সব ডিভাইসের জন্য উপলব্ধ।</p>
+          <div class="feature-meta">📱 সর্বোচ্চ সামঞ্জস্য</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon icon-3">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h3 class="feature-title">সম্পূর্ণ নিরাপদ ও যাচাইকৃত</h3>
+          <p class="feature-desc">প্রতিটি অ্যাপ স্কেন করা হয় ম্যালওয়্যার থেকে। কমিউনিটি দ্বারা অনুমোদিত ও রিভিউ করা।</p>
+          <div class="feature-meta">🔒 ১০০% নিরাপদ</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon icon-4">
+            <i class="fas fa-comments"></i>
+          </div>
+          <h3 class="feature-title">রিয়েল ইউজার রিভিউ</h3>
+          <p class="feature-desc">সত্যিকারের ব্যবহারকারীদের রিভিউ এবং রেটিং পড়ুন। কোনো ফেক রেটিং নেই।</p>
+          <div class="feature-meta">⭐ সৎ মতামত</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon icon-5">
+            <i class="fas fa-globe"></i>
+          </div>
+          <h3 class="feature-title">বাংলা ভাষায় সম্পূর্ণ</h3>
+          <p class="feature-desc">সম্পূর্ণ বাংলা ইন্টারফেস। কোনো ইংরেজি জানার দরকার নেই।</p>
+          <div class="feature-meta">🇧🇩 আপনার ভাষায়</div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon icon-6">
+            <i class="fas fa-headset"></i>
+          </div>
+          <h3 class="feature-title">২৪/৭ কাস্টমার সাপোর্ট</h3>
+          <p class="feature-desc">যেকোনো সমস্যার জন্য সবসময় আমাদের সাথে যোগাযোগ করুন। দ্রুত সমাধান পাবেন।</p>
+          <div class="feature-meta">💬 সর্বদা প্রস্তুত</div>
+        </div>
       </div>
     </div>
   </section>
 
-  <section>
-    <div class="sectionTitle">
-      <div>
-        <h2>জনপ্রিয় অ্যাপগুলি</h2>
-        <p>সর্বশেষ এবং সবচেয়ে বেশি ব্যবহৃত অ্যাপ</p>
+  <!-- ==================== STATS SECTION ==================== -->
+  <section class="section stats-section">
+    <div class="stats-background">
+      <div class="stats-blob blob-1"></div>
+      <div class="stats-blob blob-2"></div>
+    </div>
+
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-box-number">৫০+</div>
+          <div class="stat-box-label">ক্যাটাগরি</div>
+          <div class="stat-box-desc">সব ধরনের অ্যাপ এক জায়গায়</div>
+        </div>
+
+        <div class="stat-box">
+          <div class="stat-box-number">১০K+</div>
+          <div class="stat-box-label">যাচাইকৃত অ্যাপ</div>
+          <div class="stat-box-desc">নিরাপত্তা আমাদের অগ্রাধিকার</div>
+        </div>
+
+        <div class="stat-box">
+          <div class="stat-box-number">১০০K+</div>
+          <div class="stat-box-label">বিশ্বস্ত ব্যবহারকারী</div>
+          <div class="stat-box-desc">প্রতিদিন হাজারো নতুন ব্যবহারকারী</div>
+        </div>
+
+        <div class="stat-box">
+          <div class="stat-box-number">২৪/৭</div>
+          <div class="stat-box-label">সক্রিয় সাপোর্ট</div>
+          <div class="stat-box-desc">আপনার সমস্যার তাৎক্ষণিক সমাধান</div>
+        </div>
       </div>
-      <a class="btn" href="{% url 'apps:list' %}">সব অ্যাপ দেখুন →</a>
+    </div>
+  </section>
+
+  <!-- ==================== HOW IT WORKS ==================== -->
+  <section class="section how-it-works">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">কীভাবে কাজ করে?</h2>
+        <p class="section-subtitle">মাত্র ৩ ধাপে আপনার প্রয়োজনীয় অ্যাপ ডাউনলোড করুন</p>
+      </div>
+
+      <div class="steps-container">
+        <div class="step-card">
+          <div class="step-badge">1</div>
+          <h3 class="step-title">খুঁজুন</h3>
+          <p class="step-desc">আপনার পছন্দের অ্যাপ খুঁজুন ক্যাটাগরি ব্রাউজ করে বা সার্চ করে।</p>
+          <div class="step-visual">🔍</div>
+        </div>
+
+        <div class="step-connector"></div>
+
+        <div class="step-card">
+          <div class="step-badge">2</div>
+          <h3 class="step-title">পড়ুন ও তুলনা করুন</h3>
+          <p class="step-desc">বিভিন্ন সংস্করণ, রিভিউ এবং ব্যবহারকারীর মতামত পড়ুন।</p>
+          <div class="step-visual">📖</div>
+        </div>
+
+        <div class="step-connector"></div>
+
+        <div class="step-card">
+          <div class="step-badge">3</div>
+          <h3 class="step-title">ডাউনলোড করুন</h3>
+          <p class="step-desc">এক ক্লিকে আপনার পছন্দের অ্যাপ ডাউনলোড করুন। সম্পূর্ণ বিনামূল্যে।</p>
+          <div class="step-visual">⬇️</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== POPULAR APPS ==================== -->
+  <section class="section popular-apps">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">জনপ্রিয় অ্যাপ এই সপ্তাহে</h2>
+        <p class="section-subtitle">সবচেয়ে বেশি ডাউনলোড করা এবং রেটিং পাওয়া অ্যাপ</p>
+      </div>
+
+      <div class="apps-showcase">
+        <div class="app-card">
+          <div class="app-icon">📱</div>
+          <div class="app-badge">Top Rated</div>
+          <h4 class="app-name">হোয়াটসঅ্যাপ</h4>
+          <p class="app-category">মেসেজিং</p>
+          <div class="app-rating">⭐⭐⭐⭐⭐ (৪.৮)</div>
+        </div>
+
+        <div class="app-card">
+          <div class="app-icon">🎮</div>
+          <div class="app-badge">Most Downloaded</div>
+          <h4 class="app-name">PUBG Mobile</h4>
+          <p class="app-category">গেমিং</p>
+          <div class="app-rating">⭐⭐⭐⭐⭐ (৪.৬)</div>
+        </div>
+
+        <div class="app-card">
+          <div class="app-icon">🎵</div>
+          <div class="app-badge">New</div>
+          <h4 class="app-name">স্পটিফাই</h4>
+          <p class="app-category">সঙ্গীত</p>
+          <div class="app-rating">⭐⭐⭐⭐⭐ (৪.৭)</div>
+        </div>
+
+        <div class="app-card">
+          <div class="app-icon">📸</div>
+          <div class="app-badge">Trending</div>
+          <h4 class="app-name">ইনস্টাগ্রাম</h4>
+          <p class="app-category">সোশ্যাল মিডিয়া</p>
+          <div class="app-rating">⭐⭐⭐⭐⭐ (৪.৫)</div>
+        </div>
+      </div>
+
+      <div class="center-button">
+        <a href="{% url 'apps:list' %}" class="btn btn-primary">সব অ্যাপ দেখুন →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== TRUST & SECURITY ==================== -->
+  <section class="section trust-security">
+    <div class="trust-background">
+      <div class="trust-gradient grad-t1"></div>
+      <div class="trust-gradient grad-t2"></div>
+    </div>
+
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">আমরা আপনার বিশ্বাস রক্ষা করি</h2>
+        <p class="section-subtitle">সর্বোচ্চ নিরাপত্তা এবং গোপনীয়তা আমাদের প্রতিশ্রুতি</p>
+      </div>
+
+      <div class="trust-grid">
+        <div class="trust-card">
+          <div class="trust-icon">🔒</div>
+          <h3>শক্তিশালী এনক্রিপশন</h3>
+          <p>আপনার সামগ্রিক ডেটা সম্পূর্ণ এনক্রিপ্টেড এবং সুরক্ষিত থাকে।</p>
+        </div>
+
+        <div class="trust-card">
+          <div class="trust-icon">🧪</div>
+          <h3>স্বয়ংক্রিয় ম্যালওয়্যার স্ক্যান</h3>
+          <p>প্রতিটি অ্যাপ ভাইরাস এবং ম্যালওয়্যারের জন্য স্বয়ংক্রিয়ভাবে স্ক্যান করা হয়।</p>
+        </div>
+
+        <div class="trust-card">
+          <div class="trust-icon">👥</div>
+          <h3>কমিউনিটি যাচাইকরণ</h3>
+          <p>বাস্তব ব্যবহারকারীরা অ্যাপ যাচাই এবং রিভিউ করেন। সম্পূর্ণ স্বচ্ছতা।</p>
+        </div>
+
+        <div class="trust-card">
+          <div class="trust-icon">📋</div>
+          <h3>স্বচ্ছ নীতিমালা</h3>
+          <p>আমাদের সব নীতি এবং গাইডলাইন সম্পূর্ণভাবে প্রকাশ্য এবং স্বচ্ছ।</p>
+        </div>
+
+        <div class="trust-card">
+          <div class="trust-icon">⭐</div>
+          <h3>রেপুটেশন সিস্টেম</h3>
+          <p>ডেভেলপারদের বিশ্বস্ততা স্কোর দিয়ে চিহ্নিত করা হয়। কোনো জালিয়াতি নেই।</p>
+        </div>
+
+        <div class="trust-card">
+          <div class="trust-icon">🛡️</div>
+          <h3>নিয়মিত নিরাপত্তা আপডেট</h3>
+          <p>আমরা নিয়মিত নিরাপত্তা পরীক্ষা করি এবং আপডেট প্রকাশ করি।</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== DEVELOPER CTA ==================== -->
+  <section class="section developer-cta">
+    <div class="developer-blob blob-dev-1"></div>
+    <div class="developer-blob blob-dev-2"></div>
+
+    <div class="container">
+      <div class="cta-content">
+        <h2 class="cta-title">আপনার অ্যাপ শেয়ার করুন</h2>
+        <p class="cta-subtitle">হাজারো বাংলা ভাষী ব্যবহারকারীদের কাছে পৌঁছান</p>
+        <p class="cta-text">আপনার অ্যাপ JnDroid Store-এ আপলোড করুন এবং লক্ষ লক্ষ সম্ভাব্য ডাউনলোডকারীদের সাথে সংযোগ করুন।</p>
+        <a href="{% url 'apps:upload' %}" class="btn btn-primary btn-lg">
+          <i class="fas fa-upload"></i> অ্যাপ আপলোড করুন
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FAQ SECTION ==================== -->
+  <section class="section faq-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">সাধারণ প্রশ্ন</h2>
+        <p class="section-subtitle">আপনার সমস্ত প্রশ্নের উত্তর এখানে</p>
+      </div>
+
+      <div class="faq-grid">
+        <div class="faq-card">
+          <h3 class="faq-question">🤔 JnDroid Store কি সত্যিই নিরাপদ?</h3>
+          <p class="faq-answer">হ্যাঁ, সম্পূর্ণভাবে। প্রতিটি অ্যাপ স্বয়ংক্রিয়ভাবে স্ক্যান করা হয় এবং কমিউনিটি দ্বারা যাচাই করা হয়।</p>
+        </div>
+
+        <div class="faq-card">
+          <h3 class="faq-question">💰 কি এটি সত্যিই বিনামূল্যে?</h3>
+          <p class="faq-answer">সম্পূর্ণ বিনামূল্যে। কোনো লুকানো খরচ, কোনো সাবস্ক্রিপশন, কোনো বিজ্ঞাপন নেই।</p>
+        </div>
+
+        <div class="faq-card">
+          <h3 class="faq-question">📱 কোনো ফোনে ব্যবহার করতে পারি?</h3>
+          <p class="faq-answer">যেকোনো Android ফোনে। পুরানো ফোনের জন্য আমাদের আছে Lite সংস্করণ।</p>
+        </div>
+
+        <div class="faq-card">
+          <h3 class="faq-question">🔐 আমার ডেটা কি নিরাপদ থাকে?</h3>
+          <p class="faq-answer">আপনার সব ডেটা এনক্রিপ্টেড এবং সুরক্ষিত। আমরা কখনও ব্যক্তিগত তথ্য শেয়ার করি না।</p>
+        </div>
+
+        <div class="faq-card">
+          <h3 class="faq-question">📧 কোনো সমস্যা হলে কীভাবে যোগাযোগ করব?</h3>
+          <p class="faq-answer">আমাদের সাপোর্ট টিম ২৪/৭ উপলব্ধ। যেকোনো সময় যোগাযোগ করুন।</p>
+        </div>
+
+        <div class="faq-card">
+          <h3 class="faq-question">🚀 নতুন অ্যাপ কত দ্রুত যুক্ত হয়?</h3>
+          <p class="faq-answer">প্রতিদিন নতুন এবং জনপ্রিয় অ্যাপ যুক্ত হয়। আপনিও নির্দেশ করতে পারেন।</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== NEWSLETTER CTA ==================== -->
+  <section class="section newsletter">
+    <div class="container">
+      <div class="newsletter-card">
+        <h2 class="newsletter-title">নতুন অ্যাপ সম্পর্কে সবার আগে জানুন</h2>
+        <p class="newsletter-subtitle">প্রতি সপ্তাহে সেরা নতুন অ্যাপ, আপডেট এবং টিপস পান</p>
+        
+        <form class="newsletter-form">
+          <input type="email" placeholder="আপনার ইমেইল লিখুন..." class="newsletter-input" required>
+          <button type="submit" class="btn btn-primary">সাইন আপ করুন</button>
+        </form>
+        
+        <p class="newsletter-note">🔒 আমরা আপনার ইনবক্সে স্প্যাম পাঠাই না। আপনি যেকোনো সময় আনসাবস্ক্রাইব করতে পারেন।</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FINAL CTA ==================== -->
+  <section class="section final-cta">
+    <div class="container">
+      <div class="final-cta-content">
+        <h2>শুরু করতে প্রস্তুত?</h2>
+        <p>এখনই JnDroid Store-এ যোগ দিন এবং হাজারো অ্যাপ আবিষ্কার করুন</p>
+        <div class="final-cta-buttons">
+          <a href="{% url 'apps:list' %}" class="btn btn-primary btn-lg">অ্যাপ ব্রাউজ করুন</a>
+          <a href="{% url 'accounts:login' %}" class="btn btn-secondary btn-lg">লগইন করুন</a>
+        </div>
+      </div>
     </div>
   </section>
 {% endblock %}

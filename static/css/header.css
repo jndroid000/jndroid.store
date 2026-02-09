@@ -1,0 +1,354 @@
+/* ==================== PROFILE DROPDOWN ==================== */
+
+.profile-dropdown {
+  position: relative;
+  display: none;
+  overflow: visible !important;
+}
+
+.profile-btn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  position: relative;
+  color: white;
+  font-size: 24px;
+  opacity: 1;
+  visibility: visible;
+}
+
+.profile-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.profile-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--line);
+}
+
+.profile-avatar-initial {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #7c5cff, #5c4cdd);
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  border: 2px solid #7c5cff;
+}
+
+.profile-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 240px;
+  background: rgba(15, 20, 30, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.8);
+  z-index: 1001;
+  padding: 8px 0;
+  /* Initially hidden */
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+.profile-dropdown.active .profile-menu {
+  max-height: 500px;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.profile-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  color: #e0e0e0 !important;
+  text-decoration: none;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.2s ease;
+  font-size: 0.95em;
+  opacity: 1;
+  visibility: visible;
+}
+
+.profile-menu-item span {
+  display: flex;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.profile-menu-item:hover {
+  background: rgba(124, 92, 255, 0.15);
+  color: #7c5cff;
+  padding-left: 20px;
+  border-left: 3px solid #7c5cff;
+  padding-left: 16px;
+}
+
+.profile-menu-item .icon {
+  font-size: 18px;
+  min-width: 20px;
+}
+
+.menu-divider {
+  height: 1px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1) !important;
+  margin: 8px 0;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.logout-btn {
+  color: #ff3e3e;
+  opacity: 1;
+  visibility: visible;
+}
+
+.logout-btn:hover {
+  background: rgba(255, 62, 62, 0.15);
+  color: #ff3e3e;
+  border-left: 3px solid #ff3e3e;
+  padding-left: 16px;
+}
+
+/* Form styling within profile menu */
+.profile-menu form {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  display: block;
+}
+
+.profile-menu form button {
+  width: 100%;
+  border: none;
+  margin: 0;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: transparent;
+  color: #ff3e3e !important;
+  font-size: 0.95em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  opacity: 1 !important;
+  visibility: visible !important;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.profile-menu form button:hover {
+  background: rgba(255, 62, 62, 0.15);
+  color: #ff3e3e;
+}
+
+/* ==================== SEARCH BUTTON (MOBILE) ==================== */
+
+.search-btn-mobile {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--line);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.search-btn-mobile:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #7c5cff;
+}
+
+.theme-toggle-menu {
+  width: 100%;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: none;
+  background: transparent;
+  color: #e0e0e0 !important;
+  cursor: pointer;
+  font-size: 0.95em;
+  transition: all 0.2s ease;
+  text-align: left;
+  font-weight: 500;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.theme-toggle-menu:hover {
+  background: rgba(124, 92, 255, 0.15);
+  color: #7c5cff;
+  padding-left: 20px;
+  border-left: 3px solid #7c5cff;
+  padding-left: 16px;
+}
+
+.theme-toggle-menu .icon {
+  font-size: 18px;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* ==================== RESPONSIVE DESIGN ==================== */
+
+/* Tablet & Up - Show Profile Dropdown, Hide Mobile Elements */
+@media (min-width: 769px) {
+  .profile-dropdown {
+    display: block !important;
+  }
+
+  .search-btn-mobile {
+    display: none !important;
+  }
+
+  .menuBtn {
+    display: none !important;
+  }
+
+  .links {
+    display: flex;
+  }
+
+  .actions {
+    gap: 15px;
+  }
+}
+
+/* Mobile & Tablet - Show Search & Hamburger, Hide Profile Dropdown */
+@media (max-width: 768px) {
+  .profile-dropdown {
+    display: none;
+  }
+
+  .search-btn-mobile {
+    display: flex;
+  }
+
+  .menuBtn {
+    display: flex;
+  }
+
+  .links {
+    display: none;
+  }
+
+  .actions {
+    gap: 10px;
+  }
+}
+
+/* Extra Small Devices */
+@media (max-width: 480px) {
+  .profile-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .profile-avatar {
+    width: 36px;
+    height: 36px;
+  }
+
+  .profile-avatar-initial {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+
+  .search-btn-mobile {
+    padding: 6px 10px;
+  }
+
+  .menuBtn {
+    padding: 6px 10px;
+  }
+}
+
+/* Close profile dropdown when clicking outside */
+.profile-dropdown.active .profile-menu {
+  z-index: 1001;
+}
+
+.profile-menu-item {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  color: #e0e0e0 !important;
+}
+
+.profile-menu form button {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  color: #ff3e3e !important;
+}
+
+.theme-toggle-menu {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  color: #e0e0e0 !important;
+}
+
+.menu-divider {
+  display: block !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+.profile-menu-item a,
+.profile-menu-item button,
+.profile-menu button,
+.profile-menu form {
+  pointer-events: auto !important;
+}
+
+.profile-menu-item a:visited {
+  color: #e0e0e0 !important;
+}
+.profile-dropdown.active .profile-menu * {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+}
+
+.profile-dropdown.active .profile-menu-item {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: flex !important;
+}
+
+.profile-dropdown.active .profile-menu form {
+  display: block !important;
+}
+
+.profile-dropdown.active .profile-menu form button {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}

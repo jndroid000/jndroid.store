@@ -1,0 +1,164 @@
+/* DMCA Takedown Page Styles */
+
+.dmca-takedown {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    line-height: 1.6;
+    margin: 20px auto;
+    max-width: 1000px;
+    padding: 40px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius2);
+    box-shadow: var(--shadow);
+    overflow: visible;
+    position: relative;
+    background: linear-gradient(180deg, var(--card2), var(--card));
+}
+
+.dmca-takedown::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    background:
+        radial-gradient(500px 240px at 20% 10%, rgba(124,92,255,0.30), transparent 60%),
+        radial-gradient(480px 260px at 80% 0%, rgba(34,197,94,0.20), transparent 62%);
+    pointer-events: none;
+    filter: blur(0px);
+    z-index: -1;
+}
+
+.dmca-takedown h1 {
+    font-size: 2.5em;
+    color: #333;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+.dmca-takedown h2 {
+    font-size: 1.5em;
+    color: #555;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--line);
+    padding-bottom: 10px;
+}
+
+.dmca-takedown p {
+    color: var(--muted);
+    font-size: 1em;
+    margin: 10px 0;
+    line-height: 1.7;
+}
+
+.dmca-takedown ul {
+    margin: 15px 0;
+    padding-left: 25px;
+}
+
+.dmca-takedown ul li {
+    margin: 10px 0;
+    color: #666;
+}
+
+/* Form Styles */
+.dmca-form {
+    margin-top: 30px;
+}
+
+.dmca-form fieldset {
+    border: 1px solid var(--line);
+    padding: 25px;
+    margin-bottom: 25px;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.dmca-form legend {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+    padding: 0 10px;
+}
+
+.dmca-form label {
+    display: block;
+    margin: 18px 0 6px;
+    font-weight: 600;
+    color: #333;
+    font-size: 0.95em;
+}
+
+.dmca-form label span {
+    color: #dc3545;
+    margin-left: 3px;
+}
+
+.dmca-form input,
+.dmca-form textarea,
+.dmca-form select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.95em;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    background-color: #fff;
+}
+
+.dmca-form input:focus,
+.dmca-form textarea:focus,
+.dmca-form select:focus {
+    outline: none;
+    border-color: #007bff;
+    background-color: #f8f9ff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.dmca-form textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.dmca-form input[type='checkbox'] {
+    width: auto;
+    margin-right: 8px;
+}
+
+.btn {
+    background-color: #007bff;
+    color: #fff;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 86, 179, 0.3);
+}
+
+@media (max-width: 768px) {
+    .dmca-takedown {
+        padding: 20px;
+        max-width: 100%;
+    }
+
+    .dmca-takedown h1 {
+        font-size: 1.8em;
+    }
+
+    .dmca-takedown h2 {
+        font-size: 1.3em;
+    }
+
+    .dmca-form fieldset {
+        padding: 15px;
+    }
+}

@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from core.views import home, support, community_guidelines, report_bug, terms_of_service
+from django.views.generic import TemplateView
+from core import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,6 +34,10 @@ urlpatterns = [
     path('categories/', include('categories.urls')),
     path('apps/', include('apps.urls')),
     path('reviews/', include('reviews.urls')),
+    path('privacy/', TemplateView.as_view(template_name='privacy.html'), name='privacy'),
+    path('dmca-takedown/', TemplateView.as_view(template_name='dmca_takedown.html'), name='dmca_takedown'),
+    path('dmca-takedown/submit/', views.submit_dmca_notice, name='submit_dmca_notice'),
+    path('dmca-success/', views.dmca_success, name='dmca_success'),
 ]
 from django.conf import settings
 from django.conf.urls.static import static

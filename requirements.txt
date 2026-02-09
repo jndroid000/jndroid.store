@@ -1,7 +1,37 @@
+# Core Django
 Django==6.0.2
-Pillow==12.1.0
 asgiref==3.11.1
 sqlparse==0.5.5
 tzdata==2025.3
+
+# Image Processing
+Pillow==12.1.0
+
+# Authentication & User Management
 django-allauth==0.61.1
+
+# Database
 psycopg2-binary==2.9.9  # PostgreSQL adapter for production
+
+# Development & Utilities
+django-extensions==3.2.3
+python-dotenv==1.0.0
+
+# API & CORS (if needed)
+django-cors-headers==4.3.1
+
+# Filtering
+django-filter==24.1
+
+# Email Support
+django-anymail==10.2  # Optional: for email provider integration
+
+# Testing
+pytest==7.4.3
+pytest-django==4.7.0
+factory-boy==3.3.0
+
+# Code Quality
+black==23.12.1
+flake8==6.1.0
+isort==5.13.2

@@ -148,6 +148,21 @@ header {
   flex: 0 0 auto;
 }
 
+.logo-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: block;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
 .logo {
   width: 38px;
   height: 38px;
@@ -430,6 +445,11 @@ footer {
   .brand {
     gap: 10px;
     flex: 1 0 auto;
+  }
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
   }
 
   .logo {

@@ -1,5 +1,5 @@
 """
-Production Django settings for JN App Store.
+Production Django settings for JnDroid Store.
 Secure settings for live deployment.
 """
 

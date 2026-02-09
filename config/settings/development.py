@@ -20,8 +20,8 @@ CSRF_TRUSTED_ORIGINS = [
 # ==================== DEVELOPMENT TOOLS ====================
 
 # ==================== EMAIL BACKEND (Development) ====================
-# Emails print to console
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Use SMTP to send emails to Gmail
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # ==================== DATABASE (Development) ====================
 # SQLite (inherited from base.py)

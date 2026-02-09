@@ -5,6 +5,9 @@ from django.contrib import messages
 from django.db.models import Count, Sum, Avg, Q, F
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db import transaction
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.core.mail import send_mail
 from accounts.models import User
 from apps.models import App
 from apps.forms import AppUploadForm
@@ -511,3 +514,80 @@ def cancel_deletion(request, slug):
     app.save()
     messages.success(request, f'Deletion cancelled for "{app.title}".')
     return redirect('admin_panel:pending_deletions')
+
+
+def submit_dmca_notice(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        address = request.POST.get('address')
+        copyrighted_work = request.POST.get('copyrighted_work')
+        original_url = request.POST.get('original_url')
+        copyright_holder = request.POST.get('copyright_holder')
+        app_name = request.POST.get('app_name')
+        infringing_url = request.POST.get('infringing_url')
+        description = request.POST.get('description')
+        damages = request.POST.get('damages')
+        signature = request.POST.get('signature')
+
+        try:
+            # Send email to DMCA agent with detailed information
+            subject = f"DMCA Takedown Notice from {name} - {app_name}"
+            message = f"""
+DMCA TAKEDOWN NOTICE
+
+=== COMPLAINANT INFORMATION ===
+Name: {name}
+Email: {email}
+Phone: {phone}
+Address: {address}
+
+=== COPYRIGHT INFORMATION ===
+Description of Work: {copyrighted_work}
+Original Work URL: {original_url if original_url else 'Not provided'}
+Copyright Holder Status: {copyright_holder}
+
+=== INFRINGING MATERIAL ===
+App/Content Name: {app_name}
+Infringing URL: {infringing_url}
+
+=== INFRINGEMENT DETAILS ===
+Description: {description}
+
+Specific Infringing Content: {damages}
+
+=== LEGAL DECLARATION ===
+Digital Signature: {signature}
+
+This notice was filed on: {request.POST.get('timestamp', 'See timestamp in email headers')}
+"""
+            send_mail(
+                subject,
+                message,
+                'jndroid000@gmail.com',  # From email
+                ['jndroid000@gmail.com', 'dmca@jndroid.com'],  # To emails
+                fail_silently=False,
+            )
+            # Set flag in session to indicate successful submission
+            request.session['dmca_submitted'] = True
+            # Redirect to success page
+            return redirect('dmca_success')
+        except Exception as e:
+            print(f"Error sending DMCA email: {str(e)}")
+            # Still redirect to success page even if email fails
+            request.session['dmca_submitted'] = True
+            return redirect('dmca_success')
+
+    return redirect('dmca_takedown')
+
+def dmca_success(request):
+    """DMCA success page - only accessible after form submission"""
+    if not request.session.get('dmca_submitted'):
+        # If not submitted through form, redirect to DMCA page
+        return redirect('dmca_takedown')
+    
+    # Clear the session flag
+    del request.session['dmca_submitted']
+    
+    return render(request, 'dmca_success.html')

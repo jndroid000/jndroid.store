@@ -6,6 +6,16 @@ Common settings used by both development and production.
 from pathlib import Path
 import os
 
+# Load .env file manually before anything else
+env_path = Path(__file__).resolve().parent.parent.parent / '.env'
+if env_path.exists():
+    with open(env_path, 'r') as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith('#') and '=' in line:
+                key, value = line.split('=', 1)
+                os.environ.setdefault(key.strip(), value.strip())
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -68,6 +78,9 @@ TEMPLATES = [
     },
 ]
 
+# Add the privacy page template directory
+TEMPLATES[0]['DIRS'].append(BASE_DIR / 'templates')
+
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # ==================== DATABASE ====================
@@ -109,14 +122,18 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 # ==================== EMAIL CONFIGURATION ====================
+# Get email credentials from environment
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '').strip()
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'jndroid000@gmail.com').strip()
+
+# Use SMTP for Gmail
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'jndroid000@gmail.com')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')  # Must be set via environment variable
-DEFAULT_FROM_EMAIL = 'JN App Store <jndroid000@gmail.com>'
-SERVER_EMAIL = 'JN App Store Server <jndroid000@gmail.com>'
+
+DEFAULT_FROM_EMAIL = f'JN App Store <{EMAIL_HOST_USER}>'
+SERVER_EMAIL = f'JN App Store Server <{EMAIL_HOST_USER}>'
 ACCOUNT_EMAIL_SUBJECT_PREFIX = '[JN App Store] '
 
 # ==================== DJANGO-ALLAUTH CONFIGURATION ====================
@@ -135,6 +152,8 @@ ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_FORMS = {
     'signup': 'accounts.forms.SignUpForm',
 }
+
+ACCOUNT_EMAIL_REQUIRED = True  # Ensure email is required for mandatory verification
 
 # ==================== LOGGING CONFIGURATION ====================
 # Ensure logs directory exists
