@@ -1,42 +1,39 @@
 # Core Django
-Django==6.0.2
-asgiref==3.11.1
-sqlparse==0.5.5
-tzdata==2025.3
+Django==4.2.10
+asgiref==3.8.1
+sqlparse==0.5.0
+tzdata==2024.1
 
 # Image Processing
-Pillow==12.1.0
+Pillow==10.1.0
 
 # Authentication & User Management
-django-allauth==0.61.1
+django-allauth==0.57.0
 
 # Database
-psycopg2-binary==2.9.9  # PostgreSQL adapter for production
+psycopg2-binary==2.9.9
 
 # Production Server & Static Files
-gunicorn==21.2.0  # WSGI HTTP Server for VPS
-whitenoise==6.6.0  # Static files serving in production
-python-decouple==3.8  # Environment variables management
+gunicorn==21.2.0
+whitenoise==6.5.0
 
-# Development & Utilities
-django-extensions==3.2.3
-python-dotenv==1.0.0
+# Environment Variables Management
+python-decouple==3.8
 
-# API & CORS (if needed)
-django-cors-headers==4.3.1
+# Security & Encryption
+cryptography==41.0.7
 
-# Filtering
-django-filter==24.1
+# API & HTTP
+requests==2.31.0
 
-# Email Support
-django-anymail==10.2  # Optional: for email provider integration
+# Filtering (if needed for app listings)
+django-filter==23.5
 
-# Testing
-pytest==7.4.3
-pytest-django==4.7.0
-factory-boy==3.3.0
+# Optional: Email Provider Integration
+# django-anymail==10.2
 
-# Code Quality
-black==23.12.1
-flake8==6.1.0
-isort==5.13.2
+# Optional: Developer Monitoring (Production recommended)
+# sentry-sdk==1.45.1
+
+# Optional: CORS Support (if API enabled)
+# django-cors-headers==4.3.1

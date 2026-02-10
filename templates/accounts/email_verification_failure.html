@@ -1,12 +1,21 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}ইমেইল যাচাইকরণ ব্যর্থ - JN App Store{% endblock %}
-{% block extra_css %}<link rel="stylesheet" href="{% static 'css/review_form.css' %}">{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/review_form.css' %}">
+<style>
+  .errorContainer {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 0 16px;
+  }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="reviewFormContainer" style="max-width: 600px;">
+<div class="errorContainer">
   <div style="text-align: center; margin-bottom: 40px;">
-    <div style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--danger), #fb7185); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; box-shadow: 0 18px 40px rgba(251, 113, 133, 0.25);">
+    <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #ef4444, #fb7185); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; box-shadow: 0 18px 40px rgba(251, 113, 133, 0.25);">
       <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
         <circle cx="12" cy="12" r="10"/>
         <line x1="15" y1="9" x2="9" y2="15"/>
@@ -18,65 +27,73 @@
   </div>
 
   <div style="background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 32px 24px; margin-bottom: 24px;">
-    <h3 style="color: var(--text); font-size: 14px; font-weight: 600; margin: 0 0 16px;">কেন এটি ঘটেছে?</h3>
+    <h3 style="color: var(--text); font-size: 15px; font-weight: 600; margin: 0 0 20px;">⚠️ সমস্যার কারণ:</h3>
     
     {% if error_type == 'expired' %}
-      <ul style="margin: 0; padding: 0; list-style: none; color: var(--muted); font-size: 14px;">
-        <li style="margin-bottom: 8px; display: flex; align-items: center;">
-          <span style="color: var(--danger); margin-right: 8px;">⚠</span>
-          আপনার যাচাইকরণ লিঙ্কের মেয়াদ শেষ হয়ে গেছে
-        </li>
-        <li style="display: flex; align-items: center;">
-          <span style="color: var(--danger); margin-right: 8px;">⚠</span>
-          সাধারণত লিঙ্ক ২৪ ঘন্টার জন্য বৈধ থাকে
-        </li>
-      </ul>
+      <div style="background: rgba(251, 113, 133, 0.08); border-left: 3px solid #ef4444; padding: 16px; border-radius: 8px; margin-bottom: 20px;">
+        <p style="margin: 0 0 12px; color: var(--text); font-weight: 500;">⏰ যাচাইকরণ লিঙ্কের মেয়াদ শেষ</p>
+        <ul style="margin: 0; padding-left: 20px; color: var(--muted); font-size: 14px;">
+          <li style="margin-bottom: 6px;">আপনার যাচাইকরণ লিঙ্ক পুরানো হয়ে গেছে</li>
+          <li style="margin-bottom: 6px;">প্রতিটি লিঙ্ক শুধুমাত্র 7 দিনের জন্য কাজ করে</li>
+          <li>আপনার ফোন/কম্পিউটার তারিখ সঠিক কিনা চেক করুন</li>
+        </ul>
+      </div>
+      <p style="color: var(--muted); font-size: 14px; margin: 0; padding: 16px; background: rgba(59, 130, 246, 0.05); border-radius: 8px;">
+        ✅ সমাধান: নীচে "নতুন যাচাইকরণ পান" বাটনে ক্লিক করুন
+      </p>
+    
     {% elif error_type == 'invalid' %}
-      <ul style="margin: 0; padding: 0; list-style: none; color: var(--muted); font-size: 14px;">
-        <li style="margin-bottom: 8px; display: flex; align-items: center;">
-          <span style="color: var(--danger); margin-right: 8px;">⚠</span>
-          যাচাইকরণ লিঙ্ক অনুপস্থিত বা ভুল
-        </li>
-        <li style="display: flex; align-items: center;">
-          <span style="color: var(--danger); margin-right: 8px;">⚠</span>
-          URL-টি সম্পূর্ণভাবে কপি না করা হয়েছে
-        </li>
-      </ul>
+      <div style="background: rgba(251, 113, 133, 0.08); border-left: 3px solid #ef4444; padding: 16px; border-radius: 8px; margin-bottom: 20px;">
+        <p style="margin: 0 0 12px; color: var(--text); font-weight: 500;">🔗 যাচাইকরণ লিঙ্ক অনুপস্থিত বা ভুল</p>
+        <ul style="margin: 0; padding-left: 20px; color: var(--muted); font-size: 14px;">
+          <li style="margin-bottom: 6px;">লিঙ্কটি আর বিদ্যমান নেই</li>
+          <li style="margin-bottom: 6px;">URL-টি সম্পূর্ণভাবে না কপি করা হয়েছে</li>
+          <li>অথবা এটি কারো অন্য অ্যাকাউন্টের লিঙ্ক হতে পারে</li>
+        </ul>
+      </div>
+      <p style="color: var(--muted); font-size: 14px; margin: 0; padding: 16px; background: rgba(59, 130, 246, 0.05); border-radius: 8px;">
+        ✅ সমাধান: নীচে "নতুন যাচাইকরণ পান" বাটনে ক্লিক করুন এবং সম্পূর্ণ লিঙ্কটি অনুলিপি করুন
+      </p>
+    
     {% elif error_type == 'already_verified' %}
-      <ul style="margin: 0; padding: 0; list-style: none; color: var(--muted); font-size: 14px;">
-        <li style="margin-bottom: 8px; display: flex; align-items: center;">
-          <span style="color: var(--brand2); margin-right: 8px;">✓</span>
-          এই ইমেইল ইতিমধ্যে যাচাই করা হয়েছে
-        </li>
-        <li style="display: flex; align-items: center;">
-          <span style="color: var(--brand2); margin-right: 8px;">✓</span>
-          আপনার অ্যাকাউন্ট সক্রিয় এবং ব্যবহারের জন্য প্রস্তুত
-        </li>
-      </ul>
+      <div style="background: rgba(34, 197, 94, 0.08); border-left: 3px solid #22c55e; padding: 16px; border-radius: 8px; margin-bottom: 20px;">
+        <p style="margin: 0 0 12px; color: var(--text); font-weight: 500;">✓ এই ইমেইল ইতিমধ্যে যাচাই করা হয়েছে</p>
+        <ul style="margin: 0; padding-left: 20px; color: var(--muted); font-size: 14px;">
+          <li style="margin-bottom: 6px;">আপনার অ্যাকাউন্ট সম্পূর্ণ সক্রিয় এবং বিদ্যমান</li>
+          <li>আপনি এখনই লগইন করতে পারেন</li>
+        </ul>
+      </div>
+      <p style="color: var(--muted); font-size: 14px; margin: 0; padding: 16px; background: rgba(34, 197, 94, 0.05); border-radius: 8px;">
+        ✅ সমাধান: নীচে "লগইন করুন" বাটনে ক্লিক করুন
+      </p>
+    
     {% else %}
-      <ul style="margin: 0; padding: 0; list-style: none; color: var(--muted); font-size: 14px;">
-        <li style="display: flex; align-items: center;">
-          <span style="color: var(--danger); margin-right: 8px;">⚠</span>
-          একটি অপ্রত্যাশিত ত্রুটি ঘটেছে। দয়া করে পুনরায় চেষ্টা করুন।
-        </li>
-      </ul>
+      <div style="background: rgba(251, 113, 133, 0.08); border-left: 3px solid #ef4444; padding: 16px; border-radius: 8px; margin-bottom: 20px;">
+        <p style="margin: 0 0 12px; color: var(--text); font-weight: 500;">⚠️ একটি অপ্রত্যাশিত ত্রুটি ঘটেছে</p>
+        <ul style="margin: 0; padding-left: 20px; color: var(--muted); font-size: 14px;">
+          <li style="margin-bottom: 6px;">একটি সিস্টেম সমস্যা হয়েছে যাচাইকরণ প্রক্রিয়ায়</li>
+          <li>অনুগ্রহ করে পুনরায় চেষ্টা করুন বা সহায়তা যোগাযোগ করুন</li>
+        </ul>
+      </div>
     {% endif %}
 
     <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--line);">
-      <h3 style="color: var(--text); font-size: 14px; font-weight: 600; margin: 0 0 12px;">এখন কী করবেন?</h3>
-      <ol style="margin: 0; padding-left: 20px; color: var(--muted); font-size: 14px;">
-        {% if error_type == 'expired' %}
-          <li style="margin-bottom: 8px;">নীচে বোতাম ক্লিক করে নতুন যাচাইকরণ ইমেইল পান</li>
-          <li style="margin-bottom: 8px;">আপনার ইনবক্সে নতুন লিঙ্ক খুঁজুন</li>
-          <li>যে কোনো ব্রাউজারে তাত্ক্ষণিকভাবে লিঙ্কটি খুলুন</li>
+      <h4 style="color: var(--text); font-size: 14px; font-weight: 600; margin: 0 0 16px;">💡 আপনি কি করতে পারেন:</h4>
+      <ol style="margin: 0; padding-left: 20px; color: var(--muted); font-size: 14px; line-height: 1.8;">
+        {% if error_type == 'expired' or error_type == 'invalid' %}
+          <li style="margin-bottom: 8px;">নীচে <strong>"নতুন যাচাইকরণ পান"</strong> বাটনে ক্লিক করুন</li>
+          <li style="margin-bottom: 8px;">আপনার ইমেইল ইনবক্সে নতুন লিঙ্ক খুঁজুন</li>
+          <li style="margin-bottom: 8px;"><strong>সম্পূর্ণ URL</strong> ব্রাউজারে পেস্ট করুন (অংশত কপি নয়)</li>
+          <li>লিঙ্কটি স্বয়ংক্রিয়ভাবে আপনাকে লগইন করবে এবং প্রোফাইলে নিয়ে যাবে</li>
         {% elif error_type == 'already_verified' %}
-          <li style="margin-bottom: 8px;">আপনার অ্যাকাউন্ট সম্পূর্ণভাবে সক্রিয় এবং ব্যবহারের জন্য প্রস্তুত</li>
-          <li>নীচে লগইন বোতাম ক্লিক করে প্রবেশ করুন</li>
-          <li>আপনার পছন্দের অ্যাপ অনুসন্ধান এবং শেয়ার করা শুরু করুন</li>
+          <li style="margin-bottom: 8px;">নীচে <strong>"লগইন করুন"</strong> বাটনে ক্লিক করুন</li>
+          <li style="margin-bottom: 8px;">আপনার ইমেইল এবং পাসওয়ার্ড দিয়ে প্রবেশ করুন</li>
+          <li style="margin-bottom: 8px;">আপনার প্রোফাইল পেজে অ্যাক্সেস পাবেন</li>
+          <li>আপনার অ্যাপ আপলোড শুরু করুন এবং কমিউনিটিতে যুক্ত হন</li>
         {% else %}
-          <li style="margin-bottom: 8px;">আপনার ইনবক্সে নতুন যাচাইকরণ ইমেইলের জন্য অপেক্ষা করুন</li>
-          <li style="margin-bottom: 8px;">নতুন লিঙ্ক পেতে নীচে বোতাম ক্লিক করুন</li>
-          <li>যদি সমস্যা অব্যাহত থাকে, আমাদের সাথে যোগাযোগ করুন</li>
+          <li style="margin-bottom: 8px;"><strong>"সাহায্য যোগাযোগ করুন"</strong> বোতামে ক্লিক করুন</li>
+          <li style="margin-bottom: 8px;">আমাদের সাপোর্ট টিম আপনাকে সাহায্য করবে</li>
+          <li>আপনার ইমেইল এবং বর্ণনা প্রদান করুন</li>
         {% endif %}
       </ol>
     </div>
@@ -84,15 +101,17 @@
 
   <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;">
     {% if error_type == 'expired' or error_type == 'invalid' %}
-      <a href="{% url 'accounts:signup' %}" class="btn primary" style="flex: 1; min-width: 200px; display: block; text-align: center; padding: 12px 24px; background: linear-gradient(135deg, var(--brand), #4f46e5); color: white; border-radius: 12px; text-decoration: none; font-weight: 600; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 18px 40px rgba(124,92,255,0.25); transition: opacity 0.2s;">নতুন যাচাইকরণ পান</a>
+      <a href="{% url 'accounts:signup' %}" class="btn primary" style="flex: 1; min-width: 200px; display: block; text-align: center; padding: 12px 24px; background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; border-radius: 12px; text-decoration: none; font-weight: 600; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 18px 40px rgba(37,99,235,0.25); transition: opacity 0.2s;">নতুন যাচাইকরণ পান</a>
+    {% elif error_type == 'already_verified' %}
+      <a href="{% url 'accounts:login' %}" class="btn primary" style="flex: 1; min-width: 200px; display: block; text-align: center; padding: 12px 24px; background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; border-radius: 12px; text-decoration: none; font-weight: 600; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 18px 40px rgba(37,99,235,0.25); transition: opacity 0.2s;">লগইন করুন</a>
     {% else %}
-      <a href="{% url 'accounts:login' %}" class="btn primary" style="flex: 1; min-width: 200px; display: block; text-align: center; padding: 12px 24px; background: linear-gradient(135deg, var(--brand), #4f46e5); color: white; border-radius: 12px; text-decoration: none; font-weight: 600; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 18px 40px rgba(124,92,255,0.25); transition: opacity 0.2s;">লগইন করুন</a>
+      <a href="{% url 'support' %}" class="btn primary" style="flex: 1; min-width: 200px; display: block; text-align: center; padding: 12px 24px; background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; border-radius: 12px; text-decoration: none; font-weight: 600; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 18px 40px rgba(37,99,235,0.25); transition: opacity 0.2s;">সাহায্য যোগাযোগ করুন</a>
     {% endif %}
-    <a href="/support" class="btn secondary" style="flex: 1; min-width: 200px; display: block; text-align: center; padding: 12px 24px; background: var(--card); color: var(--text); border: 1px solid var(--line); border-radius: 12px; text-decoration: none; font-weight: 600; transition: background 0.2s;">সহায়তা যোগাযোগ করুন</a>
+    <a href="/" class="btn secondary" style="flex: 1; min-width: 200px; display: block; text-align: center; padding: 12px 24px; background: var(--card); color: var(--text); border: 1px solid var(--line); border-radius: 12px; text-decoration: none; font-weight: 600; transition: background 0.2s;">হোমে ফিরুন</a>
   </div>
 
   <div style="background: rgba(251, 113, 133, 0.08); border: 1px solid rgba(251, 113, 133, 0.2); border-radius: 12px; padding: 16px; text-align: center; color: var(--muted); font-size: 13px;">
-    📧 যদি আপনি আমাদের কাছ থেকে কোনো ইমেইল না পান, দয়া করে স্প্যাম ফোল্ডার চেক করুন বা আমাদের সাথে যোগাযোগ করুন।
+    📧 প্রশ্ন? <a href="{% url 'support' %}" style="color: var(--brand); font-weight: 600; text-decoration: none;">সাপোর্টে যোগাযোগ করুন</a> বা আমাদের গাইড পড়ুন
   </div>
 </div>
 {% endblock %}

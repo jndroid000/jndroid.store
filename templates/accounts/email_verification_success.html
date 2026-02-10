@@ -12,7 +12,11 @@
       </svg>
     </div>
     <h1 style="margin: 0 0 12px; color: var(--text); font-size: 28px; font-weight: 600;">ইমেইল যাচাইকরণ সফল!</h1>
-    <p style="color: var(--muted); margin: 0; font-size: 15px;">আপনার অ্যাকাউন্ট সক্রিয় হয়েছে এবং সম্পূর্ণভাবে যাচাই করা হয়েছে।</p>
+    {% if already_verified %}
+      <p style="color: var(--muted); margin: 0; font-size: 15px;">এই ইমেইল ইতিমধ্যে যাচাই করা হয়েছে এবং আপনার অ্যাকাউন্ট সক্রিয়।</p>
+    {% else %}
+      <p style="color: var(--muted); margin: 0; font-size: 15px;">আপনার অ্যাকাউন্ট সক্রিয় হয়েছে এবং সম্পূর্ণভাবে যাচাই করা হয়েছে।</p>
+    {% endif %}
   </div>
 
   <div style="background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 32px 24px; margin-bottom: 24px;">
@@ -27,7 +31,7 @@
     </div>
 
     <div style="margin-bottom: 24px;">
-      <h3 style="color: var(--text); font-size: 14px; font-weight: 600; margin: 0 0 12px;">আপনার অ্যাকাউন্ট এখন প্রস্তুত। আপনি এখন:</h3>
+      <h3 style="color: var(--text); font-size: 14px; font-weight: 600; margin: 0 0 12px;">আপনার অ্যাকাউন্ট প্রস্তুত। আপনি এখন:</h3>
       <ul style="margin: 0; padding: 0; list-style: none; color: var(--muted); font-size: 14px;">
         <li style="margin-bottom: 8px; display: flex; align-items: center;">
           <span style="color: var(--brand2); font-weight: 600; margin-right: 8px;">✓</span>
@@ -50,11 +54,7 @@
   </div>
 
   <div style="display: flex; gap: 12px; margin-bottom: 20px;">
-    {% if next_url %}
-      <a href="{{ next_url }}" class="btn primary" style="flex: 1; display: block; text-align: center; padding: 12px 24px; background: linear-gradient(135deg, var(--brand), #4f46e5); color: white; border-radius: 12px; text-decoration: none; font-weight: 600; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 18px 40px rgba(124,92,255,0.25); transition: opacity 0.2s;">আপনার প্রোফাইলে যান</a>
-    {% else %}
-      <a href="{% url 'accounts:profile' %}" class="btn primary" style="flex: 1; display: block; text-align: center; padding: 12px 24px; background: linear-gradient(135deg, var(--brand), #4f46e5); color: white; border-radius: 12px; text-decoration: none; font-weight: 600; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 18px 40px rgba(124,92,255,0.25); transition: opacity 0.2s;">আপনার প্রোফাইলে যান</a>
-    {% endif %}
+    <a href="{% url 'accounts:profile' %}" class="btn primary" onclick="this.innerHTML='লোড হচ্ছে...'; this.style.pointerEvents='none';" style="flex: 1; display: block; text-align: center; padding: 12px 24px; background: linear-gradient(135deg, var(--brand), #4f46e5); color: white; border-radius: 12px; text-decoration: none; font-weight: 600; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 18px 40px rgba(124,92,255,0.25); transition: opacity 0.2s;">আপনার প্রোফাইলে যান</a>
     <a href="/" class="btn secondary" style="flex: 1; display: block; text-align: center; padding: 12px 24px; background: var(--card); color: var(--text); border: 1px solid var(--line); border-radius: 12px; text-decoration: none; font-weight: 600; transition: background 0.2s;">হোমে ফিরুন</a>
   </div>
 

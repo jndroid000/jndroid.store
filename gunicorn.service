@@ -1,0 +1,29 @@
+[Unit]
+Description=Gunicorn service for jndroid.store
+After=network.target
+
+[Service]
+Type=notify
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/jndroid.store/backend
+Environment="PATH=/var/www/jndroid.store/backend/venv/bin"
+ExecStart=/var/www/jndroid.store/backend/venv/bin/gunicorn \
+    --workers 4 \
+    --worker-class sync \
+    --bind unix:/var/www/jndroid.store/backend/gunicorn.sock \
+    --timeout 120 \
+    --access-logfile /var/log/gunicorn/access.log \
+    --error-logfile /var/log/gunicorn/error.log \
+    config.wsgi:application
+
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+KillSignal=SIGTERM
+
+# Auto restart on failure
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
