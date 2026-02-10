@@ -3,38 +3,83 @@ __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
+*.egg-info/
+dist/
+build/
 
 # Virtual environment
 venv/
 env/
+.venv/
+ENV/
 .venv/
 
 # Django
 *.log
 local_settings.py
 db.sqlite3
+*.db
 staticfiles/
 media/
+*.sqlite3
 
-# Environment variables
+# Environment variables (SENSITIVE - NEVER COMMIT)
 .env
-.env.production
-.env.*.production
 .env.local
 .env.*.local
+.env.development
+.env.production
+.env.production.*
+.env.*.production
+!.env.example
+!.env.production.template
 
-# Development/Testing Scripts (local testing only)
-check_db.py
-show_db.py
+# Test databases
 test_db.py
-*_test.py
-*_debug.py
+test_*.py
 
 # IDE / Editor
 .vscode/
 .idea/
 *.swp
+*.swo
+*~
+.DS_Store
+*.sublime-project
+*.sublime-workspace
 
 # OS
 .DS_Store
 Thumbs.db
+.AppleDouble
+.LSOverride
+
+# Credentials and sensitive files
+credentials.json
+*.pem
+*.key
+*.crt
+secret*
+private*
+production_credentials.txt
+
+# Logs
+logs/
+*.log
+log.txt
+
+# Temporary files
+*.tmp
+*.temp
+*~
+.~*
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
+*.rar
+
+# Package managers
+node_modules/
+package-lock.json
