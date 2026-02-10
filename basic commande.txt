@@ -6,3 +6,11 @@ deactivate
 
 source venv/bin/activate
 
+
+
+git push origin main (derectory te dile git e update hobe)
+
+git pull origin main
+
+
+Environment="web&&fnq5)#*3v-u9@69djmk3uk_i3a+t=@#l5#hsd#_93!s=+"

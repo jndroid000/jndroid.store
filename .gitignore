@@ -18,6 +18,9 @@ media/
 
 # Environment variables
 .env
+.env.production  # Production environment with sensitive credentials
+.env.local
+.env.*.local
 
 # IDE / Editor
 .vscode/

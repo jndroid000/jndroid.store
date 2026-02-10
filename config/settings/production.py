@@ -5,6 +5,17 @@ Secure settings for live deployment.
 
 import os
 from .base import *
+from pathlib import Path
+
+# Load .env.production if it exists - OVERRIDE any values from .env
+env_file = Path(__file__).resolve().parent.parent.parent / '.env.production'
+if env_file.exists():
+    with open(env_file, 'r', encoding='utf-8') as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith('#') and '=' in line:
+                key, value = line.split('=', 1)
+                os.environ[key.strip()] = value.strip()  # Direct assignment to override
 
 # ==================== DEBUG & SECURITY ====================
 DEBUG = False
@@ -40,17 +51,33 @@ SECURE_HSTS_PRELOAD = True
 # SMTP configured via environment variables
 
 # ==================== DATABASE (Production) ====================
+# Force PostgreSQL backend
 DATABASES = {
     'default': {
-        'ENGINE': os.getenv('DATABASE_ENGINE', 'django.db.backends.postgresql'),
-        'NAME': os.getenv('DATABASE_NAME', 'jndroid_production'),
+        'ENGINE': 'django.db.backends.postgresql',  # Always PostgreSQL in production
+        'NAME': os.getenv('DATABASE_NAME', 'jndroid_db'),
         'USER': os.getenv('DATABASE_USER', 'postgres'),
         'PASSWORD': os.getenv('DATABASE_PASSWORD', ''),
         'HOST': os.getenv('DATABASE_HOST', 'localhost'),
         'PORT': os.getenv('DATABASE_PORT', '5432'),
         'CONN_MAX_AGE': 600,
+        'ATOMIC_REQUESTS': True,  # Wrap all requests in transactions
     }
 }
+
+# Ensure DATABASE_PASSWORD is set
+if not os.getenv('DATABASE_PASSWORD'):
+    raise ValueError(
+        '🚨 CRITICAL: DATABASE_PASSWORD environment variable must be set in production!\n'
+        'Add it to .env.production file: DATABASE_PASSWORD=your_password'
+    )
+
+# Ensure DATABASE_NAME is set
+if not os.getenv('DATABASE_NAME'):
+    raise ValueError(
+        '🚨 CRITICAL: DATABASE_NAME environment variable must be set in production!\n'
+        'Add it to .env.production file: DATABASE_NAME=jndroid_db'
+    )
 
 # ==================== CACHING (Production) ====================
 CACHES = {
