@@ -49,6 +49,15 @@ SECURE_HSTS_PRELOAD = True
 
 # ==================== EMAIL BACKEND (Production) ====================
 # SMTP configured via environment variables
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() == 'true'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@jndroid.store')
+SERVER_EMAIL = os.getenv('SERVER_EMAIL', 'server@jndroid.store')
+ADMIN_EMAIL = os.getenv('ADMIN_EMAIL', 'admin@jndroid.store')
 
 # ==================== DATABASE (Production) ====================
 # Force PostgreSQL backend
@@ -125,7 +134,5 @@ ADMINS = [
     ('JN Admin', os.getenv('ADMIN_EMAIL', 'admin@jndroid.store')),
 ]
 MANAGERS = ADMINS
-
-# ==================== SECURITY ====================
 X_FRAME_OPTIONS = 'DENY'
 SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
