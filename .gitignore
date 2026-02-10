@@ -18,7 +18,8 @@ media/
 
 # Environment variables
 .env
-.env.production  # Production environment with sensitive credentials
+.env.production
+.env.*.production
 .env.local
 .env.*.local
 
