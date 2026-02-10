@@ -37,6 +37,15 @@ media/
 # Test databases
 test_db.py
 test_*.py
+check_db.py
+show_db.py
+create_test_user.py
+test_email_verification.py
+verify_postgres.py
+final_verify.py
+production_audit.py
+setup_postgres_user.py
+generate_credentials.sh
 
 # IDE / Editor
 .vscode/
