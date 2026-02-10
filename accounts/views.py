@@ -159,15 +159,11 @@ def email_confirmation_view(request, key):
         # Try to get and verify the confirmation
         try:
             confirmation = EmailConfirmationHMAC.from_key(key)
-            print(f"[DEBUG] Confirmation key: {key}")
-            print(f"[DEBUG] Confirmation object: {confirmation}")
         except Exception as e:
-            print(f"[DEBUG] Error getting confirmation from key: {e}")
             confirmation = None
         
         if not confirmation:
             # Invalid or non-existent key
-            print("[DEBUG] Confirmation is None/False - invalid key")
             context = {
                 'title': 'Verification Failed',
                 'error_type': 'invalid',
@@ -178,14 +174,11 @@ def email_confirmation_view(request, key):
         # Get the email address object
         try:
             email_address = confirmation.email_address
-            print(f"[DEBUG] Email address: {email_address}")
         except Exception as e:
-            print(f"[DEBUG] Error getting email_address: {e}")
             raise
         
         # Check if already verified
         if email_address.verified:
-            print(f"[DEBUG] Email already verified: {email_address.email}")
             context = {
                 'title': 'Already Verified',
                 'error_type': 'already_verified',
@@ -199,44 +192,31 @@ def email_confirmation_view(request, key):
         
         # Delete any duplicate EmailAddress records with the same email (keep only this one)
         EmailAddress.objects.filter(email=email_address.email).exclude(id=email_address.id).delete()
-        print(f"[DEBUG] Deleted duplicate EmailAddress records for: {email_address.email}")
         
         # Delete any other primary emails for this user
         EmailAddress.objects.filter(user=user, primary=True).exclude(id=email_address.id).delete()
-        print(f"[DEBUG] Cleared other primary emails for user: {user.username}")
         
         # Now update this email as verified and primary using save()
         email_address.verified = True
         email_address.primary = True
         email_address.save()
-        print(f"[DEBUG] Email verified and saved: {email_address.email}")
         
         # Activate the user account
         if not user.is_active:
             user.is_active = True
             user.save()
-            print(f"[DEBUG] User activated: {user.username}")
         
         # Auto-login the user - refresh user object first
         user.refresh_from_db()
         login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-        print(f"[DEBUG] User logged in: {user.username}")
         
-        # Show success page
-        context = {
-            'title': 'Email Verified',
-            'email': user.email,
-            'next_url': request.GET.get('next') or 'accounts:profile'
-        }
+        # Auto-redirect to profile page (or next page if specified)
         messages.success(request, 'ইমেইল যাচাইকরণ সফল হয়েছে! আপনি এখন লগইন করেছেন।')
-        return render(request, 'accounts/email_verification_success.html', context)
+        next_url = request.GET.get('next') or 'accounts:profile'
+        return redirect(next_url)
     
     except Exception as e:
         # Handle expired or invalid confirmations
-        print(f"[ERROR] Email verification exception: {type(e).__name__}: {e}")
-        import traceback
-        traceback.print_exc()
-        
         error_message = str(e).lower()
         
         if 'expired' in error_message or 'invalid' in error_message:

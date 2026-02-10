@@ -154,8 +154,6 @@ ACCOUNT_FORMS = {
     'signup': 'accounts.forms.SignUpForm',
 }
 
-ACCOUNT_EMAIL_REQUIRED = True  # Ensure email is required for mandatory verification
-
 # ==================== LOGGING CONFIGURATION ====================
 # Ensure logs directory exists
 LOG_DIR = BASE_DIR / 'logs'
