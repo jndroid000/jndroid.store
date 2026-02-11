@@ -35,9 +35,11 @@ if not SECRET_KEY or SECRET_KEY == 'change-me-in-production-please':
 # Use this if behind a reverse proxy (nginx/Apache)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+# Temporarily disable SSL redirect for initial setup (enable after SSL certificate)
+# SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = False  # Enable after SSL setup
+SESSION_COOKIE_SECURE = False  # Enable after SSL setup
+CSRF_COOKIE_SECURE = False  # Enable after SSL setup
 CSRF_TRUSTED_ORIGINS = [h.strip() for h in os.getenv('CSRF_TRUSTED_ORIGINS', 'https://jndroid.store,https://www.jndroid.store').split(',') if h.strip()]
 
 # HTTPS only
@@ -59,7 +61,20 @@ DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@jndroid.store')
 SERVER_EMAIL = os.getenv('SERVER_EMAIL', 'server@jndroid.store')
 ADMIN_EMAIL = os.getenv('ADMIN_EMAIL', 'admin@jndroid.store')
 
-# ==================== DATABASE (Production) ====================
+# ==================== ALLAUTH SETTINGS ====================
+# Email verification
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = os.getenv('ACCOUNT_EMAIL_VERIFICATION', 'optional')  # 'optional', 'mandatory', 'none'
+ACCOUNT_AUTHENTICATE_ON_EMAIL = True
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+
+# Account settings
+ACCOUNT_LOGIN_REQUIRED = False
+ACCOUNT_SESSION_REMEMBER = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_CASE_INSENSITIVE = False
+
+# Database
 # Force PostgreSQL backend
 DATABASES = {
     'default': {
