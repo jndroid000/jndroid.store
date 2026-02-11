@@ -99,7 +99,6 @@ def apps_list(request):
     apps_qs = App.objects.select_related(
         "category", "owner"
     ).annotate(
-        avg_rating=Avg("reviews__rating"),
         review_count=Count("reviews")
     ).order_by('-created_at')
     
@@ -157,7 +156,7 @@ def apps_pending(request):
 def app_detail(request, slug):
     """Admin detail view for a specific app with analytics and reviews"""
     app = get_object_or_404(
-        App.objects.select_related("category", "owner").annotate(avg_rating=Avg("reviews__rating")),
+        App.objects.select_related("category", "owner"),
         slug=slug
     )
     

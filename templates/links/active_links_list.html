@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Active Links - JN App Store{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="mb-2">🔗 Active Links</h1>
+            <p class="text-muted">All your published and active links</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'links:dashboard' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="card text-center border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-muted">Total Active Links</h5>
+                    <h2 class="text-success">{{ total_active_links }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- All Active Links -->
+    {% if links %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>URL</th>
+                        <th>Clicks</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for link in links %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                            <strong>{{ link.title }}</strong>
+                            {% if link.description %}
+                                <div class="small text-muted">{{ link.description|truncatewords:10 }}</div>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if link.category %}
+                                <span class="badge bg-info">{{ link.category.name }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Uncategorized</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <small><a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">
+                                {{ link.url|truncatewords:3 }}
+                                <i class="fas fa-external-link-alt"></i>
+                            </a></small>
+                        </td>
+                        <td>
+                            <span class="badge bg-primary">{{ link.click_count }}</span>
+                        </td>
+                        <td>
+                            <small>{{ link.created_at|date:"M d, Y" }}</small>
+                        </td>
+                        <td>
+                            <a href="{% url 'links:edit' link.id %}" class="btn btn-sm btn-warning" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="{% url 'links:redirect' link.id %}" class="btn btn-sm btn-info" title="Open Link" target="_blank">
+                                <i class="fas fa-share-alt"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Export Section -->
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <div class="card border-0 shadow-sm bg-light">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Export Your Active Links</h5>
+                        <p class="text-muted">Download all your active links for backup or sharing</p>
+                        <div class="btn-group" role="group">
+                            <a href="{% url 'links:export_json' %}" class="btn btn-outline-primary">
+                                <i class="fas fa-file-json"></i> Download JSON
+                            </a>
+                            <a href="{% url 'links:export_csv' %}" class="btn btn-outline-success">
+                                <i class="fas fa-file-csv"></i> Download CSV
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% else %}
+        <div class="alert alert-info text-center py-5">
+            <h5><i class="fas fa-info-circle"></i> No Active Links</h5>
+            <p>You don't have any active links yet. Create and activate links to see them here.</p>
+            <a href="{% url 'links:create' %}" class="btn btn-primary">Create First Link</a>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+    .table td {
+        vertical-align: middle;
+    }
+    .badge {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.6rem;
+    }
+    .btn-group .btn {
+        margin: 0 5px;
+    }
+</style>
+{% endblock %}

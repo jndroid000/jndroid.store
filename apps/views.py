@@ -27,7 +27,6 @@ def app_list(request):
     apps_qs = App.objects.filter(is_published=True).select_related(
         "category", "owner"
     ).annotate(
-        avg_rating=Avg("reviews__rating"),
         review_count=Count("reviews")
     ).order_by("-created_at")
 
@@ -70,7 +69,6 @@ def app_detail(request, slug):
     """Display detailed app page with reviews and related apps"""
     app = get_object_or_404(
         App.objects.select_related("category", "owner").annotate(
-            avg_rating=Avg("reviews__rating"),
             review_count=Count("reviews")
         ),
         slug=slug,
@@ -83,9 +81,7 @@ def app_detail(request, slug):
     related_apps = App.objects.filter(
         category=app.category,
         is_published=True
-    ).exclude(slug=slug).annotate(
-        avg_rating=Avg("reviews__rating")
-    )[:4]
+    ).exclude(slug=slug)[:4]
 
     context = {
         "app": app,
@@ -176,7 +172,6 @@ def my_apps(request):
     """View dashboard with all apps uploaded by the current user"""
     # Get user's apps with stats
     apps = App.objects.filter(owner=request.user).annotate(
-        avg_rating=Avg('reviews__rating'),
         review_count=Count('reviews')
     ).order_by('-created_at')
     

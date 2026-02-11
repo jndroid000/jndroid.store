@@ -1,0 +1,311 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}App Ledger - {{ user.username }}{% endblock %}
+
+{% block content %}
+<div style="width: 100vw; margin-left: calc(-50vw + 50%); padding: 20px; overflow-x: auto;">
+    <!-- Main Content -->
+    <div style="width: 100%; padding: 0 20px;">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="mb-0">📋 App Ledger</h4>
+                        </div>
+                        <div class="col-auto">
+                            <a href="?format=json" class="btn btn-sm btn-info">
+                                <i class="fas fa-json"></i> JSON
+                            </a>
+                            <a href="?format=csv" class="btn btn-sm btn-success">
+                                <i class="fas fa-file-csv"></i> CSV
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Filters -->
+                <div class="card-body bg-light border-bottom">
+                    <form method="get" class="row g-3">
+                        <div class="col-md-3">
+                            <input 
+                                type="text" 
+                                name="search" 
+                                class="form-control form-control-sm" 
+                                placeholder="Search apps..." 
+                                value="{{ search_query }}"
+                            >
+                        </div>
+                        
+                        <div class="col-md-2">
+                            <select name="platform" class="form-control form-control-sm">
+                                <option value="">All Platforms</option>
+                                <option value="android" {% if current_platform == 'android' %}selected{% endif %}>
+                                    Android
+                                </option>
+                                <option value="ios" {% if current_platform == 'ios' %}selected{% endif %}>
+                                    iOS
+                                </option>
+                                <option value="windows" {% if current_platform == 'windows' %}selected{% endif %}>
+                                    Windows
+                                </option>
+                                <option value="web" {% if current_platform == 'web' %}selected{% endif %}>
+                                    Web
+                                </option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-2">
+                            <select name="category" class="form-control form-control-sm">
+                                <option value="">All Categories</option>
+                                {% for cat in categories %}
+                                <option value="{{ cat.slug }}" {% if current_category == cat.slug %}selected{% endif %}>
+                                    {{ cat.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-2">
+                            <select name="status" class="form-control form-control-sm">
+                                <option value="">All Status</option>
+                                <option value="published" {% if current_status == 'published' %}selected{% endif %}>
+                                    Published
+                                </option>
+                                <option value="draft" {% if current_status == 'draft' %}selected{% endif %}>
+                                    Draft
+                                </option>
+                                <option value="pending_deletion" {% if current_status == 'pending_deletion' %}selected{% endif %}>
+                                    Pending Delete
+                                </option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary btn-sm w-100">
+                                <i class="fas fa-filter"></i> Filter
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Ledger Table - Comprehensive View -->
+                <div style="overflow-x: auto;">
+                    <table class="table table-hover table-sm mb-0" style="width: 100%; min-width: 4000px;">
+                        <thead class="table-dark sticky-top">
+                            <tr>
+                                <th style="white-space: nowrap;">App Title</th>
+                                <th style="white-space: nowrap;">Category</th>
+                                <th style="white-space: nowrap;">Description</th>
+                                <th style="white-space: nowrap;">Platform</th>
+                                <th style="white-space: nowrap;">Version</th>
+                                <th style="white-space: nowrap;">Size (MB)</th>
+                                <th style="white-space: nowrap;">Developer</th>
+                                <th style="white-space: nowrap;">Developer Email</th>
+                                <th style="white-space: nowrap;">Website</th>
+                                <th style="white-space: nowrap;">Support Email</th>
+                                <th style="white-space: nowrap;">Downloads</th>
+                                <th style="white-space: nowrap;">Installs</th>
+                                <th style="white-space: nowrap;">Rating ⭐</th>
+                                <th style="white-space: nowrap;">Reviews</th>
+                                <th style="white-space: nowrap;">Price</th>
+                                <th style="white-space: nowrap;">Type</th>
+                                <th style="white-space: nowrap;">Download Link</th>
+                                <th style="white-space: nowrap;">App Source</th>
+                                <th style="white-space: nowrap;">Content Rating</th>
+                                <th style="white-space: nowrap;">API Level</th>
+                                <th style="white-space: nowrap;">Hash</th>
+                                <th style="white-space: nowrap;">Privacy Policy</th>
+                                <th style="white-space: nowrap;">Terms</th>
+                                <th style="white-space: nowrap;">Release Date</th>
+                                <th style="white-space: nowrap;">Status</th>
+                                <th style="white-space: nowrap;">Published</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for detail in app_details %}
+                            <tr>
+                                <td><a href="{% url 'apps:info_sheet' detail.app.slug %}" style="text-decoration: none; color: inherit;"><strong>{{ detail.app.title }}</strong></a></td>
+                                <td><span class="badge badge-info">{{ detail.app.category.name }}</span></td>
+                                <td><small>{{ detail.app.short_description|truncatewords:5 }}</small></td>
+                                <td><span class="badge badge-secondary">{{ detail.app.platform|upper }}</span></td>
+                                <td>{{ detail.app.version }}</td>
+                                <td>{{ detail.app.file_size|default:"—" }}</td>
+                                <td>{{ detail.app.owner.username }}</td>
+                                <td><a href="mailto:{{ detail.app.owner.email }}" style="font-size:11px;">{{ detail.app.owner.email }}</a></td>
+                                <td>
+                                    {% if detail.app.website %}
+                                    <a href="{{ detail.app.website }}" target="_blank" style="font-size:11px;">Visit</a>
+                                    {% else %}
+                                    <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if detail.app.support_email %}
+                                    <a href="mailto:{{ detail.app.support_email }}" style="font-size:11px;">{{ detail.app.support_email|truncatewords:1 }}</a>
+                                    {% else %}
+                                    <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td><strong>{{ detail.app.downloads }}</strong></td>
+                                <td>{{ detail.app.install_count }}</td>
+                                <td>
+                                    {% if detail.app.avg_rating > 0 %}
+                                    <strong>{{ detail.app.avg_rating|floatformat:1 }}/5</strong>
+                                    {% else %}
+                                    <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ detail.review_count }}</td>
+                                <td>
+                                    {% if detail.app.is_free %}
+                                    <span class="badge badge-success">Free</span>
+                                    {% else %}
+                                    <strong class="text-primary">${{ detail.app.price }}</strong>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if detail.app.has_iap %}
+                                    <span class="badge badge-warning">IAP</span>
+                                    {% elif detail.app.is_free %}
+                                    <span class="badge badge-info">Free</span>
+                                    {% else %}
+                                    <span class="badge badge-primary">Paid</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if detail.app.download_link %}
+                                    <a href="{{ detail.app.download_link }}" target="_blank" style="font-size:11px;"><i class="fas fa-download"></i></a>
+                                    {% else %}
+                                    <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if detail.app.app_source %}
+                                    <a href="{{ detail.app.app_source }}" target="_blank" style="font-size:11px;"><i class="fab fa-github"></i></a>
+                                    {% else %}
+                                    <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ detail.app.age_rating|default:"—" }}</td>
+                                <td>
+                                    {% if detail.app.min_api_level or detail.app.max_api_level %}
+                                    <small>{{ detail.app.min_api_level|default:"—" }}-{{ detail.app.max_api_level|default:"—" }}</small>
+                                    {% else %}
+                                    <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td><small style="font-family: monospace;">{{ detail.app.sha256_hash|truncatechars:16 }}</small></td>
+                                <td>
+                                    {% if detail.app.privacy_policy_url %}
+                                    <a href="{{ detail.app.privacy_policy_url }}" target="_blank" style="font-size:11px;">Privacy</a>
+                                    {% else %}
+                                    <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if detail.app.terms_of_service_url %}
+                                    <a href="{{ detail.app.terms_of_service_url }}" target="_blank" style="font-size:11px;">Terms</a>
+                                    {% else %}
+                                    <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td><small>{{ detail.app.released_at|date:"M d, Y"|default:"—" }}</small></td>
+                                <td>
+                                    {% if detail.app.is_pending_deletion %}
+                                    <span class="badge badge-danger">Delete Pending</span>
+                                    {% elif detail.app.is_published %}
+                                    <span class="badge badge-success">Active</span>
+                                    {% else %}
+                                    <span class="badge badge-warning">Draft</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ detail.app.created_at|date:"M d, Y" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="26" class="text-center text-muted py-4">
+                                    <i class="fas fa-inbox"></i> No apps found
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                {% if page_obj.has_other_pages %}
+                <nav class="d-flex justify-content-center py-3" aria-label="Page navigation">
+                    <ul class="pagination mb-0">
+                        {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}">
+                                First
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">
+                                Previous
+                            </a>
+                        </li>
+                        {% endif %}
+                        
+                        <li class="page-item active">
+                            <span class="page-link">
+                                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                            </span>
+                        </li>
+                        
+                        {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">
+                                Next
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}">
+                                Last
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card {
+        border: none;
+        border-radius: 8px;
+    }
+    
+    .card-header {
+        border-radius: 8px 8px 0 0;
+        padding: 1rem;
+    }
+    
+    .table-hover tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+    
+    .progress {
+        background-color: #e9ecef;
+    }
+    
+    .badge {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.65rem;
+    }
+    
+    @media (max-width: 768px) {
+        .col-md-4, .col-md-8 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    }
+</style>
+{% endblock %}

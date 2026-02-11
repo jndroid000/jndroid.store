@@ -1,0 +1,402 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}App Info Sheet - {{ app.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3 class="mb-4">📱 {{ app.title }} - Complete Information</h3>
+    
+    <!-- Back Button -->
+    <a href="{% url 'apps:ledger' %}" class="btn btn-secondary mb-3">
+        <i class="fas fa-arrow-left"></i> Back to Ledger
+    </a>
+
+    <div class="row">
+        <!-- Left Column -->
+        <div class="col-lg-6">
+            <!-- Basic Information -->
+            <div class="card mb-3">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">📋 Basic Information</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tr>
+                            <th width="40%">App Name</th>
+                            <td><strong>{{ app.title }}</strong></td>
+                        </tr>
+                        <tr>
+                            <th>Slug</th>
+                            <td><code>{{ app.slug }}</code></td>
+                        </tr>
+                        <tr>
+                            <th>Category</th>
+                            <td><span class="badge badge-info">{{ app.category.name }}</span></td>
+                        </tr>
+                        <tr>
+                            <th>Short Description</th>
+                            <td>{{ app.short_description|truncatewords:20 }}</td>
+                        </tr>
+                        <tr>
+                            <th>Full Description</th>
+                            <td>{{ app.description|linebreaks|truncatewords_html:50 }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Platform & Technical -->
+            <div class="card mb-3">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">🔧 Technical Details</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tr>
+                            <th width="40%">Platform</th>
+                            <td><span class="badge badge-dark">{{ app.platform|upper }}</span></td>
+                        </tr>
+                        <tr>
+                            <th>Version</th>
+                            <td><strong>{{ app.version }}</strong></td>
+                        </tr>
+                        <tr>
+                            <th>Size</th>
+                            <td>{{ app.size_mb }} MB</td>
+                        </tr>
+                        <tr>
+                            <th>Min API Level</th>
+                            <td>{{ app.min_api_level }}</td>
+                        </tr>
+                        <tr>
+                            <th>Target API Level</th>
+                            <td>{{ app.target_api_level }}</td>
+                        </tr>
+                        <tr>
+                            <th>File Hash</th>
+                            <td><small>{{ app.file_hash|truncatechars:40 }}</small></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Downloads & Distribution -->
+            <div class="card mb-3">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">📥 Distribution</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tr>
+                            <th width="40%">APK File</th>
+                            <td>
+                                {% if app.apk_file %}
+                                    <a href="{{ app.apk_file.url }}" class="btn btn-sm btn-success">
+                                        <i class="fas fa-download"></i> Download
+                                    </a>
+                                {% else %}
+                                    <small class="text-muted">Not uploaded</small>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Download Link</th>
+                            <td>
+                                {% if app.download_link %}
+                                    <a href="{{ app.download_link }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-external-link-alt"></i> Open
+                                    </a>
+                                {% else %}
+                                    <small class="text-muted">Not provided</small>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Monetization -->
+            <div class="card mb-3">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">💰 Monetization</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tr>
+                            <th width="40%">App Type</th>
+                            <td>
+                                {% if app.is_free %}
+                                    <span class="badge badge-success">FREE</span>
+                                {% else %}
+                                    <span class="badge badge-danger">PAID</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Price</th>
+                            <td>
+                                {% if app.price %}
+                                    <strong>${{ app.price }}</strong>
+                                {% else %}
+                                    Free
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>In-App Purchases</th>
+                            <td>
+                                {% if app.has_iap %}
+                                    <span class="badge badge-info">YES</span>
+                                {% else %}
+                                    <span class="badge badge-secondary">NO</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="col-lg-6">
+            <!-- Developer Information -->
+            <div class="card mb-3">
+                <div class="card-header bg-purple text-white">
+                    <h5 class="mb-0">👨‍💻 Developer Information</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tr>
+                            <th width="40%">Developer Name</th>
+                            <td>{{ app.developer_name|default:"Not specified" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Developer Email</th>
+                            <td>
+                                {% if app.developer_email %}
+                                    <a href="mailto:{{ app.developer_email }}">{{ app.developer_email }}</a>
+                                {% else %}
+                                    <small class="text-muted">Not provided</small>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Support Email</th>
+                            <td>
+                                {% if app.support_email %}
+                                    <a href="mailto:{{ app.support_email }}">{{ app.support_email }}</a>
+                                {% else %}
+                                    <small class="text-muted">Not provided</small>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Website</th>
+                            <td>
+                                {% if app.website_url %}
+                                    <a href="{{ app.website_url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-globe"></i> Visit
+                                    </a>
+                                {% else %}
+                                    <small class="text-muted">Not provided</small>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Analytics & Ratings -->
+            <div class="card mb-3">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">📊 Analytics & Ratings</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tr>
+                            <th width="40%">Total Downloads</th>
+                            <td><h5 class="mb-0"><strong>{{ app.downloads }}</strong></h5></td>
+                        </tr>
+                        <tr>
+                            <th>Total Installs</th>
+                            <td><h5 class="mb-0"><strong>{{ app.install_count }}</strong></h5></td>
+                        </tr>
+                        <tr>
+                            <th>Average Rating</th>
+                            <td>
+                                <h5 class="mb-0">
+                                    {% if app.avg_rating > 0 %}
+                                        <span class="star-rating">
+                                            {% for i in "12345" %}
+                                                {% if forloop.counter <= app.avg_rating %}
+                                                    ⭐
+                                                {% else %}
+                                                    ☆
+                                                {% endif %}
+                                            {% endfor %}
+                                        </span>
+                                        <strong>{{ app.avg_rating }}/5.0</strong>
+                                    {% else %}
+                                        <small class="text-muted">No ratings yet</small>
+                                    {% endif %}
+                                </h5>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Total Ratings</th>
+                            <td><strong>{{ app.total_ratings }}</strong></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Legal & Compliance -->
+            <div class="card mb-3">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">⚖️ Legal & Compliance</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tr>
+                            <th width="40%">Age Rating</th>
+                            <td><span class="badge badge-warning">{{ app.age_rating }}</span></td>
+                        </tr>
+                        <tr>
+                            <th>Privacy Policy</th>
+                            <td>
+                                {% if app.privacy_policy_url %}
+                                    <a href="{{ app.privacy_policy_url }}" target="_blank" class="btn btn-sm btn-outline-info">
+                                        <i class="fas fa-link"></i> View
+                                    </a>
+                                {% else %}
+                                    <small class="text-muted">Not provided</small>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Terms of Service</th>
+                            <td>
+                                {% if app.terms_url %}
+                                    <a href="{{ app.terms_url }}" target="_blank" class="btn btn-sm btn-outline-info">
+                                        <i class="fas fa-link"></i> View
+                                    </a>
+                                {% else %}
+                                    <small class="text-muted">Not provided</small>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Status & Dates -->
+            <div class="card mb-3">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">📅 Status & Dates</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tr>
+                            <th width="40%">Status</th>
+                            <td>
+                                {% if app.is_published %}
+                                    <span class="badge badge-success">PUBLISHED</span>
+                                {% else %}
+                                    <span class="badge badge-secondary">DRAFT</span>
+                                {% endif %}
+                                {% if app.is_pending_deletion %}
+                                    <br><span class="badge badge-danger">PENDING DELETION</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Release Date</th>
+                            <td>{{ app.release_date|date:"M d, Y" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Last Updated</th>
+                            <td>{{ app.last_update_date|date:"M d, Y" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Created</th>
+                            <td>{{ app.created_at|date:"M d, Y H:i" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Modified</th>
+                            <td>{{ app.updated_at|date:"M d, Y H:i" }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Source & Attribution -->
+            {% if app.source_url %}
+            <div class="card mb-3">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">🔗 Source & Attribution</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tr>
+                            <th width="40%">Source URL</th>
+                            <td>
+                                <a href="{{ app.source_url }}" target="_blank" class="btn btn-sm btn-outline-info">
+                                    <i class="fas fa-github"></i> Open Source
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="mt-4 mb-4">
+        <a href="{% url 'apps:edit' app.slug %}" class="btn btn-warning btn-lg">
+            <i class="fas fa-edit"></i> Edit App
+        </a>
+        <a href="{% url 'apps:ledger' %}" class="btn btn-secondary btn-lg">
+            <i class="fas fa-arrow-left"></i> Back to Ledger
+        </a>
+    </div>
+</div>
+
+<style>
+    .card-header {
+        border-radius: 5px 5px 0 0;
+    }
+    
+    .card {
+        border: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .table-borderless td {
+        padding: 8px 0;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .table-borderless tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .bg-purple {
+        background-color: #6f42c1;
+    }
+    
+    code {
+        background-color: #f4f4f4;
+        padding: 2px 6px;
+        border-radius: 3px;
+    }
+    
+    .star-rating {
+        font-size: 1.2em;
+        margin-right: 10px;
+    }
+</style>
+
+{% endblock %}

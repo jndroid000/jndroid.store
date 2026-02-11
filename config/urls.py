@@ -33,6 +33,7 @@ urlpatterns = [
     path('accounts/', include('allauth.account.urls')),  # django-allauth email verification
     path('categories/', include('categories.urls')),
     path('apps/', include('apps.urls')),
+    path('links/', include('links.urls')),  # Link management
     path('reviews/', include('reviews.urls')),
     path('privacy/', TemplateView.as_view(template_name='privacy.html'), name='privacy'),
     path('dmca-takedown/', TemplateView.as_view(template_name='dmca_takedown.html'), name='dmca_takedown'),

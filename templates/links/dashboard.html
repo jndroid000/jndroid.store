@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Link Management Dashboard - JN App Store{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="mb-2">🔗 Link Management</h1>
+            <p class="text-muted">Organize and track all your links in one place</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'links:create' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-plus"></i> Add New Link
+            </a>
+            {% if total_links > 0 %}
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-download"></i> Export
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="{% url 'links:export_json' %}">
+                        <i class="fas fa-file-json"></i> Export as JSON
+                    </a></li>
+                    <li><a class="dropdown-item" href="{% url 'links:export_csv' %}">
+                        <i class="fas fa-file-csv"></i> Export as CSV
+                    </a></li>
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="row mb-5">
+        <div class="col-md-3">
+            <div class="card text-center border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-muted">Total Links</h5>
+                    <h2 class="text-primary">{{ total_links }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-muted">Total Clicks</h5>
+                    <h2 class="text-success">{{ total_clicks }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-muted">Public Profile</h5>
+                    <a href="{% url 'links:public_profile' user.username %}" class="btn btn-sm btn-info mt-2" target="_blank">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-muted">All Links</h5>
+                    <a href="{% url 'links:all_links' %}" class="btn btn-sm btn-warning">
+                        View List
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-muted">Active Links</h5>
+                    <a href="{% url 'links:active_links' %}" class="btn btn-sm btn-success">
+                        View All
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Links by Category -->
+    {% if categories %}
+        {% for category in categories %}
+            <div class="mb-5">
+                <div class="bg-light p-3 rounded mb-3 border-left border-primary">
+                    <h4 class="mb-0">
+                        <i class="fas {{ category.icon|default:'fa-link' }}"></i>
+                        {{ category.name }}
+                    </h4>
+                </div>
+
+                {% if category.links.all %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Title</th>
+                                    <th>URL</th>
+                                    <th>Clicks</th>
+                                    <th>Created</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for link in category.links.all %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ link.title }}</strong>
+                                        {% if link.description %}
+                                            <div class="small text-muted">{{ link.description|truncatewords:10 }}</div>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <small>{{ link.url|truncatewords:3 }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">{{ link.click_count }}</span>
+                                    </td>
+                                    <td>
+                                        <small>{{ link.created_at|date:"M d, Y" }}</small>
+                                    </td>
+                                    <td>
+                                        {% if link.is_active %}
+                                            <span class="badge bg-success">Active</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Inactive</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'links:edit' link.id %}" class="btn btn-sm btn-warning">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <form method="post" action="{% url 'links:delete' link.id %}" style="display:inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this link?')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">No links in this category yet</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- All Links (if no categories) -->
+    {% if links and not categories %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Title</th>
+                        <th>URL</th>
+                        <th>Clicks</th>
+                        <th>Created</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for link in links %}
+                    <tr>
+                        <td><strong>{{ link.title }}</strong></td>
+                        <td><small>{{ link.url|truncatewords:3 }}</small></td>
+                        <td><span class="badge bg-info">{{ link.click_count }}</span></td>
+                        <td><small>{{ link.created_at|date:"M d, Y" }}</small></td>
+                        <td>
+                            {% if link.is_active %}
+                                <span class="badge bg-success">Active</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'links:edit' link.id %}" class="btn btn-sm btn-warning">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form method="post" action="{% url 'links:delete' link.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this link?')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% elif not links and not categories %}
+        <div class="alert alert-info text-center py-5">
+            <h5>No links yet</h5>
+            <p>Create your first link to get started!</p>
+            <a href="{% url 'links:create' %}" class="btn btn-primary">Create Link</a>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+    .border-left {
+        border-left: 4px solid !important;
+    }
+    .border-primary {
+        border-left-color: var(--bs-primary) !important;
+    }
+</style>
+{% endblock %}

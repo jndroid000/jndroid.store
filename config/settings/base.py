@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'categories',
     'apps',
     'reviews',
+    'links',  # Link management app
 ]
 
 MIDDLEWARE = [

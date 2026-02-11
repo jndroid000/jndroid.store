@@ -16,9 +16,23 @@ class AppUploadForm(forms.ModelForm):
             'description',
             'version',
             'size_mb',
+            'min_api_level',
+            'target_api_level',
             'cover_image',
             'apk_file',
             'download_link',
+            'file_hash',
+            'developer_name',
+            'developer_email',
+            'support_email',
+            'website_url',
+            'privacy_policy_url',
+            'terms_url',
+            'age_rating',
+            'is_free',
+            'price',
+            'has_iap',
+            'source_url',
             'store_name',
             'store_email',
             'is_published',
@@ -61,6 +75,14 @@ class AppUploadForm(forms.ModelForm):
                 'placeholder': 'Size in MB',
                 'step': '0.01',
             }),
+            'min_api_level': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Minimum API level (e.g., 21)',
+            }),
+            'target_api_level': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Target API level (e.g., 35)',
+            }),
             'cover_image': forms.FileInput(attrs={
                 'class': 'form-control',
                 'accept': 'image/*',
@@ -72,6 +94,52 @@ class AppUploadForm(forms.ModelForm):
             'download_link': forms.URLInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'https://drive.google.com/... (optional)',
+            }),
+            'file_hash': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'SHA256 hash (optional)',
+            }),
+            'developer_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Your company/developer name',
+            }),
+            'developer_email': forms.EmailInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'developer@example.com',
+            }),
+            'support_email': forms.EmailInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'support@example.com',
+            }),
+            'website_url': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'https://www.example.com',
+            }),
+            'privacy_policy_url': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'https://example.com/privacy',
+            }),
+            'terms_url': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'https://example.com/terms',
+            }),
+            'age_rating': forms.Select(attrs={
+                'class': 'form-control',
+            }),
+            'is_free': forms.CheckboxInput(attrs={
+                'class': 'form-check-input',
+            }),
+            'price': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'placeholder': '9.99',
+                'step': '0.01',
+            }),
+            'has_iap': forms.CheckboxInput(attrs={
+                'class': 'form-check-input',
+            }),
+            'source_url': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'https://github.com/... (optional)',
             }),
             'store_name': forms.TextInput(attrs={
                 'class': 'form-control',
