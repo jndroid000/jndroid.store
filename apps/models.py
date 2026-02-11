@@ -297,28 +297,3 @@ class AppVersion(models.Model):
 
     def __str__(self):
         return f"{self.app.title} v{self.version_number}"
-    
-    def get_rating_display(self):
-        """Return formatted rating (e.g., '4.5 out of 5')"""
-        if self.total_ratings == 0:
-            return "No ratings yet"
-        return f"{self.avg_rating:.1f}/5.0 ({self.total_ratings} ratings)"
-
-
-class AppVersion(models.Model):
-    """Store version history for apps"""
-    app = models.ForeignKey(App, on_delete=models.CASCADE, related_name="versions")
-    version_number = models.CharField(max_length=40)
-    description = models.TextField(blank=True)
-    size_mb = models.DecimalField(max_digits=8, decimal_places=2, default=0)
-    apk_file = models.FileField(upload_to="apks/", blank=True, null=True)
-    download_link = models.URLField(blank=True)
-    is_active = models.BooleanField(default=True)
-    released_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ["-released_at"]
-        unique_together = ("app", "version_number")
-
-    def __str__(self):
-        return f"{self.app.title} - v{self.version_number}"
