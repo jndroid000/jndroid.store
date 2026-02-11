@@ -119,22 +119,48 @@ def app_download(request, slug):
 
 @login_required(login_url='accounts:login')
 @login_required(login_url='accounts:login')
+@login_required(login_url='accounts:login')
 def app_upload(request):
-    """Upload a new app"""
+    """Upload a new app - authenticated users only"""
     if request.method == 'POST':
-        form = AppUploadForm(request.POST, request.FILES)
+        form = AppUploadForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
-            app = form.save(commit=False)
-            app.owner = request.user
-            app.save()
-            messages.success(request, f"App '{app.title}' uploaded successfully!")
-            return redirect('apps:detail', slug=app.slug)
+            try:
+                with transaction.atomic():
+                    app = form.save(commit=False)
+                    app.owner = request.user
+                    app.save()
+                    messages.success(
+                        request,
+                        f"✅ Success! '{app.title}' has been uploaded to JN App Store.",
+                        extra_tags='success'
+                    )
+                return redirect('apps:detail', slug=app.slug)
+            except Exception as e:
+                messages.error(
+                    request,
+                    f"❌ Error saving app: {str(e)}. Please try again.",
+                    extra_tags='error'
+                )
+        else:
+            # Show form validation errors
+            messages.error(
+                request,
+                "⚠️ Please fix the errors below and try again.",
+                extra_tags='error'
+            )
+            # Also show detailed field errors
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"  • {error}", extra_tags='error')
     else:
-        form = AppUploadForm()
+        form = AppUploadForm(user=request.user)
     
     context = {
         'form': form,
         'title': 'Upload New App',
+        'is_upload': True,
+        'is_superuser': request.user.is_superuser,
     }
     return render(request, 'apps/app_upload.html', context)
 
@@ -150,19 +176,20 @@ def app_edit(request, slug):
         return redirect('apps:detail', slug=app.slug)
     
     if request.method == 'POST':
-        form = AppUploadForm(request.POST, request.FILES, instance=app)
+        form = AppUploadForm(request.POST, request.FILES, instance=app, user=request.user)
         if form.is_valid():
             form.save()
             messages.success(request, f"App '{app.title}' updated successfully!")
             return redirect('apps:detail', slug=app.slug)
     else:
-        form = AppUploadForm(instance=app)
+        form = AppUploadForm(instance=app, user=request.user)
     
     context = {
         'form': form,
         'title': 'Edit App',
         'app': app,
         'is_edit': True,
+        'is_superuser': request.user.is_superuser,
     }
     return render(request, 'apps/app_upload.html', context)
 

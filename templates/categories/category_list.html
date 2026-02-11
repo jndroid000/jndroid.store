@@ -5,17 +5,39 @@
 
 {% block content %}
 <div class="pageHeader">
-  <h1>Categories</h1>
+  <h1>📱 Categories</h1>
   <p>আপনার পছন্দের ক্যাটাগরি খুঁজে পান এবং অ্যাপ ডাউনলোড করুন।</p>
+  <p style="color: #666; margin-top: 10px;">মোট <strong>{{ total_categories }}</strong>টি ক্যাটাগরি</p>
 </div>
 
+{% if categories %}
 <div class="grid3">
   {% for c in categories %}
-    <a href="{% url 'categories:detail' c.slug %}" class="card" style="text-decoration:none; color:inherit;">
-      <div class="icon">📂</div>
+    <a href="{% url 'categories:detail' c.slug %}" class="card" style="--card-color: {{ c.color }}; text-decoration:none; color:inherit; border-left: 4px solid var(--card-color);">
+      <div class="icon" style="font-size: 2.5em;">{{ c.icon }}</div>
       <h3>{{ c.name }}</h3>
-      <p>{{ c.app_count }} App{{ c.app_count|pluralize }}</p>
+      {% if c.description %}
+        <p style="font-size: 0.9em; color: #666;">{{ c.description }}</p>
+      {% endif %}
+      <p style="font-weight: bold; color: #3498db;">
+        📥 {{ c.app_count }} App{{ c.app_count|pluralize }}
+      </p>
     </a>
   {% endfor %}
 </div>
+{% else %}
+  <div class="noReviews">
+    <p>কোনো ক্যাটাগরি পাওয়া যায়নি।</p>
+  </div>
+{% endif %}
+
+<style>
+  .card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+  }
+</style>
 {% endblock %}

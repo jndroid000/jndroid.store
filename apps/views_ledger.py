@@ -18,15 +18,10 @@ def app_ledger_view(request):
     apps = App.objects.filter(owner=request.user).select_related('category')
     
     # Apply filters
-    platform = request.GET.get('platform', '')
     category = request.GET.get('category', '')
     status = request.GET.get('status', '')
     sort_by = request.GET.get('sort', '-created_at')
     search = request.GET.get('search', '')
-    
-    # Filter by platform
-    if platform:
-        apps = apps.filter(platform=platform)
     
     # Filter by category
     if category:
@@ -65,11 +60,6 @@ def app_ledger_view(request):
         avg_rating=Avg('avg_rating'),
         total_revenue=Sum('price', filter=Q(is_free=False))
     )
-    
-    # Platform distribution
-    platform_dist = App.objects.filter(owner=request.user).values('platform').annotate(
-        count=Count('id')
-    ).order_by('-count')
     
     # Category distribution
     category_dist = App.objects.filter(owner=request.user).values(
@@ -111,13 +101,11 @@ def app_ledger_view(request):
         'draft_apps': draft_apps,
         'pending_delete': pending_delete,
         'stats': stats,
-        'platform_dist': platform_dist,
         'category_dist': category_dist,
         'free_apps': free_apps,
         'paid_apps': paid_apps,
         'apps_with_iap': apps_with_iap,
         'categories': categories,
-        'current_platform': platform,
         'current_category': category,
         'current_status': status,
         'current_sort': sort_by,
@@ -139,7 +127,7 @@ def app_ledger_export(request):
     format_type = request.GET.get('format', 'json')
     
     apps = App.objects.filter(owner=request.user).select_related('category').values(
-        'id', 'title', 'slug', 'platform', 'version', 'downloads', 
+        'id', 'title', 'slug', 'version', 'downloads', 
         'install_count', 'avg_rating', 'total_ratings', 'is_free', 'price',
         'developer_name', 'is_published', 'created_at', 'updated_at'
     )
@@ -150,7 +138,7 @@ def app_ledger_export(request):
         
         csv_writer = writer(response)
         csv_writer.writerow([
-            'App ID', 'Title', 'Slug', 'Platform', 'Version', 'Downloads',
+            'App ID', 'Title', 'Slug', 'Version', 'Downloads',
             'Installs', 'Rating', 'Total Ratings', 'Free?', 'Price',
             'Developer', 'Published', 'Created', 'Updated'
         ])
@@ -160,7 +148,6 @@ def app_ledger_export(request):
                 app['id'],
                 app['title'],
                 app['slug'],
-                app['platform'],
                 app['version'],
                 app['downloads'],
                 app['install_count'],

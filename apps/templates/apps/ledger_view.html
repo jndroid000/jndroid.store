@@ -38,24 +38,6 @@
                         </div>
                         
                         <div class="col-md-2">
-                            <select name="platform" class="form-control form-control-sm">
-                                <option value="">All Platforms</option>
-                                <option value="android" {% if current_platform == 'android' %}selected{% endif %}>
-                                    Android
-                                </option>
-                                <option value="ios" {% if current_platform == 'ios' %}selected{% endif %}>
-                                    iOS
-                                </option>
-                                <option value="windows" {% if current_platform == 'windows' %}selected{% endif %}>
-                                    Windows
-                                </option>
-                                <option value="web" {% if current_platform == 'web' %}selected{% endif %}>
-                                    Web
-                                </option>
-                            </select>
-                        </div>
-                        
-                        <div class="col-md-2">
                             <select name="category" class="form-control form-control-sm">
                                 <option value="">All Categories</option>
                                 {% for cat in categories %}

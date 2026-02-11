@@ -183,7 +183,10 @@ def app_detail(request, slug):
 @require_http_methods(["GET", "POST"])
 def apps_edit(request, slug):
     """Admin edit view for editing an app"""
+    from categories.models import Category
+    
     app = get_object_or_404(App, slug=slug)
+    is_superuser = request.user.is_superuser
     
     if request.method == 'POST':
         form = AppUploadForm(request.POST, request.FILES, instance=app)
@@ -194,11 +197,16 @@ def apps_edit(request, slug):
     else:
         form = AppUploadForm(instance=app)
     
+    # Get all active categories for dropdown (Superuser only)
+    categories = Category.objects.filter(is_active=True).values_list('id', 'name').order_by('order', 'name')
+    
     context = {
         'form': form,
         'app': app,
         'title': f'Edit - {app.title}',
         'is_edit': True,
+        'is_superuser': is_superuser,
+        'categories': list(categories),
     }
     return render(request, 'admin/apps_edit.html', context)
 

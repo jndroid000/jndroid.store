@@ -4,273 +4,284 @@
 {% block extra_css %}<link rel="stylesheet" href="{% static 'css/app_detail.css' %}">{% endblock %}
 
 {% block content %}
-<div class="appDetail" style="display: grid; grid-template-columns: 1fr; gap: 0;">
-  <!-- Main Content Wrapper -->
-  <div style="display: grid; grid-template-columns: 1fr 280px; gap: 32px;">
-    <!-- Left Column -->
-    <div>
-      <!-- Header Section -->
-      <div class="appHeader">
-        <div class="appCover">{{ app.title|first|upper }}</div>
-        <div class="appInfo">
-          <h1>{{ app.title }}</h1>
-          <p style="margin: 8px 0;">
-            <a href="{% url 'apps:list' %}?cat={{ app.category.slug }}" style="text-decoration: none; color: var(--primary);">{{ app.category.name }}</a> 
-            • <span style="text-transform: uppercase; font-size: 12px; color: var(--muted);">{{ app.platform }}</span>
-            {% if app.version %} • <span>v{{ app.version }}</span>{% endif %}
-          </p>
-          <p style="color: var(--muted); font-size: 14px; margin: 8px 0;">
-            📦 {{ app.size_mb|floatformat:2 }} MB
-          </p>
-          <p style="font-size: 16px; margin: 12px 0; color: var(--text);">
-            ⭐ <strong>{{ app.avg_rating|default_if_none:"0"|floatformat:1 }}/5</strong>
-            <span style="color: var(--muted);">({{ reviews_count }} review{{ reviews_count|pluralize }})</span>
-            • ⬇️ <strong>{{ app.downloads|default:0 }}</strong> downloads
-          </p>
-          
-          <!-- Action Buttons -->
-          <div class="appActions" style="display: flex; gap: 12px; margin-top: 20px;">
-            <a href="{% url 'apps:download' app.slug %}" class="btn primary" style="flex:1; text-align: center; padding: 12px; border-radius: var(--radius); text-decoration: none;">⬇ Download</a>
-            {% if user.is_authenticated %}
-              <a href="{% url 'reviews:add' app.slug %}" class="btn" style="padding: 12px 20px; border-radius: var(--radius); text-decoration: none; border: 1px solid var(--line); text-align: center;">✍ Write Review</a>
-            {% else %}
-              <a href="{% url 'accounts:login' %}" class="btn" style="padding: 12px 20px; border-radius: var(--radius); text-decoration: none; border: 1px solid var(--line); text-align: center;">🔐 Login to Review</a>
-            {% endif %}
-          </div>
-        </div>
+<!-- HERO BANNER SECTION (Like Play Store) -->
+<div class="app-hero">
+  <div class="app-hero-container">
+    <div class="app-hero-left">
+      <!-- App Cover Image -->
+      <div class="app-cover">
+        {% if app.cover_image %}<img src="{{ app.cover_image.url }}" alt="{{ app.title }}">{% else %}{{ app.title|first|upper }}{% endif %}
       </div>
 
-      <!-- Cover Image -->
-      {% if app.cover_image %}
-        <img src="{{ app.cover_image.url }}" alt="{{ app.title }}" style="max-width:100%; width:100%; border-radius:var(--radius); border:1px solid var(--line); margin: 32px 0; display: block;">
-      {% endif %}
-
-      <!-- App Information Grid -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--line);">
-        <div style="padding: 16px; background: var(--bg-secondary); border-radius: var(--radius); text-align: center;">
-          <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">Platform</div>
-          <div style="font-size: 16px; font-weight: 600;">{{ app.platform|title }}</div>
-        </div>
-        <div style="padding: 16px; background: var(--bg-secondary); border-radius: var(--radius); text-align: center;">
-          <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">File Size</div>
-          <div style="font-size: 16px; font-weight: 600;">{{ app.size_mb|floatformat:1 }} MB</div>
-        </div>
-        <div style="padding: 16px; background: var(--bg-secondary); border-radius: var(--radius); text-align: center;">
-          <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">Developer</div>
-          <div style="font-size: 14px; font-weight: 600;">{{ app.owner.username }}</div>
-        </div>
-        <div style="padding: 16px; background: var(--bg-secondary); border-radius: var(--radius); text-align: center;">
-          <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">Updated</div>
-          <div style="font-size: 14px; font-weight: 600;">{{ app.updated_at|date:"M d, Y" }}</div>
-        </div>
-        {% if app.store_name %}
-          <div style="padding: 16px; background: var(--bg-secondary); border-radius: var(--radius); text-align: center;">
-            <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">Store</div>
-            <div style="font-size: 14px; font-weight: 600;">🏪 {{ app.store_name }}</div>
-          </div>
-        {% endif %}
-        {% if app.store_email %}
-          <div style="padding: 16px; background: var(--bg-secondary); border-radius: var(--radius); text-align: center;">
-            <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">Contact</div>
-            <a href="mailto:{{ app.store_email }}" style="font-size: 14px; font-weight: 600; color: var(--primary); text-decoration: none;">{{ app.store_email }}</a>
-          </div>
-        {% endif %}
-      </div>
-
-      <!-- Description Section -->
-      {% if app.description %}
-        <div style="margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--line);">
-          <h2 style="margin: 0 0 16px; font-size: 20px;">📝 About This App</h2>
-          <p style="color: var(--muted); line-height: 1.8; margin: 0;">{{ app.description|linebreaks }}</p>
-        </div>
-      {% endif %}
-
-      <!-- Short Description -->
-      {% if app.short_description %}
-        <div style="margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--line);">
-          <h3 style="margin: 0 0 12px; font-size: 16px;">Features</h3>
-          <p style="color: var(--text); line-height: 1.8; margin: 0;">{{ app.short_description }}</p>
-        </div>
-      {% endif %}
-
-      <!-- Version Information Section -->
-      <div style="margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--line);">
-        <h2 style="margin: 0 0 16px; font-size: 20px;">📦 Version Information</h2>
+      <!-- App Info -->
+      <div class="app-hero-info">
+        <h1 class="app-title">{{ app.title }}</h1>
         
-        <!-- Current Version -->
-        <div style="padding: 16px; background: var(--bg-secondary); border-radius: var(--radius); border-left: 4px solid #FFD700; margin-bottom: 20px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <div class="app-meta">
+          <span class="app-category">{{ app.category.icon }} {{ app.category.name }}</span>
+          <span>by <strong>{{ app.owner.first_name|default:app.owner.username }}</strong></span>
+        </div>
+
+        <p style="color: #7f8c8d; font-size: 14px; margin: 12px 0;">
+          📦 {{ app.size_mb|floatformat:2 }} MB • v{{ app.version|default:"1.0" }} • Updated {{ app.updated_at|date:"M d, Y" }}
+        </p>
+
+        <!-- Stats -->
+        <div class="app-stats">
+          <div class="app-stat">
+            <span>⭐</span>
             <div>
-              <div style="font-weight: 600; color: var(--text); font-size: 16px;">🚀 Current Version</div>
-              <div style="font-size: 14px; color: var(--muted); margin-top: 4px;">v{{ app.version|default:"1.0" }}</div>
-            </div>
-            <a href="{% url 'apps:download' app.slug %}" style="background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: var(--radius); cursor: pointer; font-size: 13px; text-decoration: none; display: inline-block;">⬇️ Download</a>
-          </div>
-          <div style="font-size: 12px; color: var(--muted); display: flex; gap: 16px;">
-            <span>📦 Size: {{ app.size_mb|floatformat:1 }} MB</span>
-            <span>📊 Downloads: {{ app.downloads|default:"0" }}</span>
-          </div>
-        </div>
-        
-        <!-- Previous Versions -->
-        {% if app.versions.all %}
-          <div style="margin-bottom: 20px;">
-            <h3 style="margin: 0 0 12px; font-size: 16px;">Previous Versions</h3>
-            <div style="display: grid; gap: 12px;">
-              {% for ver in app.versions.all %}
-                <div style="padding: 12px; background: var(--bg-secondary); border-radius: var(--radius); border-left: 4px solid var(--primary);">
-                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <div style="font-weight: 600; color: var(--text);">v{{ ver.version_number }}</div>
-                    <div style="font-size: 12px; color: var(--muted);">{{ ver.released_at|date:"M d, Y" }}</div>
-                  </div>
-                  {% if ver.description %}
-                    <p style="font-size: 13px; color: var(--muted); margin: 6px 0;">{{ ver.description|truncatewords:20 }}</p>
-                  {% endif %}
-                  <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
-                    <div style="font-size: 12px; color: var(--muted);">📦 {{ ver.size_mb|floatformat:1 }} MB</div>
-                    {% if ver.download_link %}
-                      <a href="{{ ver.download_link }}" style="background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: var(--radius); cursor: pointer; font-size: 12px; text-decoration: none; display: inline-block;">⬇️ Download</a>
-                    {% elif ver.apk_file %}
-                      <a href="{{ ver.apk_file.url }}" style="background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: var(--radius); cursor: pointer; font-size: 12px; text-decoration: none; display: inline-block;">⬇️ Download</a>
-                    {% else %}
-                      <span style="font-size: 11px; color: var(--muted);">No download available</span>
-                    {% endif %}
-                  </div>
-                </div>
-              {% endfor %}
+              <div class="app-stat-value">{{ app.avg_rating|default_if_none:"0"|floatformat:1 }}/5</div>
+              <div class="app-stat-label">({{ reviews_count }} reviews)</div>
             </div>
           </div>
-        {% endif %}
-      </div>
-
-      <!-- Copyright & Usage Guidelines Section -->
-      <div style="margin-bottom: 32px; padding: 16px; border: 2px solid #dc3545; border-radius: var(--radius); background: rgba(220, 53, 69, 0.05);">
-        <h3 style="margin: 0 0 12px; font-size: 16px; color: #dc3545;">⚖️ Copyright & Usage Guidelines</h3>
-        <ul style="margin: 0; padding-left: 20px; font-size: 13px; color: var(--muted); line-height: 1.8;">
-          <li><strong>Ownership:</strong> This application is owned and copyrighted by <strong>{{ app.owner.username }}</strong></li>
-          <li><strong>Licensed Use:</strong> Users are granted a personal, non-commercial license to download and use this app</li>
-          <li><strong>Restrictions:</strong> Redistribution, reverse engineering, decompilation, or commercial use without permission is strictly prohibited</li>
-          <li><strong>Intellectual Property:</strong> All intellectual property rights are retained by the developer</li>
-          <li><strong>No Warranty:</strong> The developer is not responsible for any data loss, damages, or issues caused by using this application</li>
-          <li><strong>Support:</strong> For licensing inquiries, support, or permissions, please contact the developer directly</li>
-          <li><strong>Terms Acceptance:</strong> By downloading this app, you agree to these terms and conditions</li>
-        </ul>
-      </div>
-
-      <!-- Related Apps Section (Mobile) -->
-      {% if related_apps %}
-        <div style="display: none; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--line);" class="related-apps-mobile">
-          <h2 style="font-size: 20px; margin-bottom: 16px;">🔗 More from {{ app.category.name }}</h2>
-          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px;">
-            {% for related in related_apps %}
-              <a href="{% url 'apps:detail' related.slug %}" style="text-decoration: none;">
-                <div style="padding: 12px; background: var(--bg-secondary); border-radius: var(--radius); text-align: center; border: 1px solid var(--line); hover: border-color var(--primary);">
-                  <div style="font-size: 32px; margin-bottom: 8px;">{{ related.title|first|upper }}</div>
-                  <div style="font-size: 12px; color: var(--text); font-weight: 600; word-break: break-word;">{{ related.title|truncatewords:2 }}</div>
-                  <div style="font-size: 11px; color: var(--muted); margin-top: 4px;">⭐ {{ related.avg_rating|default_if_none:"0"|floatformat:1 }}/5</div>
-                </div>
-              </a>
-            {% endfor %}
+          <div class="app-stat">
+            <span>⬇️</span>
+            <div>
+              <div class="app-stat-value">{{ app.downloads|default:0 }}</div>
+              <div class="app-stat-label">downloads</div>
+            </div>
           </div>
         </div>
-      {% endif %}
 
-      <!-- Reviews Section -->
-      <div class="reviewsSection" style="margin-bottom: 32px;">
-        <h2 style="font-size: 20px; margin-bottom: 20px;">⭐ User Reviews ({{ reviews_count }})</h2>
-        
-        {% if reviews %}
-          <div class="reviewsList" style="display: grid; gap: 16px;">
-            {% for r in reviews %}
-              <div class="review" style="padding: 16px; background: var(--bg-secondary); border-radius: var(--radius); border-left: 4px solid #FFD700;">
-                <div class="reviewHeader" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-                  <div>
-                    <div style="font-weight: 600; color: var(--text);">{{ r.user.username }}</div>
-                    <span style="color: var(--muted); font-size: 12px;">{{ r.created_at|date:"M d, Y" }}</span>
-                  </div>
-                  <span class="reviewRating" style="font-size: 14px; font-weight: 600;">
-                    {% for i in ""|make_list|length|add:"-4"|make_list %}
-                      {% if forloop.counter <= r.rating %}⭐{% else %}☆{% endif %}
-                    {% endfor %}
-                    {{ r.rating }}/5
-                  </span>
-                </div>
-                {% if r.comment %}
-                  <p class="reviewComment" style="color: var(--text); line-height: 1.6; margin: 0;">{{ r.comment }}</p>
-                {% else %}
-                  <p class="reviewComment" style="color: var(--muted); font-style: italic; margin: 0;">No comment provided</p>
-                {% endif %}
-              </div>
-            {% endfor %}
-          </div>
-        {% else %}
-          <div class="noReviews" style="padding: 40px; text-align: center; background: var(--bg-secondary); border-radius: var(--radius);">
-            <p style="color: var(--muted); margin: 0;">No reviews yet. Be the first to review this app! 🎉</p>
-            {% if user.is_authenticated %}
-              <a href="{% url 'reviews:add' app.slug %}" class="btn primary" style="margin-top: 16px; display: inline-block; padding: 10px 24px; border-radius: var(--radius); text-decoration: none;">Write First Review</a>
-            {% else %}
-              <a href="{% url 'accounts:login' %}" class="btn" style="margin-top: 16px; display: inline-block; padding: 10px 24px; border-radius: var(--radius); text-decoration: none; border: 1px solid var(--line);">Login to Review</a>
-            {% endif %}
-          </div>
-        {% endif %}
-      </div>
-
-      <!-- Copyright Notice -->
-      <div style="margin-top: 32px; padding: 16px; background: var(--bg-secondary); border-radius: var(--radius); border-left: 4px solid var(--primary); font-size: 12px; color: var(--muted); line-height: 1.6;">
-        <strong>📋 Information:</strong> This app is listed on JN App Store. The content, features, and availability of this application are the responsibility of the developer. Please respect copyright and intellectual property rights. For inquiries or issues, contact the developer directly.
+        <!-- Action Buttons -->
+        <div class="app-actions">
+          <a href="{% url 'apps:download' app.slug %}" class="btn btn-primary">⬇ Download Now</a>
+          {% if user.is_authenticated %}
+            <a href="{% url 'reviews:add' app.slug %}" class="btn btn-secondary">✍ Write Review</a>
+          {% else %}
+            <a href="{% url 'accounts:login' %}" class="btn btn-secondary">🔐 Login</a>
+          {% endif %}
+        </div>
       </div>
     </div>
 
-    <!-- Right Sidebar (Desktop Only) -->
-    {% if related_apps %}
-      <aside style="display: none;" class="related-apps-sidebar">
-        <div style="position: sticky; top: 20px;">
-          <h3 style="font-size: 16px; margin: 0 0 16px; padding: 12px; background: var(--bg-secondary); border-radius: var(--radius);">🔗 Related Apps</h3>
-          <div style="display: flex; flex-direction: column; gap: 12px;">
+    <!-- SIDEBAR - Quick Info (Like Play Store) -->
+    <div class="app-sidebar">
+      <div class="info-box">
+        <div class="info-box-label">File Size</div>
+        <div class="info-box-value">{{ app.size_mb|floatformat:1 }}MB</div>
+      </div>
+
+      <div class="info-box">
+        <div class="info-box-label">Version</div>
+        <div class="info-box-value">{{ app.version|default:"1.0" }}</div>
+      </div>
+
+      <div class="info-box">
+        <div class="info-box-label">Min Android</div>
+        <div class="info-box-value">{{ app.min_android_version }}</div>
+        <div class="info-box-subtext">API {{ app.min_api_level }}</div>
+      </div>
+
+      <div class="info-box">
+        <div class="info-box-label">Target Android</div>
+        <div class="info-box-value">{{ app.target_android_version }}</div>
+        <div class="info-box-subtext">API {{ app.target_api_level }}</div>
+      </div>
+
+      <div class="info-box">
+        <div class="info-box-label">Downloads</div>
+        <div class="info-box-value">{{ app.downloads|default:0 }}</div>
+      </div>
+
+      <div class="info-box {% if app.is_free %}badge-free{% else %}badge-paid{% endif %}">
+        <div class="info-box-label">Price</div>
+        <div class="info-box-value">{% if app.is_free %}FREE{% else %}${{ app.price|floatformat:2 }}{% endif %}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT AREA -->
+<div class="app-main">
+  <!-- Full-width Cover Image -->
+  {% if app.cover_image %}
+    <img src="{{ app.cover_image.url }}" alt="{{ app.title }}" class="app-image-full">
+  {% endif %}
+
+  <!-- Content Wrapper (2 Column Layout) -->
+  <div class="app-content-wrapper">
+    <!-- LEFT COLUMN -->
+    <div>
+      <!-- About This App -->
+      {% if app.description %}
+        <div class="section-card featured">
+          <h2 class="section-title">📝 About This App</h2>
+          <p class="section-text">{{ app.description }}</p>
+        </div>
+      {% endif %}
+
+      <!-- Key Features -->
+      {% if app.short_description %}
+        <div class="section-card">
+          <h2 class="section-title">✨ Key Features</h2>
+          <p class="section-text">{{ app.short_description }}</p>
+        </div>
+      {% endif %}
+
+      <!-- Android Requirements (Like APK Pure) -->
+      <div class="section-card info">
+        <h2 class="section-title">🤖 Android Requirements</h2>
+        <div class="requirements-grid">
+          <div class="requirement-item">
+            <div class="requirement-label">Minimum Android</div>
+            <div class="requirement-value">{{ app.min_android_version }}</div>
+            <div class="requirement-api">API Level {{ app.min_api_level }}</div>
+          </div>
+          <div class="requirement-item">
+            <div class="requirement-label">Target Android</div>
+            <div class="requirement-value">{{ app.target_android_version }}</div>
+            <div class="requirement-api">API Level {{ app.target_api_level }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Developer Information -->
+      <div class="section-card developer">
+        <h2 class="section-title">👨‍💻 Developer Information</h2>
+        <div class="dev-info-grid">
+          <div class="dev-info-item">
+            <span class="dev-info-label">Developer:</span>
+            <span class="dev-info-value">{{ app.developer_name|default:app.owner.get_full_name|default:app.owner.username }}</span>
+          </div>
+          {% if app.website_url %}
+            <div class="dev-info-item">
+              <span class="dev-info-label">Website:</span>
+              <span class="dev-info-value"><a href="{{ app.website_url }}" target="_blank">{{ app.website_url|truncatewords:3 }}</a></span>
+            </div>
+          {% endif %}
+          {% if app.developer_email %}
+            <div class="dev-info-item">
+              <span class="dev-info-label">Email:</span>
+              <span class="dev-info-value"><a href="mailto:{{ app.developer_email }}">{{ app.developer_email }}</a></span>
+            </div>
+          {% endif %}
+          {% if app.support_email %}
+            <div class="dev-info-item">
+              <span class="dev-info-label">Support:</span>
+              <span class="dev-info-value"><a href="mailto:{{ app.support_email }}">{{ app.support_email }}</a></span>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Legal & Privacy Links -->
+      {% if app.privacy_policy_url or app.terms_url %}
+        <div class="section-card legal">
+          <h2 class="section-title">⚖️ Legal</h2>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            {% if app.privacy_policy_url %}
+              <a href="{{ app.privacy_policy_url }}" target="_blank" class="btn btn-secondary">🔒 Privacy Policy</a>
+            {% endif %}
+            {% if app.terms_url %}
+              <a href="{{ app.terms_url }}" target="_blank" class="btn btn-secondary">📋 Terms</a>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div>
+      <!-- Statistics -->
+      <div class="section-card featured">
+        <h2 class="section-title">📊 Statistics</h2>
+        <div class="stats-grid">
+          <div class="stat-row">
+            <span class="stat-label">⭐ Rating</span>
+            <strong class="stat-value highlight">{{ app.avg_rating|default_if_none:"0"|floatformat:1 }}/5.0</strong>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">💬 Reviews</span>
+            <strong class="stat-value">{{ reviews_count }}</strong>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">⬇️ Downloads</span>
+            <strong class="stat-value">{{ app.downloads|default:0 }}</strong>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">📅 Published</span>
+            <strong class="stat-value">{{ app.created_at|date:"M d, Y" }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Related Apps (Like TikTok Store) -->
+      {% if related_apps %}
+        <div class="section-card featured">
+          <h2 class="section-title">🔗 Similar Apps</h2>
+          <div class="related-apps-list">
             {% for related in related_apps %}
-              <a href="{% url 'apps:detail' related.slug %}" style="text-decoration: none;">
-                <div style="padding: 12px; background: var(--bg-secondary); border-radius: var(--radius); border: 1px solid var(--line); transition: all 0.2s;">
-                  <div style="font-size: 28px; margin-bottom: 6px;">{{ related.title|first|upper }}</div>
-                  <div style="font-size: 12px; color: var(--text); font-weight: 600; word-break: break-word; margin-bottom: 4px;">{{ related.title }}</div>
-                  <div style="font-size: 11px; color: var(--muted);">⭐ {{ related.avg_rating|default_if_none:"0"|floatformat:1 }}/5</div>
-                  <div style="font-size: 10px; color: var(--muted); margin-top: 4px;">⬇ {{ related.downloads|default:0 }} downloads</div>
+              <a href="{% url 'apps:detail' related.slug %}" class="related-app-item">
+                <div class="related-app-icon">{{ related.title|first|upper }}</div>
+                <div class="related-app-info">
+                  <div class="related-app-title">{{ related.title }}</div>
+                  <div class="related-app-meta">⭐ {{ related.avg_rating|default_if_none:"0"|floatformat:1 }} • ⬇ {{ related.downloads|default:0 }}</div>
                 </div>
               </a>
             {% endfor %}
           </div>
         </div>
-      </aside>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- USER REVIEWS SECTION -->
+  <div class="reviews-section">
+    <h2 class="reviews-title">⭐ User Reviews ({{ reviews_count }})</h2>
+
+    {% if reviews %}
+      <div class="reviews-list">
+        {% for r in reviews %}
+          <div class="review-card">
+            <div class="review-header">
+              <div class="review-user-info">
+                <div class="review-username">{{ r.user.first_name|default:r.user.username }}</div>
+                <div class="review-date">{{ r.created_at|date:"M d, Y" }}</div>
+              </div>
+              <div class="review-rating">
+                <span class="review-stars">
+                  {% for i in "12345" %}
+                    {% if forloop.counter <= r.rating %}⭐{% else %}☆{% endif %}
+                  {% endfor %}
+                </span>
+                <span>{{ r.rating }}.0</span>
+              </div>
+            </div>
+            {% if r.comment %}
+              <p class="review-comment">{{ r.comment }}</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="review-empty">
+        <div class="review-empty-icon">📝</div>
+        <p class="review-empty-text">No reviews yet. Be the first to review this app!</p>
+        {% if user.is_authenticated %}
+          <a href="{% url 'reviews:add' app.slug %}" class="btn btn-primary">✍ Write First Review</a>
+        {% else %}
+          <a href="{% url 'accounts:login' %}" class="btn btn-secondary">🔐 Login to Review</a>
+        {% endif %}
+      </div>
     {% endif %}
   </div>
+
+  <!-- COPYRIGHT & LEGAL FOOTER -->
+  <div class="app-footer">
+    <h3 class="app-footer-title">📋 App Information & Copyright</h3>
+    <div class="app-footer-content">
+      <p>This application is listed on <strong>JN App Store</strong> and is owned/developed by <strong>{{ app.owner.get_full_name|default:app.owner.username }}</strong>. All content, features, and availability are the responsibility of the developer.</p>
+      <p style="margin-top: 12px; font-size: 12px; color: #95a5a6;">By downloading and using this app, you agree to these terms:</p>
+      <ul>
+        <li>The app is provided for personal, non-commercial use only</li>
+        <li>Redistribution, reverse engineering, or commercial use is strictly prohibited</li>
+        <li>All intellectual property rights are retained by the developer</li>
+        <li>The developer is not responsible for any damages or issues caused by the app</li>
+        <li>For support, licensing, or inquiries, contact the developer directly</li>
+      </ul>
+    </div>
+  </div>
 </div>
-
-<style>
-  @media (max-width: 1024px) {
-    .appDetail {
-      display: grid !important;
-      grid-template-columns: 1fr !important;
-      gap: 0 !important;
-    }
-    .appDetail > div {
-      display: grid !important;
-      grid-template-columns: 1fr !important;
-      gap: 0 !important;
-    }
-    .related-apps-sidebar {
-      display: none !important;
-    }
-    .related-apps-mobile {
-      display: block !important;
-    }
-  }
-
-  @media (min-width: 1025px) {
-    .related-apps-sidebar {
-      display: block !important;
-    }
-    .related-apps-mobile {
-      display: none !important;
-    }
-  }
-</style>
 {% endblock %}

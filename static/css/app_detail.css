@@ -1,124 +1,840 @@
-/* App detail page styles */
-.appDetail {
-  max-width: 900px;
+/* ===================================
+   APP DETAIL PAGE - PRODUCTION STYLING
+   Inspired by: Play Store, APK Pure, TikTok App Store
+   =================================== */
+
+:root {
+  --primary: #3498db;
+  --primary-dark: #2980b9;
+  --secondary: #2c3e50;
+  --success: #27ae60;
+  --danger: #e74c3c;
+  --warning: #f39c12;
+  --info: #3498db;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #ecf0f1;
+  --text-primary: #2c3e50;
+  --text-secondary: #7f8c8d;
+  --text-muted: #95a5a6;
+  --border-color: #e0e0e0;
+  --border-radius: 12px;
+  --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --box-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ===================================
+   HERO BANNER SECTION
+   =================================== */
+
+.app-hero {
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(52, 152, 219, 0.05) 100%);
+  border-bottom: 1px solid var(--border-color);
+  padding: 32px 0;
+  margin-bottom: 32px;
+}
+
+.app-hero-container {
+  max-width: 1200px;
   margin: 0 auto;
-}
-
-.appHeader {
+  padding: 0 20px;
   display: grid;
-  grid-template-columns: 120px 1fr;
-  gap: 20px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid var(--line);
-  margin-bottom: 24px;
+  grid-template-columns: 1fr 320px;
+  gap: 32px;
 }
 
-.appCover {
-  width: 120px;
-  height: 120px;
-  border-radius: var(--radius);
-  border: 1px solid var(--line);
-  background: var(--card);
-  display: grid;
-  place-items: center;
-  font-size: 48px;
-  font-weight: 900;
-}
-
-.appInfo h1 {
-  margin: 0 0 8px;
-  font-size: 28px;
-}
-
-.appInfo p {
-  margin: 4px 0;
-  color: var(--muted);
-  font-size: 14px;
-}
-
-.appActions {
+.app-hero-left {
   display: flex;
-  gap: 10px;
-  margin-top: 12px;
+  gap: 24px;
+}
+
+.app-cover {
+  min-width: 140px;
+  width: 140px;
+  height: 140px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 56px;
+  font-weight: bold;
+  flex-shrink: 0;
+  box-shadow: var(--box-shadow-lg);
+  overflow: hidden;
+  position: relative;
+}
+
+.app-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.app-hero-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.app-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 12px;
+  line-height: 1.2;
+}
+
+.app-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.app-category {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(52, 152, 219, 0.15);
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.app-stats {
+  display: flex;
+  gap: 24px;
+  margin: 16px 0;
   flex-wrap: wrap;
 }
 
-.reviewsSection {
-  margin-top: 32px;
-}
-
-.reviewsSection h2 {
-  margin: 0 0 16px;
-  font-size: 20px;
-}
-
-.reviewsList {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.review {
-  border: 1px solid var(--line);
-  background: var(--card);
-  border-radius: var(--radius);
-  padding: 14px;
-}
-
-.reviewHeader {
+.app-stat {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
+  gap: 8px;
 }
 
-.reviewUser {
+.app-stat-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.app-stat-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.app-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+/* ===================================
+   BUTTONS
+   =================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 10px;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  flex: 1;
+  min-width: 150px;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  box-shadow: var(--box-shadow-lg);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: white;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  box-shadow: var(--box-shadow);
+}
+
+/* ===================================
+   SIDEBAR INFO BOXES
+   =================================== */
+
+.app-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: fit-content;
+}
+
+.info-box {
+  background: white;
+  padding: 16px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  text-align: center;
+  transition: var(--transition);
+}
+
+.info-box:hover {
+  box-shadow: var(--box-shadow);
+  border-color: var(--primary);
+}
+
+.info-box-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.info-box-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.info-box-subtext {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.info-box.badge-free {
+  background: linear-gradient(135deg, #27ae60, #229954);
+  color: white;
+}
+
+.info-box.badge-free .info-box-label,
+.info-box.badge-free .info-box-value {
+  color: white;
+}
+
+.info-box.badge-paid {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
+}
+
+.info-box.badge-paid .info-box-label,
+.info-box.badge-paid .info-box-value {
+  color: white;
+}
+
+/* ===================================
+   MAIN CONTENT AREA
+   =================================== */
+
+.app-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px 40px;
+  width: 100%;
+}
+
+.app-content-wrapper {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 32px;
+  margin-bottom: 40px;
+}
+
+.app-image-full {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  margin: 32px 0;
+}
+
+/* ===================================
+   SECTION CARDS
+   =================================== */
+
+.section-card {
+  background: white;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  padding: 24px;
+  margin-bottom: 32px;
+  transition: var(--transition);
+}
+
+.section-card:hover {
+  box-shadow: var(--box-shadow);
+}
+
+.section-card.featured {
+  border-left: 4px solid var(--primary);
+  background: linear-gradient(to right, rgba(52, 152, 219, 0.05), transparent);
+}
+
+.section-card.info {
+  border-left: 4px solid #00bcd4;
+}
+
+.section-card.developer {
+  border-left: 4px solid #9c27b0;
+}
+
+.section-card.legal {
+  border-left: 4px solid #ff9800;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-text {
+  color: var(--text-primary);
+  line-height: 1.8;
+  font-size: 15px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ===================================
+   ANDROID REQUIREMENTS GRID
+   =================================== */
+
+.requirements-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.requirement-item {
+  padding: 16px;
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  text-align: center;
+  transition: var(--transition);
+}
+
+.requirement-item:hover {
+  border-color: var(--primary);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+}
+
+.requirement-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  text-transform: uppercase;
   font-weight: 600;
 }
 
-.reviewRating {
-  color: var(--brand2);
+.requirement-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.requirement-api {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* ===================================
+   DEVELOPER INFO GRID
+   =================================== */
+
+.dev-info-grid {
+  display: grid;
+  gap: 16px;
   font-size: 14px;
 }
 
-.reviewComment {
-  color: var(--muted);
-  font-size: 13px;
-  margin: 0;
+.dev-info-item {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
 }
 
-.noReviews {
+.dev-info-label {
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 80px;
+}
+
+.dev-info-value {
+  color: var(--text-secondary);
+  word-break: break-all;
+}
+
+.dev-info-value a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.dev-info-value a:hover {
+  text-decoration: underline;
+}
+
+/* ===================================
+   STATS SECTION
+   =================================== */
+
+.stats-grid {
+  display: grid;
+  gap: 12px;
+  font-size: 14px;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.stat-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.stat-label {
+  color: var(--text-secondary);
+}
+
+.stat-value {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.stat-value.highlight {
+  color: #ffc107;
+}
+
+/* ===================================
+   RELATED APPS SECTION
+   =================================== */
+
+.related-apps-list {
+  display: grid;
+  gap: 12px;
+}
+
+.related-app-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit;
+  transition: var(--transition);
+}
+
+.related-app-item:hover {
+  border-color: var(--primary);
+  box-shadow: var(--box-shadow);
+  transform: translateX(4px);
+}
+
+.related-app-icon {
+  font-size: 32px;
+  font-weight: bold;
+  color: var(--primary);
+  min-width: 40px;
   text-align: center;
-  padding: 32px 0;
-  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Responsive */
+.related-app-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.related-app-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.related-app-meta {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* ===================================
+   REVIEWS SECTION
+   =================================== */
+
+.reviews-section {
+  margin-bottom: 40px;
+}
+
+.reviews-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 24px;
+}
+
+.reviews-list {
+  display: grid;
+  gap: 16px;
+}
+
+.review-card {
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 20px;
+  border-left: 4px solid #ffc107;
+  transition: var(--transition);
+}
+
+.review-card:hover {
+  box-shadow: var(--box-shadow);
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  gap: 12px;
+}
+
+.review-user-info {
+  flex: 1;
+}
+
+.review-username {
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 15px;
+}
+
+.review-date {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.review-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.review-stars {
+  color: #ffc107;
+  font-size: 16px;
+}
+
+.review-comment {
+  color: var(--text-primary);
+  line-height: 1.6;
+  font-size: 14px;
+  word-break: break-word;
+}
+
+.review-empty {
+  text-align: center;
+  padding: 60px 40px;
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius);
+}
+
+.review-empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.review-empty-text {
+  color: var(--text-secondary);
+  margin: 0 0 20px;
+  font-size: 16px;
+}
+
+/* ===================================
+   FOOTER SECTION
+   =================================== */
+
+.app-footer {
+  background: white;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid #ff9800;
+  padding: 24px;
+  margin-top: 40px;
+}
+
+.app-footer-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 12px;
+}
+
+.app-footer-content {
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.app-footer-content ul {
+  margin: 12px 0 0;
+  padding-left: 24px;
+}
+
+.app-footer-content li {
+  margin-bottom: 8px;
+}
+
+/* ===================================
+   RESPONSIVE DESIGN
+   =================================== */
+
+@media (max-width: 1024px) {
+  .app-hero-container {
+    grid-template-columns: 1fr;
+  }
+
+  .app-sidebar {
+    order: -1;
+    max-width: 100%;
+  }
+
+  .app-content-wrapper {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 768px) {
-  .appDetail {
+  .app-hero {
+    padding: 24px 0;
+    margin-bottom: 24px;
+  }
+
+  .app-hero-container {
     padding: 0 16px;
   }
 
-  .appHeader {
-    grid-template-columns: 100px 1fr;
+  .app-hero-left {
+    flex-direction: column;
     gap: 16px;
   }
 
-  .appCover {
-    width: 100px;
-    height: 100px;
-    font-size: 40px;
+  .app-cover {
+    min-width: 100%;
+    width: 100%;
+    height: 200px;
+    border-radius: 16px;
   }
 
-  .appInfo h1 {
+  .app-title {
     font-size: 24px;
   }
 
-  .appActions {
+  .app-stats {
+    gap: 16px;
+    margin: 12px 0;
+  }
+
+  .app-actions {
     flex-direction: column;
   }
 
-  .appActions .btn {
+  .btn {
     width: 100%;
+  }
+
+  .app-main {
+    padding: 0 16px 32px;
+  }
+
+  .requirement-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .requirements-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+
+  .reviews-title {
+    font-size: 18px;
+  }
+
+  .review-card {
+    padding: 16px;
+  }
+
+  .review-header {
+    flex-direction: column;
+  }
+
+  .app-content-wrapper {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-title {
+    font-size: 20px;
+  }
+
+  .app-meta {
+    font-size: 12px;
+  }
+
+  .app-actions {
+    gap: 8px;
+  }
+
+  .btn {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+
+  .section-card {
+    padding: 16px;
+  }
+
+  .section-title {
+    font-size: 16px;
+  }
+
+  .app-footer {
+    padding: 16px;
+  }
+
+  .app-hero-container {
+    padding: 0 12px;
+  }
+}
+
+/* ===================================
+   ANIMATIONS & TRANSITIONS
+   =================================== */
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.review-card {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* ===================================
+   DARK MODE SUPPORT (Optional)
+   =================================== */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #242424;
+    --bg-tertiary: #2a2a2a;
+    --text-primary: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --text-muted: #808080;
+    --border-color: #404040;
+  }
+
+  .section-card {
+    background: #242424;
+    border-color: #404040;
+  }
+
+  .info-box {
+    background: #2a2a2a;
+    border-color: #404040;
+  }
+
+  .requirement-item {
+    background: #2a2a2a;
+    border-color: #404040;
+  }
+
+  .review-card {
+    background: #2a2a2a;
+    border-color: #404040;
+  }
+
+  .app-footer {
+    background: #242424;
+    border-color: #404040;
+  }
+}
+
+/* ===================================
+   PRINT STYLES
+   =================================== */
+
+@media print {
+  .app-actions,
+  .app-sidebar {
+    display: none;
+  }
+
+  .section-card {
+    page-break-inside: avoid;
   }
 }

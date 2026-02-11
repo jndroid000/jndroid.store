@@ -57,37 +57,42 @@
       </div>
     </div>
 
-    <!-- Technical Details -->
+    <!-- Android Version Requirements -->
     <div style="padding:20px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:12px;">
-      <h3 style="margin:0 0 20px; font-size:18px;">Technical Details</h3>
+      <h3 style="margin:0 0 20px; font-size:18px;">🤖 Android Version Requirements</h3>
       
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:16px;">
-        <!-- Platform -->
+        <!-- Min Android Version -->
         <div>
-          <label style="display:block; margin-bottom:8px; font-weight:500;">Platform</label>
-          <select name="platform" style="width:100%; padding:10px 12px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box; font-size:14px;">
-            {% for value, label in platforms %}
-              <option value="{{ value }}" {% if app.platform == value %}selected{% endif %}>{{ label }}</option>
-            {% endfor %}
-          </select>
+          <label style="display:block; margin-bottom:8px; font-weight:500;">Min Android Version</label>
+          <input type="text" name="min_android_version" value="{{ app.min_android_version }}" placeholder="e.g., 5.0" style="width:100%; padding:10px 12px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box; font-size:14px;">
         </div>
 
-        <!-- Version -->
+        <!-- Target Android Version -->
         <div>
-          <label style="display:block; margin-bottom:8px; font-weight:500;">Version</label>
-          <input type="text" name="version" value="{{ app.version }}" placeholder="e.g., 1.0.0" style="width:100%; padding:10px 12px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box; font-size:14px;">
+          <label style="display:block; margin-bottom:8px; font-weight:500;">Target Android Version</label>
+          <input type="text" name="target_android_version" value="{{ app.target_android_version }}" placeholder="e.g., 15.0" style="width:100%; padding:10px 12px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box; font-size:14px;">
         </div>
 
-        <!-- Size (MB) -->
+        <!-- Category -->
         <div>
-          <label style="display:block; margin-bottom:8px; font-weight:500;">Size (MB)</label>
-          <input type="number" name="size_mb" value="{{ app.size_mb }}" step="0.01" min="0" style="width:100%; padding:10px 12px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box; font-size:14px;">
-        </div>
-
-        <!-- Category (Read-only) -->
-        <div>
-          <label style="display:block; margin-bottom:8px; font-weight:500;">Category</label>
-          <input type="text" value="{{ app.category.name }}" disabled style="width:100%; padding:10px 12px; background:rgba(255,255,255,0.02); border:1px solid var(--line); border-radius:8px; color:var(--muted); box-sizing:border-box; font-size:14px;">
+          <label style="display:block; margin-bottom:8px; font-weight:500;">
+            Category
+            {% if is_superuser %}
+              <span style="font-size:12px; color:#27ae60; margin-left:8px;">(Editable - Superuser)</span>
+            {% else %}
+              <span style="font-size:12px; color:#7f8c8d; margin-left:8px;">(Read-only)</span>
+            {% endif %}
+          </label>
+          {% if is_superuser %}
+            <select name="category" style="width:100%; padding:10px 12px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box; font-size:14px;" required>
+              <option value="">-- Select Category --</option>
+              {% for cat_id, cat_name in categories %}
+                <option value="{{ cat_id }}" {% if app.category.id == cat_id %}selected{% endif %}>{{ cat_name }}</option>
+              {% endfor %}
+            </select>
+          {% else %}
+            <input type="text" value="{{ app.category.name }}" disabled style="width:100%; padding:10px 12px; background:rgba(255,255,255,0.02); border:1px solid var(--line); border-radius:8px; color:var(--muted); box-sizing:border-box; font-size:14px;">
+          {% endif %}
         </div>
       </div>
 
@@ -194,7 +199,7 @@
       <a href="{% url 'admin_panel:apps_list' %}" style="padding:12px 24px; background:rgba(255,255,255,0.04); color:var(--text); border:1px solid var(--line); border-radius:8px; text-decoration:none; font-weight:500; font-size:14px;">
         Cancel
       </a>
-      <form method="post" action="{% url 'admin_panel:mark_app_for_deletion' pk=app.pk %}" style="display:inline; margin-left:auto;">
+      <form method="post" action="{% url 'admin_panel:mark_app_for_deletion' slug=app.slug %}" style="display:inline; margin-left:auto;">
         {% csrf_token %}
         <button type="button" onclick="openDeleteModal(this.closest('form'), '{{ app.title }}')" style="padding:12px 24px; background:rgba(251,113,133,0.15); color:rgba(251,113,133,0.9); border:1px solid rgba(251,113,133,0.3); border-radius:8px; cursor:pointer; font-weight:500; font-size:14px;">
           Delete App
