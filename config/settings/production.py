@@ -122,23 +122,24 @@ WHITENOISE_COMPRESS_OFFLINE = True
 WHITENOISE_COMPRESSION_QUALITY = 80
 
 # ==================== LOGGING (Production) ====================
-# Production logging - remove console output, keep file logging only
+# Production logging - use console logging captured by systemd/Gunicorn
+# File logging disabled to avoid permission issues with www-data user
 LOGGING['loggers']['django']['level'] = 'INFO'
-LOGGING['loggers']['django']['handlers'] = ['file']  # Remove console
+LOGGING['loggers']['django']['handlers'] = ['console']
 
 LOGGING['loggers']['django.request']['level'] = 'ERROR'
-LOGGING['loggers']['django.request']['handlers'] = ['error_file']  # Remove console
+LOGGING['loggers']['django.request']['handlers'] = ['console']
 
 LOGGING['loggers']['django.security']['level'] = 'WARNING'
-LOGGING['loggers']['django.security']['handlers'] = ['security_file']  # Remove console
+LOGGING['loggers']['django.security']['handlers'] = ['console']
 
 LOGGING['loggers']['apps']['level'] = 'INFO'
-LOGGING['loggers']['apps']['handlers'] = ['file']  # Remove console
+LOGGING['loggers']['apps']['handlers'] = ['console']
 
 LOGGING['loggers']['accounts']['level'] = 'INFO'
-LOGGING['loggers']['accounts']['handlers'] = ['file']  # Remove console
+LOGGING['loggers']['accounts']['handlers'] = ['console']
 
-LOGGING['root']['handlers'] = ['file']  # Remove console from root
+LOGGING['root']['handlers'] = ['console']
 
 # ==================== PERFORMANCE ====================
 # Disable SQL query logging in production
