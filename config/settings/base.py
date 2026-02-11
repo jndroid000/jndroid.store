@@ -143,6 +143,7 @@ ACCOUNT_LOGIN_METHOD = 'email'  # Allow both email and username
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 
 # Email verification
+ACCOUNT_EMAIL_REQUIRED = True  # Require email on signup
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # Require email verification
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True  # Auto-verify when clicking link
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7  # Link expires in 7 days

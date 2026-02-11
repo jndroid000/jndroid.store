@@ -9,5 +9,6 @@ urlpatterns = [
     path("my-apps/", views.my_apps, name="my_apps"),
     path("<slug:slug>/", views.app_detail, name="detail"),
     path("<slug:slug>/edit/", views.app_edit, name="edit"),
+    path("<slug:slug>/delete/", views.app_delete, name="delete"),
     path("<slug:slug>/download/", views.app_download, name="download"),
 ]

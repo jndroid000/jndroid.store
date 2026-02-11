@@ -25,17 +25,19 @@
     </div>
     <div style="padding: 16px; background: var(--bg-secondary); border-radius: var(--radius); border-left: 4px solid #FFD700; text-align: center;">
       <div style="font-size: 28px; font-weight: 600; color: #FFD700;">
-        {% widthratio apps|length 1 100 %}%
+        {{ published_apps|default:"0" }}
       </div>
       <div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Published</div>
     </div>
+    <div style="padding: 16px; background: var(--bg-secondary); border-radius: var(--radius); border-left: 4px solid #808080; text-align: center;">
+      <div style="font-size: 28px; font-weight: 600; color: #808080;">
+        {{ unpublished_apps|default:"0" }}
+      </div>
+      <div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Draft</div>
+    </div>
     <div style="padding: 16px; background: var(--bg-secondary); border-radius: var(--radius); border-left: 4px solid #28a745; text-align: center;">
       <div style="font-size: 28px; font-weight: 600; color: #28a745;">
-        {% if apps %}
-          {% widthratio apps|first.downloads 1 1 %}
-        {% else %}
-          0
-        {% endif %}
+        {{ total_downloads|default:"0" }}
       </div>
       <div style="font-size: 12px; color: var(--muted); margin-top: 4px;">Total Downloads</div>
     </div>
@@ -102,11 +104,11 @@
               👁️ View Details
             </a>
             
-            <a href="#" style="padding: 10px 16px; background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: var(--radius); text-decoration: none; text-align: center; font-weight: 600; font-size: 13px;">
+            <a href="{% url 'apps:edit' app.slug %}" style="padding: 10px 16px; background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: var(--radius); text-decoration: none; text-align: center; font-weight: 600; font-size: 13px;">
               ✏️ Edit
             </a>
             
-            <a href="#" style="padding: 10px 16px; background: #dc3545; color: white; border-radius: var(--radius); text-decoration: none; text-align: center; font-weight: 600; font-size: 13px;">
+            <a href="{% url 'apps:delete' app.slug %}" style="padding: 10px 16px; background: #dc3545; color: white; border-radius: var(--radius); text-decoration: none; text-align: center; font-weight: 600; font-size: 13px;">
               🗑️ Delete
             </a>
           </div>

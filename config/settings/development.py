@@ -19,6 +19,11 @@ CSRF_TRUSTED_ORIGINS = [
 
 # ==================== DEVELOPMENT TOOLS ====================
 
+# ==================== ALLAUTH (Development) ====================
+# In development, use optional email verification for easier testing
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
+ACCOUNT_EMAIL_REQUIRED = True
+
 # ==================== EMAIL BACKEND (Development) ====================
 # Use SMTP to send emails to Gmail
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

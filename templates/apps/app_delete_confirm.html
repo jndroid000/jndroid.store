@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Delete App - JN App Store{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-danger shadow-sm">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">⚠️ Delete Application</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning mb-4" role="alert">
+                        <strong>Warning!</strong> This action cannot be undone. Your app will be marked for deletion.
+                    </div>
+
+                    <h6 class="mb-3">Are you sure you want to delete this app?</h6>
+                    
+                    <div class="card bg-light mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ app.title }}</h5>
+                            <p class="card-text text-muted mb-2">{{ app.short_description }}</p>
+                            <dl class="row mb-0">
+                                <dt class="col-sm-4">Category:</dt>
+                                <dd class="col-sm-8">{{ app.category.name }}</dd>
+                                
+                                <dt class="col-sm-4">Platform:</dt>
+                                <dd class="col-sm-8">{{ app.get_platform_display }}</dd>
+                                
+                                <dt class="col-sm-4">Version:</dt>
+                                <dd class="col-sm-8">{{ app.version }}</dd>
+                                
+                                <dt class="col-sm-4">Downloads:</dt>
+                                <dd class="col-sm-8">{{ app.downloads }}</dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info" role="alert">
+                        <small>
+                            <strong>What happens:</strong>
+                            <ul class="mb-0 mt-2">
+                                <li>Your app will be unpublished immediately</li>
+                                <li>It will no longer appear in searches or category listings</li>
+                                <li>The app data will be marked for deletion</li>
+                                <li>Admin team will review and permanently delete after 30 days</li>
+                            </ul>
+                        </small>
+                    </div>
+
+                    <form method="post" class="mt-4">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger btn-lg">
+                                <i class="fas fa-trash"></i> Yes, Delete This App
+                            </button>
+                            <a href="{% url 'apps:my_apps' %}" class="btn btn-secondary btn-lg">
+                                <i class="fas fa-arrow-left"></i> Cancel & Go Back
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="mt-3 text-center">
+                <p class="text-muted">
+                    <small>
+                        If you accidentally delete an app, contact our support team within 7 days for recovery options.
+                    </small>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

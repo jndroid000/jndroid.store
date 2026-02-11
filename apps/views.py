@@ -173,11 +173,59 @@ def app_edit(request, slug):
 
 @login_required(login_url='accounts:login')
 def my_apps(request):
-    """View all apps uploaded by the current user"""
-    apps = App.objects.filter(owner=request.user).order_by('-created_at')
+    """View dashboard with all apps uploaded by the current user"""
+    # Get user's apps with stats
+    apps = App.objects.filter(owner=request.user).annotate(
+        avg_rating=Avg('reviews__rating'),
+        review_count=Count('reviews')
+    ).order_by('-created_at')
+    
+    # Calculate total stats
+    total_apps = apps.count()
+    total_downloads = apps.aggregate(Sum('downloads'))['downloads__sum'] or 0
+    published_apps = apps.filter(is_published=True).count()
+    unpublished_apps = apps.filter(is_published=False).count()
+    
+    # Pagination (10 apps per page)
+    page = request.GET.get('page', 1)
+    paginator = Paginator(apps, 10)
+    try:
+        apps = paginator.page(page)
+    except PageNotAnInteger:
+        apps = paginator.page(1)
+    except EmptyPage:
+        apps = paginator.page(paginator.num_pages)
     
     context = {
         'apps': apps,
-        'title': 'My Apps',
+        'title': 'My Apps Dashboard',
+        'total_apps': total_apps,
+        'total_downloads': total_downloads,
+        'published_apps': published_apps,
+        'unpublished_apps': unpublished_apps,
     }
     return render(request, 'apps/my_apps.html', context)
+
+
+@login_required(login_url='accounts:login')
+def app_delete(request, slug):
+    """Soft delete an app (only owner can delete)"""
+    app = get_object_or_404(App, slug=slug)
+    
+    # Check if current user is the owner or staff
+    if app.owner != request.user and not request.user.is_staff:
+        messages.error(request, 'You can only delete your own apps!')
+        return redirect('apps:detail', slug=app.slug)
+    
+    if request.method == 'POST':
+        app.is_pending_deletion = True
+        app.is_published = False
+        app.save()
+        messages.success(request, f"App '{app.title}' marked for deletion!")
+        return redirect('apps:my_apps')
+    
+    context = {
+        'app': app,
+        'title': 'Delete App',
+    }
+    return render(request, 'apps/app_delete_confirm.html', context)

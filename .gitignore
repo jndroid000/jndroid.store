@@ -92,3 +92,8 @@ log.txt
 # Package managers
 node_modules/
 package-lock.json
+
+
+# kichu temp file kint kajer
+archived-docs/
+archived-scripts/
