@@ -14,3 +14,33 @@ git pull origin main
 
 
 Environment="web&&fnq5)#*3v-u9@69djmk3uk_i3a+t=@#l5#hsd#_93!s=+"
+
+
+
+
+
+------------------------------------------------------------
+# 1. SSH করে VPS তে Login করো
+ssh root@217.15.164.196
+
+# 2. Backend folder এ যাও
+cd /var/www/jndroid.store/backend
+
+# 3. Git থেকে latest code pull করো
+git pull origin main
+
+# 4. Database migration চালাও (যদি নতুন migration থাকে)
+python manage.py migrate
+
+# 5. Static files collect করো
+python manage.py collectstatic --noinput
+
+# 6. Gunicorn/Django restart করো
+sudo systemctl restart jndroid
+
+# 7. Nginx reload করো (optional)
+sudo systemctl reload nginx
+
+# 8. Check করুন সবকিছু চলছে কিনা
+sudo systemctl status jndroid
+--------------------------------
