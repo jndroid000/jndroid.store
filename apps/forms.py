@@ -284,7 +284,6 @@ class AppVersionForm(forms.ModelForm):
             'version_number',
             'description',
             'size_mb',
-            'apk_file',
             'download_link',
             'is_active',
         ]
@@ -303,10 +302,6 @@ class AppVersionForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Size in MB',
                 'step': '0.01',
-            }),
-            'apk_file': forms.FileInput(attrs={
-                'class': 'form-control',
-                'accept': '.apk,.exe,.ipa',
             }),
             'download_link': forms.URLInput(attrs={
                 'class': 'form-control',
