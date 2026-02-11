@@ -112,7 +112,9 @@ CACHES = {
 
 # ==================== STATIC & MEDIA FILES (Production) ====================
 # Run before deployment: python manage.py collectstatic --noinput
-STATICFILES_DIRS = []
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
 
 # WhiteNoise configuration for serving static files efficiently
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
