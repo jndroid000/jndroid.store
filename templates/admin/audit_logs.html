@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Audit Logs - Admin{% endblock %}
+
+{% block content %}
+<div style="padding:20px; max-width:1200px; margin:0 auto;">
+  <!-- Header -->
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:32px; padding-bottom:20px; border-bottom:1px solid var(--line);">
+    <div>
+      <h1 style="margin:0 0 8px; font-size:32px;">📝 Audit Logs</h1>
+      <p style="color:var(--muted); margin:0;">System activity and compliance tracking</p>
+    </div>
+    <a href="{% url 'admin_panel:dashboard' %}" class="btn secondary" style="padding:10px 20px;">← Back</a>
+  </div>
+
+  <!-- Stats Cards -->
+  <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:12px; margin-bottom:32px;">
+    <div style="padding:16px; background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.2); border-radius:8px;">
+      <div style="font-size:24px; font-weight:bold; color:#3b82f6;">{{ total_logs }}</div>
+      <div style="font-size:12px; color:var(--muted);">Total Logs</div>
+    </div>
+    <div style="padding:16px; background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.2); border-radius:8px;">
+      <div style="font-size:24px; font-weight:bold; color:#22c55e;">{{ today_logs }}</div>
+      <div style="font-size:12px; color:var(--muted);">Today's Activity</div>
+    </div>
+  </div>
+
+  <!-- Search & Filter -->
+  <form method="get" style="margin-bottom:24px;">
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:12px; margin-bottom:16px;">
+      <input type="text" name="q" placeholder="🔍 Search user, object, IP..." value="{{ search_query }}" 
+             style="padding:10px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:6px; color:var(--text);">
+      <select name="action" style="padding:10px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:6px; color:var(--text); cursor:pointer;">
+        <option value="">All Actions</option>
+        {% for action in all_actions %}
+          <option value="{{ action }}" {% if action == action_filter %}selected{% endif %}>{{ action|upper }}</option>
+        {% endfor %}
+      </select>
+      <select name="object_type" style="padding:10px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:6px; color:var(--text); cursor:pointer;">
+        <option value="">All Objects</option>
+        {% for obj_type in all_object_types %}
+          <option value="{{ obj_type }}" {% if obj_type == object_type_filter %}selected{% endif %}>{{ obj_type|upper }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" style="padding:10px 20px; background:#3b82f6; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:600;">Search</button>
+    </div>
+  </form>
+
+  <!-- Audit Logs Table -->
+  <div style="overflow-x:auto; border:1px solid var(--line); border-radius:8px;">
+    <table style="width:100%; border-collapse:collapse; font-size:13px;">
+      <thead>
+        <tr style="background:rgba(255,255,255,0.04); border-bottom:1px solid var(--line);">
+          <th style="padding:12px; text-align:left; color:var(--muted); font-weight:500;">Admin User</th>
+          <th style="padding:12px; text-align:center; color:var(--muted); font-weight:500;">Action</th>
+          <th style="padding:12px; text-align:center; color:var(--muted); font-weight:500;">Object Type</th>
+          <th style="padding:12px; text-align:left; color:var(--muted); font-weight:500;">Object Name</th>
+          <th style="padding:12px; text-align:left; color:var(--muted); font-weight:500;">Timestamp</th>
+          <th style="padding:12px; text-align:left; color:var(--muted); font-weight:500;">IP Address</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for log in logs %}
+          <tr style="border-bottom:1px solid var(--line);">
+            <td style="padding:12px; font-weight:600;">{{ log.admin_user.get_full_name|default:log.admin_user.username }}</td>
+            <td style="padding:12px; text-align:center;">
+              <span style="padding:3px 8px; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.3); color:rgba(59,130,246,0.9); border-radius:3px; font-size:11px; font-weight:600;">
+                {% if log.action == 'create' %}✨{% elif log.action == 'update' %}✏️{% elif log.action == 'delete' %}🗑️{% elif log.action == 'approve' %}✅{% elif log.action == 'flag' %}⚠️{% elif log.action == 'activate' %}🟢{% elif log.action == 'deactivate' %}⚪{% elif log.action == 'login' %}🔐{% elif log.action == 'logout' %}🚪{% else %}📌{% endif %}
+                {{ log.action|upper }}
+              </span>
+            </td>
+            <td style="padding:12px; text-align:center;">
+              <span style="padding:3px 8px; background:rgba(139,92,246,0.15); border:1px solid rgba(139,92,246,0.3); color:rgba(139,92,246,0.9); border-radius:3px; font-size:11px; font-weight:600;">{{ log.object_type|upper }}</span>
+            </td>
+            <td style="padding:12px; color:var(--muted);">{{ log.object_name }}</td>
+            <td style="padding:12px; color:var(--muted); white-space:nowrap;">
+              <div style="font-size:12px;">{{ log.timestamp|date:"M d, Y" }}</div>
+              <div style="font-size:11px; color:var(--muted);">{{ log.timestamp|time:"H:i" }}</div>
+            </td>
+            <td style="padding:12px; color:var(--muted); font-family:monospace; font-size:11px;">{{ log.ip_address }}</td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="6" style="padding:32px; text-align:center; color:var(--muted);">
+              📭 No audit logs found matching your criteria.
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  {% if logs.has_other_pages %}
+    <div style="margin-top:20px; display:flex; justify-content:center; gap:8px; align-items:center;">
+      {% if logs.has_previous %}
+        <a href="?page=1{% if search_query %}&q={{ search_query }}{% endif %}{% if action_filter %}&action={{ action_filter }}{% endif %}{% if object_type_filter %}&object_type={{ object_type_filter }}{% endif %}" class="btn secondary" style="padding:6px 10px; font-size:12px;">First</a>
+        <a href="?page={{ logs.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if action_filter %}&action={{ action_filter }}{% endif %}{% if object_type_filter %}&object_type={{ object_type_filter }}{% endif %}" class="btn secondary" style="padding:6px 10px; font-size:12px;">← Previous</a>
+      {% endif %}
+      
+      <span style="padding:6px 12px; color:var(--muted); font-size:12px;">Page {{ logs.number }} of {{ logs.paginator.num_pages }}</span>
+      
+      {% if logs.has_next %}
+        <a href="?page={{ logs.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if action_filter %}&action={{ action_filter }}{% endif %}{% if object_type_filter %}&object_type={{ object_type_filter }}{% endif %}" class="btn secondary" style="padding:6px 10px; font-size:12px;">Next →</a>
+        <a href="?page={{ logs.paginator.num_pages }}{% if search_query %}&q={{ search_query }}{% endif %}{% if action_filter %}&action={{ action_filter }}{% endif %}{% if object_type_filter %}&object_type={{ object_type_filter }}{% endif %}" class="btn secondary" style="padding:6px 10px; font-size:12px;">Last</a>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+
+{% endblock %}

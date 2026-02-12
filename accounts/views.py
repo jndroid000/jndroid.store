@@ -217,11 +217,15 @@ def email_confirmation_view(request, key):
         email_address.save()
         print(f"[DEBUG] Email verified and saved: {email_address.email}")
         
+        # Mark user's email as verified in our User model
+        user.email_verified = True
+        
         # Activate the user account
         if not user.is_active:
             user.is_active = True
-            user.save()
-            print(f"[DEBUG] User activated: {user.username}")
+        
+        user.save()
+        print(f"[DEBUG] User activated: {user.username}")
         
         # Auto-login the user - refresh user object first
         user.refresh_from_db()

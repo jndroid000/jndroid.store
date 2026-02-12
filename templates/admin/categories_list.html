@@ -1,128 +1,141 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}Categories Management - Admin{% endblock %}
-{% block extra_css %}<link rel="stylesheet" href="{% static 'css/categories_admin.css' %}">{% endblock %}
 
 {% block content %}
-<div class="categories-container">
+<div style="padding:20px; max-width:1200px; margin:0 auto;">
   <!-- Header -->
-  <div class="categories-header">
-    <div class="categories-header-left">
-      <h1>Categories Management</h1>
-      <p>Total: {{ categories|length }} categories</p>
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:32px; padding-bottom:20px; border-bottom:1px solid var(--line);">
+    <div>
+      <h1 style="margin:0 0 8px; font-size:32px;">🏷️ Categories Management</h1>
+      <p style="color:var(--muted); margin:0;">Total {{ categories|length }} categories</p>
     </div>
-    <a href="{% url 'admin_panel:dashboard' %}" class="btn-dashboard">← Back to Dashboard</a>
+    <a href="{% url 'admin_panel:dashboard' %}" class="btn secondary" style="padding:10px 20px;">← Back</a>
   </div>
 
   <!-- Add Category Form -->
-  <div class="add-category-section">
-    <h3>Add New Category</h3>
-    <form method="post" action="{% url 'admin_panel:categories_create' %}" class="add-category-form">
+  <div style="padding:20px; background:rgba(255,255,255,0.02); border:1px solid var(--line); border-radius:8px; margin-bottom:32px;">
+    <h3 style="margin:0 0 16px; font-size:18px;">➕ Add New Category</h3>
+    <form method="post" action="{% url 'admin_panel:categories_create' %}" style="display:grid; grid-template-columns:1fr 2fr auto; gap:12px;">
       {% csrf_token %}
-      <div class="form-group">
-        <label>Category Name</label>
-        <input type="text" name="name" placeholder="e.g. Games" required>
-      </div>
-      <div class="form-group">
-        <label>Description</label>
-        <input type="text" name="description" placeholder="Brief description">
-      </div>
-      <button type="submit" class="btn-primary">Create Category</button>
+      <input type="text" name="name" placeholder="Category name (e.g., Games)" required style="padding:10px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:6px; color:var(--text);">
+      <input type="text" name="description" placeholder="Description (optional)" style="padding:10px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:6px; color:var(--text);">
+      <button type="submit" style="padding:10px 20px; background:#22c55e; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:600;">Create</button>
     </form>
   </div>
 
-  <!-- Categories Table -->
-  <div class="table-container">
-    <table class="categories-table">
-      <thead>
-        <tr>
-          <th>Category</th>
-          <th>Description</th>
-          <th>Apps</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for category in categories %}
-          <tr>
-            <td class="category-name">{{ category.name }}</td>
-            <td class="category-description">{{ category.description|default:"No description" }}</td>
-            <td class="apps-count">{{ category.apps.count }}</td>
-            <td class="actions-cell">
-              <div class="actions-group">
-                <a href="{% url 'admin_panel:categories_view' pk=category.pk %}" class="btn-action view">View</a>
-                <a href="{% url 'admin_panel:categories_edit' pk=category.pk %}" class="btn-action edit">Edit</a>
-                <button type="button" onclick="openDeleteModal({{ category.pk }}, '{{ category.name }}')" class="btn-action delete">Delete</button>
-              </div>
-            </td>
+  <!-- Bulk Actions Form -->
+  {% if categories %}
+  <form method="post" style="margin-bottom:20px;">
+    {% csrf_token %}
+    
+    <!-- Bulk Action Toolbar -->
+    <div style="display:flex; gap:12px; padding:12px; background:rgba(255,255,255,0.02); border:1px solid var(--line); border-radius:6px; margin-bottom:16px;">
+      <select name="bulk_action" style="padding:8px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:4px; color:var(--text); cursor:pointer;">
+        <option value="">Select Action...</option>
+        <option value="activate">✅ Activate Selected</option>
+        <option value="deactivate">❌ Deactivate Selected</option>
+        <option value="delete">🗑️ Delete Selected</option>
+      </select>
+      <button type="submit" style="padding:8px 16px; background:#3b82f6; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:600;">Apply</button>
+      <div style="flex:1;"></div>
+      <span id="selected-count" style="color:var(--muted); font-size:14px; align-self:center;">0 selected</span>
+    </div>
+
+    <!-- Categories Table -->
+    <div style="overflow-x:auto; border:1px solid var(--line); border-radius:8px;">
+      <table style="width:100%; border-collapse:collapse; font-size:14px;">
+        <thead>
+          <tr style="background:rgba(255,255,255,0.04); border-bottom:1px solid var(--line);">
+            <th style="padding:12px; text-align:center; color:var(--muted); font-weight:500; width:40px;">
+              <input type="checkbox" id="select-all" style="cursor:pointer;">
+            </th>
+            <th style="padding:12px; text-align:left; color:var(--muted); font-weight:500;">📁 Category</th>
+            <th style="padding:12px; text-align:left; color:var(--muted); font-weight:500;">Description</th>
+            <th style="padding:12px; text-align:center; color:var(--muted); font-weight:500;">Apps</th>
+            <th style="padding:12px; text-align:center; color:var(--muted); font-weight:500;">Status</th>
+            <th style="padding:12px; text-align:center; color:var(--muted); font-weight:500;">Actions</th>
           </tr>
-        {% empty %}
-          <tr>
-            <td colspan="4" class="empty-state">No categories found</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+        </thead>
+        <tbody>
+          {% for category in categories %}
+            <tr style="border-bottom:1px solid var(--line);">
+              <td style="padding:12px; text-align:center;">
+                <input type="checkbox" name="selected_categories" value="{{ category.pk }}" class="category-checkbox" style="cursor:pointer;">
+              </td>
+              <td style="padding:12px; font-weight:600;">{{ category.name }}</td>
+              <td style="padding:12px; color:var(--muted); font-size:13px;">{{ category.description|default:"—" }}</td>
+              <td style="padding:12px; text-align:center; font-weight:600;">{{ category.apps.count }}</td>
+              <td style="padding:12px; text-align:center;">
+                {% if category.is_active %}
+                  <span style="padding:4px 8px; background:rgba(34,197,94,0.15); border:1px solid rgba(34,197,94,0.3); color:rgba(34,197,94,0.9); border-radius:3px; font-size:12px;">🟢 Active</span>
+                {% else %}
+                  <span style="padding:4px 8px; background:rgba(156,163,175,0.15); border:1px solid rgba(156,163,175,0.3); color:rgba(156,163,175,0.9); border-radius:3px; font-size:12px;">⚪ Inactive</span>
+                {% endif %}
+              </td>
+              <td style="padding:12px; text-align:center;">
+                <a href="{% url 'admin_panel:categories_view' pk=category.pk %}" style="color:#3b82f6; text-decoration:none; font-weight:600; font-size:12px; margin-right:8px;">View</a>
+                <a href="{% url 'admin_panel:categories_edit' pk=category.pk %}" style="color:#8b5cf6; text-decoration:none; font-weight:600; font-size:12px;">Edit →</a>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="6" style="padding:32px; text-align:center; color:var(--muted);">
+                📭 No categories found. Create one!
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </form>
+  {% endif %}
 </div>
 
-<!-- Delete Confirmation Modal -->
-<div id="deleteModal" class="modal">
-  <div class="modal-content">
-    <!-- Icon & Title -->
-    <div class="modal-icon">⚠️</div>
-    <div class="modal-header">
-      <h2>Delete Category?</h2>
-      <p>This action cannot be undone</p>
-    </div>
 
-    <!-- Warning Message -->
-    <div class="modal-warning">
-      <strong id="categoryName"></strong> will be permanently deleted
-    </div>
-
-    <!-- Buttons -->
-    <div class="modal-actions">
-      <button type="button" onclick="closeDeleteModal()" class="btn-cancel">Cancel</button>
-      <form id="deleteForm" method="post">
-        {% csrf_token %}
-        <button type="submit" class="btn-delete-confirm">Delete Permanently</button>
-      </form>
-    </div>
-  </div>
-</div>
-
+<!-- JavaScript for Bulk Selection -->
 <script>
-var currentCategoryId = null;
+  const selectAllCheckbox = document.getElementById('select-all');
+  const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
+  const selectedCount = document.getElementById('selected-count');
 
-function openDeleteModal(categoryId, categoryName) {
-  currentCategoryId = categoryId;
-  document.getElementById('categoryName').textContent = categoryName;
-  
-  // Set form action dynamically
-  const form = document.getElementById('deleteForm');
-  form.action = '/admin-panel/categories/' + categoryId + '/delete/';
-  
-  document.getElementById('deleteModal').classList.add('show');
-}
-
-function closeDeleteModal() {
-  document.getElementById('deleteModal').classList.remove('show');
-  currentCategoryId = null;
-}
-
-// Close modal when clicking outside of it
-document.getElementById('deleteModal').addEventListener('click', function(e) {
-  if (e.target === this) {
-    closeDeleteModal();
+  function updateCount() {
+    const checked = document.querySelectorAll('.category-checkbox:checked').length;
+    selectedCount.textContent = `${checked} selected`;
   }
-});
 
-// Close modal with Escape key
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') {
-    closeDeleteModal();
-  }
-});
+  selectAllCheckbox?.addEventListener('change', function() {
+    categoryCheckboxes.forEach(cb => cb.checked = this.checked);
+    updateCount();
+  });
+
+  categoryCheckboxes.forEach(cb => {
+    cb.addEventListener('change', () => {
+      selectAllCheckbox.checked = Array.from(categoryCheckboxes).every(c => c.checked);
+      updateCount();
+    });
+  });
+
+  document.querySelector('form')?.addEventListener('submit', function(e) {
+    const action = document.querySelector('[name="bulk_action"]').value;
+    const selected = document.querySelectorAll('.category-checkbox:checked').length;
+    
+    if (!action) {
+      e.preventDefault();
+      alert('Please select an action');
+      return;
+    }
+    
+    if (selected === 0) {
+      e.preventDefault();
+      alert('Please select at least one category');
+      return;
+    }
+    
+    if (!confirm(`Are you sure? This will ${action} ${selected} category/ies.`)) {
+      e.preventDefault();
+    }
+  });
 </script>
+
 {% endblock %}

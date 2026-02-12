@@ -8,11 +8,22 @@ from django.db import transaction
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail
+from django.utils import timezone
 from accounts.models import User
 from apps.models import App
 from apps.forms import AppUploadForm
 from categories.models import Category
 from reviews.models import Review
+
+
+def get_client_ip(request):
+    """Get client IP address from request"""
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
 
 
 def home(request):
@@ -213,13 +224,77 @@ def apps_edit(request, slug):
 
 @login_required(login_url='accounts:login')
 @user_passes_test(is_admin)
+@login_required(login_url='accounts:login')
+@user_passes_test(is_admin)
 def users_list(request):
-    """List all users"""
+    """List all users with search, filter, and bulk actions"""
     users = User.objects.all().order_by('-date_joined')
+    
+    # Search functionality
+    search_query = request.GET.get('q', '').strip()
+    if search_query:
+        users = users.filter(
+            Q(username__icontains=search_query) |
+            Q(email__icontains=search_query) |
+            Q(first_name__icontains=search_query) |
+            Q(last_name__icontains=search_query)
+        )
+    
+    # Filter by status
+    status = request.GET.get('status', '').strip()
+    if status == 'active':
+        users = users.filter(is_active=True)
+    elif status == 'inactive':
+        users = users.filter(is_active=False)
+    elif status == 'verified':
+        users = users.filter(email_verified=True)
+    elif status == 'unverified':
+        users = users.filter(email_verified=False)
+    elif status == 'staff':
+        users = users.filter(is_staff=True)
+    
+    # Bulk Actions
+    if request.method == 'POST':
+        action = request.POST.get('bulk_action')
+        selected_ids = request.POST.getlist('selected_users')
+        
+        if action == 'deactivate' and selected_ids:
+            User.objects.filter(id__in=selected_ids).update(is_active=False)
+            messages.success(request, f'Deactivated {len(selected_ids)} users')
+            # Log action
+            for user_id in selected_ids:
+                try:
+                    from core.models import AuditLog
+                    AuditLog.log_action(
+                        admin_user=request.user,
+                        action='deactivate',
+                        object_type='user',
+                        object_id=user_id,
+                        ip_address=get_client_ip(request),
+                        user_agent=request.META.get('HTTP_USER_AGENT', '')
+                    )
+                except:
+                    pass
+            return redirect('admin_panel:users_list')
+        
+        elif action == 'activate' and selected_ids:
+            User.objects.filter(id__in=selected_ids).update(is_active=True)
+            messages.success(request, f'Activated {len(selected_ids)} users')
+            return redirect('admin_panel:users_list')
+        
+        elif action == 'delete' and selected_ids:
+            User.objects.filter(id__in=selected_ids).delete()
+            messages.success(request, f'Deleted {len(selected_ids)} users')
+            return redirect('admin_panel:users_list')
     
     context = {
         'users': users,
+        'search_query': search_query,
+        'status': status,
         'title': 'Users Management',
+        'total_users': User.objects.count(),
+        'active_users': User.objects.filter(is_active=True).count(),
+        'verified_users': User.objects.filter(email_verified=True).count(),
     }
     return render(request, 'admin/users_list.html', context)
 
@@ -279,13 +354,68 @@ def users_edit(request, pk):
 @user_passes_test(is_admin)
 @login_required(login_url='accounts:login')
 @user_passes_test(is_admin)
+@login_required(login_url='accounts:login')
+@user_passes_test(is_admin)
+@require_http_methods(["GET", "POST"])
 def categories_list(request):
-    """List all categories"""
-    categories = Category.objects.all().annotate(apps_count=Count('apps'))
+    """List all categories with search and bulk actions"""
+    categories = Category.objects.all().annotate(apps_count=Count('apps')).order_by('order', 'name')
+    
+    # Search functionality
+    search_query = request.GET.get('q', '').strip()
+    if search_query:
+        categories = categories.filter(
+            Q(name__icontains=search_query) |
+            Q(description__icontains=search_query)
+        )
+    
+    # Bulk Actions
+    if request.method == 'POST':
+        action = request.POST.get('bulk_action')
+        selected_ids = request.POST.getlist('selected_categories')
+        
+        if action == 'delete' and selected_ids:
+            # Check if any category has apps
+            categories_to_delete = Category.objects.filter(id__in=selected_ids)
+            has_apps = categories_to_delete.filter(apps__isnull=False).exists()
+            
+            if has_apps:
+                messages.error(request, 'Cannot delete categories that have apps in them!')
+            else:
+                count = categories_to_delete.count()
+                categories_to_delete.delete()
+                messages.success(request, f'Deleted {count} categories')
+                # Log action
+                try:
+                    from core.models import AuditLog
+                    AuditLog.log_action(
+                        admin_user=request.user,
+                        action='delete',
+                        object_type='category',
+                        object_id=0,
+                        object_name=f'{count} categories',
+                        ip_address=get_client_ip(request),
+                    )
+                except:
+                    pass
+            return redirect('admin_panel:categories_list')
+        
+        elif action == 'deactivate' and selected_ids:
+            Category.objects.filter(id__in=selected_ids).update(is_active=False)
+            messages.success(request, f'Deactivated {len(selected_ids)} categories')
+            return redirect('admin_panel:categories_list')
+        
+        elif action == 'activate' and selected_ids:
+            Category.objects.filter(id__in=selected_ids).update(is_active=True)
+            messages.success(request, f'Activated {len(selected_ids)} categories')
+            return redirect('admin_panel:categories_list')
     
     context = {
         'categories': categories,
+        'search_query': search_query,
         'title': 'Categories Management',
+        'total_categories': Category.objects.count(),
+        'active_categories': Category.objects.filter(is_active=True).count(),
     }
     return render(request, 'admin/categories_list.html', context)
 
@@ -372,16 +502,144 @@ def categories_delete(request, pk):
 
 @login_required(login_url='accounts:login')
 @user_passes_test(is_admin)
+@login_required(login_url='accounts:login')
+@user_passes_test(is_admin)
+@require_http_methods(["GET", "POST"])
 def reviews_list(request):
-    """List all reviews"""
-    # Show all reviews that are not flagged or approved (pending review)
-    reviews = Review.objects.filter(is_flagged=False).exclude(is_approved=True).select_related('user', 'app').order_by('-created_at')
+    """List all reviews with filtering and bulk moderation"""
+    # Get status filter
+    status_filter = request.GET.get('status', '').strip()
+    
+    # Base query - show based on status filter
+    if status_filter == 'approved':
+        reviews = Review.objects.filter(is_approved=True).select_related('user', 'app').order_by('-created_at')
+    elif status_filter == 'flagged':
+        reviews = Review.objects.filter(is_flagged=True).select_related('user', 'app').order_by('-created_at')
+    elif status_filter == 'pending':
+        # Show pending (not approved and not flagged)
+        reviews = Review.objects.filter(is_flagged=False, is_approved=False).select_related('user', 'app').order_by('-created_at')
+    else:
+        # Default: show all reviews
+        reviews = Review.objects.select_related('user', 'app').order_by('-created_at')
+    
+    # Filter by rating
+    rating = request.GET.get('rating', '').strip()
+    if rating:
+        reviews = reviews.filter(rating=rating)
+    
+    # Search
+    search_query = request.GET.get('q', '').strip()
+    if search_query:
+        reviews = reviews.filter(
+            Q(comment__icontains=search_query) |
+            Q(app__title__icontains=search_query) |
+            Q(user__username__icontains=search_query)
+        )
+    
+    # Bulk Actions
+    if request.method == 'POST':
+        action = request.POST.get('bulk_action')
+        selected_ids = request.POST.getlist('selected_reviews')
+        
+        if action == 'approve' and selected_ids:
+            from django.utils import timezone
+            Review.objects.filter(id__in=selected_ids).update(
+                is_approved=True,
+                approved_at=timezone.now()
+            )
+            messages.success(request, f'Approved {len(selected_ids)} reviews')
+            try:
+                from core.models import AuditLog
+                AuditLog.log_action(
+                    admin_user=request.user,
+                    action='approve',
+                    object_type='review',
+                    object_id=0,
+                    object_name=f'{len(selected_ids)} reviews',
+                )
+            except:
+                pass
+            return redirect('admin_panel:reviews_list')
+        
+        elif action == 'flag' and selected_ids:
+            Review.objects.filter(id__in=selected_ids).update(is_flagged=True)
+            messages.success(request, f'Flagged {len(selected_ids)} reviews')
+            return redirect('admin_panel:reviews_list')
+        
+        elif action == 'delete' and selected_ids:
+            Review.objects.filter(id__in=selected_ids).delete()
+            messages.success(request, f'Deleted {len(selected_ids)} reviews')
+            return redirect('admin_panel:reviews_list')
+    
+    # Stats
+    total_reviews = Review.objects.count()
+    pending_reviews = Review.objects.filter(is_flagged=False, is_approved=False).count()
+    flagged_reviews = Review.objects.filter(is_flagged=True).count()
+    approved_reviews = Review.objects.filter(is_approved=True).count()
     
     context = {
         'reviews': reviews,
-        'title': 'Pending Reviews',
+        'search_query': search_query,
+        'rating': rating,
+        'status_filter': status_filter,
+        'title': f'Pending Reviews ({pending_reviews})',
+        'total_reviews': total_reviews,
+        'pending_reviews': pending_reviews,
+        'flagged_reviews': flagged_reviews,
+        'approved_reviews': approved_reviews,
     }
     return render(request, 'admin/reviews_list.html', context)
+
+
+@login_required(login_url='accounts:login')
+@user_passes_test(is_admin)
+def reviews_detail(request, pk):
+    """Detail view for a single review - approve/flag/delete option"""
+    review = get_object_or_404(Review.objects.select_related('user', 'app'), pk=pk)
+    
+    # Handle actions
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        
+        if action == 'approve':
+            from django.utils import timezone
+            review.is_approved = True
+            review.approved_at = timezone.now()
+            review.save()
+            
+            # Log action
+            try:
+                from core.models import AuditLog
+                AuditLog.log_action(
+                    admin_user=request.user,
+                    action='approve',
+                    object_type='review',
+                    object_id=review.id,
+                    object_name=f'Review by {review.user.username} on {review.app.title}',
+                )
+            except:
+                pass
+            
+            messages.success(request, f'✅ Review approved!')
+            return redirect('admin_panel:reviews_list')
+        
+        elif action == 'flag':
+            review.is_flagged = True
+            review.save()
+            messages.warning(request, f'⚠️ Review flagged for moderation')
+            return redirect('admin_panel:reviews_list')
+        
+        elif action == 'delete':
+            review_info = f'{review.user.username} on {review.app.title}'
+            review.delete()
+            messages.success(request, f'🗑️ Review deleted')
+            return redirect('admin_panel:reviews_list')
+    
+    context = {
+        'review': review,
+        'title': f'Review - {review.app.title}',
+    }
+    return render(request, 'admin/reviews_detail.html', context)
 
 
 @login_required(login_url='accounts:login')
@@ -466,6 +724,67 @@ def analytics_reports(request):
         'title': 'Reports',
     }
     return render(request, 'admin/analytics_reports.html', context)
+
+
+@login_required(login_url='accounts:login')
+@user_passes_test(is_admin)
+def audit_logs(request):
+    """View audit logs with search and filter"""
+    from core.models import AuditLog
+    
+    # Get filters
+    action_filter = request.GET.get('action', '').strip()
+    object_type_filter = request.GET.get('object_type', '').strip()
+    search_query = request.GET.get('q', '').strip()
+    
+    # Base queryset
+    logs = AuditLog.objects.select_related('admin_user').order_by('-timestamp')
+    
+    # Apply filters
+    if action_filter:
+        logs = logs.filter(action=action_filter)
+    
+    if object_type_filter:
+        logs = logs.filter(object_type=object_type_filter)
+    
+    if search_query:
+        logs = logs.filter(
+            Q(admin_user__username__icontains=search_query) |
+            Q(object_name__icontains=search_query) |
+            Q(ip_address__icontains=search_query)
+        )
+    
+    # Pagination
+    from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+    page = request.GET.get('page', 1)
+    paginator = Paginator(logs, 50)
+    try:
+        logs_page = paginator.page(page)
+    except PageNotAnInteger:
+        logs_page = paginator.page(1)
+    except EmptyPage:
+        logs_page = paginator.page(paginator.num_pages)
+    
+    # Get unique values for filters
+    all_actions = AuditLog.objects.values_list('action', flat=True).distinct()
+    all_object_types = AuditLog.objects.values_list('object_type', flat=True).distinct()
+    
+    # Stats
+    total_logs = AuditLog.objects.count()
+    today_logs = AuditLog.objects.filter(timestamp__date=timezone.now().date()).count()
+    
+    context = {
+        'logs': logs_page,
+        'search_query': search_query,
+        'action_filter': action_filter,
+        'object_type_filter': object_type_filter,
+        'all_actions': all_actions,
+        'all_object_types': all_object_types,
+        'total_logs': total_logs,
+        'today_logs': today_logs,
+        'title': 'Audit Logs',
+    }
+    return render(request, 'admin/audit_logs.html', context)
 
 
 @login_required(login_url='accounts:login')

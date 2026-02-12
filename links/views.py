@@ -1,14 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
-from django.db.models import Sum, Count
-from django.contrib.auth.models import User
+from django.db.models import Sum, Count, Q
 from django.http import JsonResponse, HttpResponse
 import json
 import csv
 from datetime import datetime
 
+from accounts.models import User
 from .models import Link, LinkCategory, LinkClick
 from .forms import LinkForm, LinkCategoryForm
 
@@ -231,3 +232,149 @@ def export_links_csv(request):
     
     messages.success(request, f"Exported {links.count()} active links to CSV!")
     return response
+
+# ==================== ADMIN VIEWS ====================
+
+@staff_member_required(login_url='accounts:login')
+def admin_links_overview(request):
+    """Admin dashboard overview for links analytics"""
+    # Get statistics
+    total_links = Link.objects.count()
+    total_clicks = LinkClick.objects.count()
+    total_categories = LinkCategory.objects.count()
+    
+    # Get active users with links
+    users_with_links = User.objects.filter(links__isnull=False).distinct().count()
+    
+    # Most popular links (top 10)
+    popular_links = Link.objects.filter(is_active=True).select_related('user', 'category').order_by('-click_count')[:10]
+    
+    # Recent links
+    recent_links = Link.objects.select_related('user', 'category').order_by('-created_at')[:10]
+    
+    # Top link creators (users with most links)
+    top_creators = User.objects.annotate(
+        link_count=Count('links')
+    ).filter(link_count__gt=0).order_by('-link_count')[:10]
+    
+    context = {
+        'total_links': total_links,
+        'total_clicks': total_clicks,
+        'total_categories': total_categories,
+        'users_with_links': users_with_links,
+        'popular_links': popular_links,
+        'recent_links': recent_links,
+        'top_creators': top_creators,
+        'title': 'Link Management Analytics',
+    }
+    return render(request, 'admin/links_overview.html', context)
+
+
+@staff_member_required(login_url='accounts:login')
+def admin_links_list(request):
+    """Admin view all links with moderation controls"""
+    # Get filter parameters
+    search = request.GET.get('search', '')
+    is_active = request.GET.get('is_active', '')
+    sort_by = request.GET.get('sort', '-created_at')
+    
+    # Start with all links
+    links = Link.objects.select_related('user', 'category')
+    
+    # Apply filters
+    if search:
+        links = links.filter(
+            Q(title__icontains=search) | 
+            Q(description__icontains=search) | 
+            Q(user__username__icontains=search) |
+            Q(url__icontains=search)
+        )
+    
+    if is_active:
+        links = links.filter(is_active=is_active.lower() == 'true')
+    
+    # Apply sorting
+    valid_sorts = ['-created_at', 'created_at', '-click_count', 'click_count', 'title', '-title']
+    if sort_by not in valid_sorts:
+        sort_by = '-created_at'
+    links = links.order_by(sort_by)
+    
+    # Pagination
+    from django.core.paginator import Paginator
+    paginator = Paginator(links, 20)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        'page_obj': page_obj,
+        'total_links': links.count(),
+        'search': search,
+        'is_active': is_active,
+        'sort_by': sort_by,
+        'title': 'Link Management',
+    }
+    return render(request, 'admin/links_list.html', context)
+
+
+@staff_member_required(login_url='accounts:login')
+@require_http_methods(["POST"])
+def admin_link_toggle_status(request, link_id):
+    """Admin toggle link active/inactive status"""
+    link = get_object_or_404(Link, id=link_id)
+    link.is_active = not link.is_active
+    link.save()
+    
+    status = "activated" if link.is_active else "deactivated"
+    messages.success(request, f"Link '{link.title}' {status} successfully!")
+    return redirect('admin_panel:links_list')
+
+
+@staff_member_required(login_url='accounts:login')
+@require_http_methods(["POST"])
+def admin_link_delete(request, link_id):
+    """Admin delete user's link"""
+    link = get_object_or_404(Link, id=link_id)
+    title = link.title
+    username = link.user.username
+    link.delete()
+    
+    messages.success(request, f"Link '{title}' (from @{username}) deleted successfully!")
+    return redirect('admin_panel:links_list')
+
+
+@staff_member_required(login_url='accounts:login')
+def admin_link_analytics(request):
+    """Detailed link analytics and statistics"""
+    # Top 20 most clicked links
+    most_clicked = Link.objects.filter(is_active=True).order_by('-click_count')[:20]
+    
+    # Recent clicks
+    recent_clicks = LinkClick.objects.select_related('link', 'link__user').order_by('-clicked_at')[:30]
+    
+    # Total statistics
+    total_clicks = LinkClick.objects.count()
+    total_links = Link.objects.count()
+    
+    # Links by category with calculated width percentage
+    links_by_category = LinkCategory.objects.annotate(
+        total=Count('links')
+    ).order_by('-total')[:10]
+    
+    # Calculate width percentage for each category
+    max_count = max([c.total for c in links_by_category], default=1)
+    for category in links_by_category:
+        category.width_percent = min(int((category.total / max_count) * 100), 100)
+    
+    # Average clicks per link
+    avg_clicks = total_links > 0 and (total_clicks / total_links) or 0
+    
+    context = {
+        'most_clicked': most_clicked,
+        'recent_clicks': recent_clicks,
+        'total_clicks': total_clicks,
+        'total_links': total_links,
+        'avg_clicks': f"{avg_clicks:.1f}",
+        'links_by_category': links_by_category,
+        'title': 'Link Analytics',
+    }
+    return render(request, 'admin/links_analytics.html', context)

@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.utils.text import slugify
+from django.urls import reverse
 
 
 class LinkCategory(models.Model):
@@ -82,6 +83,10 @@ class Link(models.Model):
     def get_icon_class(self):
         """Get Font Awesome icon class"""
         return f"fas {self.icon}"
+    
+    def get_absolute_url(self):
+        """Get the click redirect URL for this link"""
+        return reverse('links:redirect', kwargs={'link_id': self.id})
 
 
 class LinkClick(models.Model):

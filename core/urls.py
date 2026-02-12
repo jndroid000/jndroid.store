@@ -27,6 +27,7 @@ urlpatterns = [
     
     # Reviews Management
     path("reviews/", views.reviews_list, name="reviews_list"),
+    path("reviews/<int:pk>/", views.reviews_detail, name="reviews_detail"),
     path("reviews/flagged/", views.reviews_flagged, name="reviews_flagged"),
     path("reviews/approved/", views.reviews_approved, name="reviews_approved"),
     path("reviews/<int:pk>/delete/", views.reviews_delete, name="reviews_delete"),
@@ -36,6 +37,9 @@ urlpatterns = [
     # Analytics
     path("analytics/", views.analytics_overview, name="analytics_overview"),
     path("analytics/reports/", views.analytics_reports, name="analytics_reports"),
+    
+    # Audit Logs
+    path("audit-logs/", views.audit_logs, name="audit_logs"),
     
     # Settings
     path("settings/", views.settings, name="settings"),

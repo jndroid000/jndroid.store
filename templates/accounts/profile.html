@@ -69,7 +69,10 @@
   <div style="margin-bottom:32px;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
       <h2 style="margin:0;">My Applications</h2>
-      <a href="{% url 'apps:upload' %}" class="btn primary" style="padding:8px 16px; font-size:14px;">+ Upload New App</a>
+      <div style="display:flex; gap:12px;">
+        <a href="{% url 'apps:my_apps' %}" class="btn secondary" style="padding:8px 16px; font-size:14px;">📋 View All Apps</a>
+        <a href="{% url 'apps:upload' %}" class="btn primary" style="padding:8px 16px; font-size:14px;">+ Upload New App</a>
+      </div>
     </div>
     
     {% if user.apps.all %}

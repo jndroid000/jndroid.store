@@ -6,6 +6,15 @@ import string
 class User(AbstractUser):
     phone = models.CharField(max_length=20, blank=True)
     avatar = models.ImageField(upload_to="avatars/", blank=True, null=True)
+    email_verified = models.BooleanField(default=False, help_text="Email address verified")
+    
+    class Meta:
+        ordering = ['-date_joined']
+        indexes = [
+            models.Index(fields=['email']),
+            models.Index(fields=['is_active']),
+            models.Index(fields=['email_verified']),
+        ]
 
     def __str__(self):
         return self.username

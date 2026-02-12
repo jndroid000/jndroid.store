@@ -43,6 +43,17 @@
     </div>
   </div>
 
+  <!-- Ledger Button -->
+  <div style="margin-bottom: 32px; padding: 20px; background: rgba(59, 130, 246, 0.1); border-radius: var(--radius); border: 1px solid rgba(59, 130, 246, 0.2); display: flex; justify-content: space-between; align-items: center;">
+    <div>
+      <h3 style="margin: 0; font-size: 16px;">📊 Advanced Analytics</h3>
+      <p style="margin: 8px 0 0; color: var(--muted); font-size: 13px;">View detailed statistics and export your app data</p>
+    </div>
+    <a href="{% url 'apps:ledger' %}" style="padding: 10px 20px; background: #3b82f6; color: white; border-radius: 6px; text-decoration: none; font-weight: 600; white-space: nowrap; margin-left: 16px;">
+      📈 Open Ledger
+    </a>
+  </div>
+
   <!-- Apps List -->
   {% if apps %}
     <div style="display: grid; grid-template-columns: 1fr; gap: 16px;">

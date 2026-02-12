@@ -148,4 +148,65 @@ document.addEventListener('DOMContentLoaded', function() {
   initHeaderFunctionality();
   initFooterFunctionality();
   initThemeToggle();
+  initSearchModal();
 });
+
+// Initialize search modal functionality
+function initSearchModal() {
+  const searchBtnMobile = document.getElementById('searchBtnMobile');
+  const searchModal = document.getElementById('searchModal');
+  const searchModalClose = document.getElementById('searchModalClose');
+  const searchInput = document.getElementById('searchInput');
+  const searchForm = document.getElementById('searchForm');
+
+  if (!searchBtnMobile || !searchModal) return;
+
+  // Open search modal
+  searchBtnMobile.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    searchModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => searchInput.focus(), 100);
+  });
+
+  // Close search modal
+  function closeSearchModal() {
+    searchModal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  if (searchModalClose) {
+    searchModalClose.addEventListener('click', closeSearchModal);
+  }
+
+  // Close on ESC key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && searchModal.classList.contains('active')) {
+      closeSearchModal();
+    }
+  });
+
+  // Close on modal background click
+  searchModal.addEventListener('click', (e) => {
+    if (e.target === searchModal) {
+      closeSearchModal();
+    }
+  });
+
+  // Submit search form
+  if (searchForm) {
+    searchForm.addEventListener('submit', (e) => {
+      if (!searchInput.value.trim()) {
+        e.preventDefault();
+      }
+    });
+  }
+
+  // Close modal when search is submitted
+  if (searchForm) {
+    searchForm.addEventListener('submit', () => {
+      closeSearchModal();
+    });
+  }
+}

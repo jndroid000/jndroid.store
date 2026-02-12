@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Link Analytics - Admin{% endblock %}
+
+{% block content %}
+<div style="padding:20px;">
+  <!-- Header -->
+  <div style="margin-bottom:32px;">
+    <h1 style="margin:0; font-size:28px;">📊 Link Analytics</h1>
+    <p style="color:var(--muted); margin-top:4px;">Detailed statistics and performance metrics</p>
+  </div>
+
+  <!-- Key Metrics -->
+  <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:32px;">
+    <div style="padding:20px; background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.2); border-radius:12px;">
+      <div style="font-size:28px; font-weight:bold; color:#3b82f6;">{{ total_links }}</div>
+      <div style="color:var(--muted); font-size:13px;">Total Links</div>
+    </div>
+
+    <div style="padding:20px; background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.2); border-radius:12px;">
+      <div style="font-size:28px; font-weight:bold; color:#22c55e;">{{ total_clicks }}</div>
+      <div style="color:var(--muted); font-size:13px;">Total Clicks</div>
+    </div>
+
+    <div style="padding:20px; background:rgba(139,92,246,0.1); border:1px solid rgba(139,92,246,0.2); border-radius:12px;">
+      <div style="font-size:28px; font-weight:bold; color:#8b5cf6;">{{ avg_clicks }}</div>
+      <div style="color:var(--muted); font-size:13px;">Avg Clicks/Link</div>
+    </div>
+
+    <div style="padding:20px; background:rgba(236,72,153,0.1); border:1px solid rgba(236,72,153,0.2); border-radius:12px;">
+      <div style="font-size:28px; font-weight:bold; color:#ec4899;">{{ links_by_category|length }}</div>
+      <div style="color:var(--muted); font-size:13px;">Used Categories</div>
+    </div>
+  </div>
+
+  <!-- Top Content Section -->
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:32px;">
+    <!-- Most Clicked Links -->
+    <div style="padding:20px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:12px;">
+      <h3 style="margin:0 0 16px; font-size:18px;">⭐ Top 20 Most Clicked</h3>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        {% for link in most_clicked %}
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:rgba(255,255,255,0.02); border-radius:6px;">
+            <div style="flex:1;">
+              <div style="font-size:13px; font-weight:500;">{{ link.title }}</div>
+              <div style="font-size:11px; color:var(--muted);">by @{{ link.user.username }}</div>
+            </div>
+            <span style="background:rgba(34,197,94,0.2); color:#22c55e; padding:4px 8px; border-radius:4px; font-size:12px; font-weight:bold;">
+              {{ link.click_count }} clicks
+            </span>
+          </div>
+        {% empty %}
+          <p style="color:var(--muted); text-align:center; padding:20px;">No links yet</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Links by Category -->
+    <div style="padding:20px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:12px;">
+      <h3 style="margin:0 0 16px; font-size:18px;">🏷️ Links by Category</h3>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        {% for category in links_by_category %}
+          <div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+              <span style="font-size:13px; font-weight:500;">{{ category.name }}</span>
+              <span style="color:var(--muted); font-size:12px;">{{ category.total }} links</span>
+            </div>
+            <div style="height:8px; background:rgba(255,255,255,0.1); border-radius:4px; overflow:hidden;">
+              <div style="height:100%; background:linear-gradient(90deg, #3b82f6, #8b5cf6); width:{{ category.width_percent }}%;"></div>
+            </div>
+          </div>
+        {% empty %}
+          <p style="color:var(--muted); text-align:center; padding:20px;">No categories yet</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Clicks -->
+  <div style="padding:20px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:12px;">
+    <h3 style="margin:0 0 16px; font-size:18px;">⏰ Recent 30 Clicks</h3>
+    <div style="overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse; font-size:13px;">
+        <thead>
+          <tr style="border-bottom:1px solid var(--line);">
+            <th style="text-align:left; padding:10px; color:var(--muted); font-size:11px; text-transform:uppercase;">Link</th>
+            <th style="text-align:left; padding:10px; color:var(--muted); font-size:11px; text-transform:uppercase;">Creator</th>
+            <th style="text-align:left; padding:10px; color:var(--muted); font-size:11px; text-transform:uppercase;">IP Address</th>
+            <th style="text-align:left; padding:10px; color:var(--muted); font-size:11px; text-transform:uppercase;">Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for click in recent_clicks %}
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+              <td style="padding:10px;">
+                <a href="{{ click.link.url }}" target="_blank" style="color:#3b82f6; text-decoration:none;">
+                  {{ click.link.title|truncatewords:3 }}
+                </a>
+              </td>
+              <td style="padding:10px; color:var(--muted);">@{{ click.link.user.username }}</td>
+              <td style="padding:10px; color:var(--muted); font-family:monospace; font-size:11px;">{{ click.ip_address }}</td>
+              <td style="padding:10px; color:var(--muted);">{{ click.clicked_at|date:"M d, H:i" }}</td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="4" style="padding:20px; text-align:center; color:var(--muted);">No clicks recorded</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

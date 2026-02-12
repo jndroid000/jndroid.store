@@ -206,6 +206,32 @@
       </div>
     </div>
 
+    <!-- Link Management -->
+    <div style="padding:20px; background:rgba(100,200,255,0.04); border:1px solid rgba(100,200,255,0.2); border-radius:12px;">
+      <h3 style="margin:0 0 16px; font-size:18px;">🔗 Link Management</h3>
+      <p style="color:var(--muted); font-size:13px; margin:0 0 16px;">Manage and monitor user links</p>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <a href="{% url 'links:admin_overview' %}" class="btn secondary" style="padding:10px; text-align:center; text-decoration:none; font-size:13px; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.3); color:rgba(59,130,246,0.9);">
+          📊 Link Analytics
+        </a>
+        <a href="{% url 'links:admin_list' %}" class="btn secondary" style="padding:10px; text-align:center; text-decoration:none; font-size:13px;">Moderation & Controls</a>
+        <a href="{% url 'links:admin_analytics' %}" class="btn secondary" style="padding:10px; text-align:center; text-decoration:none; font-size:13px;">Detailed Analytics</a>
+      </div>
+    </div>
+
+    <!-- Audit Logs -->
+    <div style="padding:20px; background:rgba(156,39,176,0.04); border:1px solid rgba(156,39,176,0.2); border-radius:12px;">
+      <h3 style="margin:0 0 16px; font-size:18px;">📝 Audit Logs</h3>
+      <p style="color:var(--muted); font-size:13px; margin:0 0 16px;">View system activity and compliance logs</p>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <a href="{% url 'admin_panel:audit_logs' %}" class="btn secondary" style="padding:10px; text-align:center; text-decoration:none; font-size:13px; background:rgba(156,39,176,0.15); border:1px solid rgba(156,39,176,0.3); color:rgba(156,39,176,0.9);">
+          📊 View All Logs
+        </a>
+        <button class="btn secondary" style="padding:10px; text-align:center; text-decoration:none; font-size:13px;" disabled>Export Logs (Coming Soon)</button>
+        <button class="btn secondary" style="padding:10px; text-align:center; text-decoration:none; font-size:13px;" disabled>Log Analytics (Coming Soon)</button>
+      </div>
+    </div>
+
     <!-- Email & Notifications -->
     <div style="padding:20px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:12px;">
       <h3 style="margin:0 0 16px; font-size:18px;">📧 Email & Notifications</h3>

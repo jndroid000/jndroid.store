@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Link Moderation - Admin{% endblock %}
+
+{% block content %}
+<div style="padding:20px;">
+  <!-- Header -->
+  <div style="margin-bottom:24px;">
+    <h1 style="margin:0; font-size:28px;">🔗 Link Moderation</h1>
+    <p style="color:var(--muted); margin-top:4px;">Total: {{ total_links }} links</p>
+  </div>
+
+  <!-- Filters & Search -->
+  <form method="get" style="margin-bottom:24px; display:grid; grid-template-columns:auto auto auto 1fr; gap:12px; align-items:center;">
+    <div>
+      <input 
+        type="text" 
+        name="search" 
+        placeholder="Search links, users, URLs..." 
+        value="{{ search }}"
+        style="padding:10px; border:1px solid var(--line); border-radius:6px; background:rgba(255,255,255,0.05); width:250px;"
+      >
+    </div>
+    
+    <select name="is_active" style="padding:10px; border:1px solid var(--line); border-radius:6px; background:rgba(255,255,255,0.05);">
+      <option value="">All Status</option>
+      <option value="true" {% if is_active == 'true' %}selected{% endif %}>Active</option>
+      <option value="false" {% if is_active == 'false' %}selected{% endif %}>Inactive</option>
+    </select>
+
+    <select name="sort" style="padding:10px; border:1px solid var(--line); border-radius:6px; background:rgba(255,255,255,0.05);">
+      <option value="-created_at" {% if sort_by == '-created_at' %}selected{% endif %}>Newest First</option>
+      <option value="created_at" {% if sort_by == 'created_at' %}selected{% endif %}>Oldest First</option>
+      <option value="-click_count" {% if sort_by == '-click_count' %}selected{% endif %}>Most Clicked</option>
+      <option value="click_count" {% if sort_by == 'click_count' %}selected{% endif %}>Least Clicked</option>
+      <option value="title" {% if sort_by == 'title' %}selected{% endif %}>Title A-Z</option>
+    </select>
+
+    <button type="submit" class="btn primary" style="padding:10px 16px; border-radius:6px;">Filter</button>
+  </form>
+
+  <!-- Links Table -->
+  <div style="overflow-x:auto; background:rgba(255,255,255,0.02); border:1px solid var(--line); border-radius:12px;">
+    <table style="width:100%; border-collapse:collapse;">
+      <thead>
+        <tr style="background:rgba(255,255,255,0.05); border-bottom:1px solid var(--line);">
+          <th style="text-align:left; padding:14px; color:var(--muted); font-size:12px; text-transform:uppercase;">Title</th>
+          <th style="text-align:left; padding:14px; color:var(--muted); font-size:12px; text-transform:uppercase;">Creator</th>
+          <th style="text-align:center; padding:14px; color:var(--muted); font-size:12px; text-transform:uppercase;">URL</th>
+          <th style="text-align:center; padding:14px; color:var(--muted); font-size:12px; text-transform:uppercase;">Clicks</th>
+          <th style="text-align:center; padding:14px; color:var(--muted); font-size:12px; text-transform:uppercase;">Status</th>
+          <th style="text-align:center; padding:14px; color:var(--muted); font-size:12px; text-transform:uppercase;">Created</th>
+          <th style="text-align:center; padding:14px; color:var(--muted); font-size:12px; text-transform:uppercase;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for link in page_obj %}
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+            <td style="padding:14px;">
+              <div style="font-weight:500; margin-bottom:4px;">{{ link.title }}</div>
+              {% if link.category %}
+                <span style="background:rgba(139,92,246,0.2); color:#8b5cf6; padding:2px 6px; border-radius:3px; font-size:11px;">
+                  {{ link.category.name }}
+                </span>
+              {% endif %}
+            </td>
+            <td style="padding:14px; color:var(--muted);">
+              <a href="{% url 'admin_panel:users_edit' pk=link.user.id %}" style="color:inherit; text-decoration:none;">
+                @{{ link.user.username }}
+              </a>
+            </td>
+            <td style="padding:14px;">
+              <a href="{{ link.url }}" target="_blank" style="color:#3b82f6; text-decoration:none; font-size:12px; overflow:hidden; text-overflow:ellipsis; display:block; max-width:200px;">
+                {{ link.url|truncatewords:5 }}
+              </a>
+            </td>
+            <td style="padding:14px; text-align:center; font-weight:bold; color:#22c55e;">{{ link.click_count }}</td>
+            <td style="padding:14px; text-align:center;">
+              <span style="background:{% if link.is_active %}rgba(34,197,94,0.2); color:#22c55e;{% else %}rgba(239,68,68,0.2); color:#ef4444;{% endif %} padding:4px 8px; border-radius:4px; font-size:12px;">
+                {% if link.is_active %}✓ Active{% else %}✗ Inactive{% endif %}
+              </span>
+            </td>
+            <td style="padding:14px; text-align:center; color:var(--muted); font-size:12px;">
+              {{ link.created_at|date:"M d, Y" }}
+            </td>
+            <td style="padding:14px; text-align:center;">
+              <div style="display:flex; gap:6px; justify-content:center;">
+                <form method="post" action="{% url 'links:admin_toggle' link.id %}" style="margin:0;">
+                  {% csrf_token %}
+                  <button 
+                    type="submit" 
+                    class="btn secondary" 
+                    style="padding:6px 10px; font-size:11px; border-radius:4px;"
+                    title="{% if link.is_active %}Deactivate{% else %}Activate{% endif %}"
+                  >
+                    {% if link.is_active %}🔇 Hide{% else %}🔊 Show{% endif %}
+                  </button>
+                </form>
+                
+                <form method="post" action="{% url 'links:admin_delete' link.id %}" style="margin:0;" onsubmit="return confirm('Delete this link?');">
+                  {% csrf_token %}
+                  <button 
+                    type="submit" 
+                    class="btn danger" 
+                    style="padding:6px 10px; font-size:11px; border-radius:4px; background:rgba(239,68,68,0.2); border:1px solid rgba(239,68,68,0.3); color:#ef4444;"
+                  >
+                    🗑️ Delete
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="7" style="padding:40px; text-align:center; color:var(--muted);">
+              No links found matching your criteria
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  {% if page_obj.has_other_pages %}
+    <div style="display:flex; justify-content:center; gap:8px; margin-top:24px; flex-wrap:wrap;">
+      {% if page_obj.has_previous %}
+        <a href="?page=1" class="btn secondary" style="padding:8px 12px; text-decoration:none; border-radius:6px;">« First</a>
+        <a href="?page={{ page_obj.previous_page_number }}" class="btn secondary" style="padding:8px 12px; text-decoration:none; border-radius:6px;">‹ Previous</a>
+      {% endif %}
+
+      <span style="padding:8px 12px; color:var(--muted);">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+      </span>
+
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="btn secondary" style="padding:8px 12px; text-decoration:none; border-radius:6px;">Next ›</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}" class="btn secondary" style="padding:8px 12px; text-decoration:none; border-radius:6px;">Last »</a>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

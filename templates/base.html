@@ -50,7 +50,7 @@
         <div class="actions">
           <!-- Search Button - Mobile -->
           <button class="btn search-btn-mobile" id="searchBtnMobile" aria-label="Search">
-            <span>🔍</span>
+            <i class="fas fa-search"></i>
           </button>
 
           <!-- Profile Dropdown - Desktop -->
@@ -72,6 +72,10 @@
               <a href="{% url 'accounts:profile' %}" class="profile-menu-item">
                 <span class="icon">👤</span>
                 <span>My Profile</span>
+              </a>
+              <a href="{% url 'apps:my_apps' %}" class="profile-menu-item">
+                <span class="icon">📚</span>
+                <span>My Apps</span>
               </a>
               <a href="{% url 'support' %}" class="profile-menu-item">
                 <span class="icon">❓</span>
@@ -146,6 +150,29 @@
       </div>
     </div>
     <div class="drawer-overlay" id="drawerOverlay"></div>
+
+    <!-- Search Modal -->
+    <div class="search-modal" id="searchModal">
+      <div class="search-modal-content">
+        <button class="search-modal-close" id="searchModalClose" aria-label="Close search">
+          <i class="fas fa-times"></i>
+        </button>
+        <form class="search-modal-form" id="searchForm" method="get" action="{% url 'apps:list' %}">
+          <div class="search-input-wrapper">
+            <i class="fas fa-search search-modal-icon"></i>
+            <input 
+              type="text" 
+              class="search-modal-input" 
+              id="searchInput" 
+              name="q" 
+              placeholder="অ্যাপ খুঁজুন..." 
+              autocomplete="off"
+            >
+          </div>
+          <button type="submit" class="search-submit-btn">অনুসন্ধান করুন</button>
+        </form>
+      </div>
+    </div>
   </header>
 
   <main>

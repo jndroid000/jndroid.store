@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Review Detail - Admin{% endblock %}
+
+{% block content %}
+<div style="padding:20px; max-width:900px; margin:0 auto;">
+  <!-- Header -->
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:32px; padding-bottom:20px; border-bottom:1px solid var(--line);">
+    <div>
+      <h1 style="margin:0 0 8px; font-size:32px;">⭐ Review Detail</h1>
+      <p style="color:var(--muted); margin:0;">Review ID: #{{ review.id }}</p>
+    </div>
+    <a href="{% url 'admin_panel:reviews_list' %}" class="btn secondary" style="padding:10px 20px;">← Back</a>
+  </div>
+
+  <!-- Review Card -->
+  <div style="padding:24px; background:rgba(255,255,255,0.02); border:1px solid var(--line); border-radius:12px; margin-bottom:32px;">
+    <!-- User & App Info -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:24px; padding-bottom:24px; border-bottom:1px solid var(--line);">
+      <!-- User Info -->
+      <div>
+        <div style="font-size:12px; color:var(--muted); text-transform:uppercase; margin-bottom:8px; font-weight:600;">👤 User</div>
+        <div style="font-size:18px; font-weight:600; margin-bottom:4px;">{{ review.user.get_full_name|default:review.user.username }}</div>
+        <div style="color:var(--muted); font-size:13px;">{{ review.user.email }}</div>
+        <div style="color:var(--muted); font-size:12px; margin-top:8px;">Joined: {{ review.user.date_joined|date:"M d, Y" }}</div>
+      </div>
+
+      <!-- App Info -->
+      <div>
+        <div style="font-size:12px; color:var(--muted); text-transform:uppercase; margin-bottom:8px; font-weight:600;">📱 App</div>
+        <div style="font-size:18px; font-weight:600; margin-bottom:4px;">{{ review.app.title }}</div>
+        <div style="color:var(--muted); font-size:13px;">v{{ review.app.version }}</div>
+        <a href="{% url 'apps:detail' review.app.slug %}" target="_blank" style="color:#3b82f6; text-decoration:none; font-size:12px; margin-top:8px; display:inline-block;">View App →</a>
+      </div>
+    </div>
+
+    <!-- Rating & Date -->
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-bottom:24px; padding-bottom:24px; border-bottom:1px solid var(--line);">
+      <div>
+        <div style="font-size:12px; color:var(--muted); text-transform:uppercase; margin-bottom:8px; font-weight:600;">⭐ Rating</div>
+        <div style="font-size:28px; font-weight:bold; color:#fbbf24;">{{ review.rating }}/5</div>
+      </div>
+      <div>
+        <div style="font-size:12px; color:var(--muted); text-transform:uppercase; margin-bottom:8px; font-weight:600;">📅 Posted</div>
+        <div style="font-size:16px; font-weight:600;">{{ review.created_at|date:"M d, Y" }}</div>
+        <div style="color:var(--muted); font-size:12px;">{{ review.created_at|date:"H:i" }}</div>
+      </div>
+      <div>
+        <div style="font-size:12px; color:var(--muted); text-transform:uppercase; margin-bottom:8px; font-weight:600;">📊 Status</div>
+        {% if review.is_approved %}
+          <span style="padding:6px 12px; background:rgba(34,197,94,0.15); border:1px solid rgba(34,197,94,0.3); color:rgba(34,197,94,0.9); border-radius:4px; font-size:13px; font-weight:600;">✅ Approved</span>
+        {% elif review.is_flagged %}
+          <span style="padding:6px 12px; background:rgba(251,113,133,0.15); border:1px solid rgba(251,113,133,0.3); color:rgba(251,113,133,0.9); border-radius:4px; font-size:13px; font-weight:600;">⚠️ Flagged</span>
+        {% else %}
+          <span style="padding:6px 12px; background:rgba(251,191,36,0.15); border:1px solid rgba(251,191,36,0.3); color:rgba(251,191,36,0.9); border-radius:4px; font-size:13px; font-weight:600;">⏳ Pending</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Comment -->
+    <div style="margin-bottom:24px;">
+      <div style="font-size:12px; color:var(--muted); text-transform:uppercase; margin-bottom:12px; font-weight:600;">💬 Comment</div>
+      <p style="font-size:15px; line-height:1.6; margin:0; color:var(--text); padding:16px; background:rgba(255,255,255,0.03); border:1px solid var(--line); border-radius:8px;">{{ review.comment }}</p>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; padding:20px; background:rgba(255,255,255,0.02); border:1px solid var(--line); border-radius:12px;">
+    {% if not review.is_approved and not review.is_flagged %}
+      <!-- Approve Button -->
+      <form method="post" style="margin:0;">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="approve">
+        <button type="submit" style="width:100%; padding:12px; background:rgba(34,197,94,0.15); border:1px solid rgba(34,197,94,0.3); color:rgba(34,197,94,0.9); border-radius:8px; cursor:pointer; font-weight:600; font-size:14px;" onclick="return confirm('✅ Approve this review?');">
+          ✅ Approve
+        </button>
+      </form>
+
+      <!-- Flag Button -->
+      <form method="post" style="margin:0;">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="flag">
+        <button type="submit" style="width:100%; padding:12px; background:rgba(251,191,36,0.15); border:1px solid rgba(251,191,36,0.3); color:rgba(251,191,36,0.9); border-radius:8px; cursor:pointer; font-weight:600; font-size:14px;" onclick="return confirm('⚠️ Flag this review for moderation?');">
+          ⚠️ Flag
+        </button>
+      </form>
+
+      <!-- Delete Button -->
+      <form method="post" style="margin:0;">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="delete">
+        <button type="submit" style="width:100%; padding:12px; background:rgba(251,113,133,0.15); border:1px solid rgba(251,113,133,0.3); color:rgba(251,113,133,0.9); border-radius:8px; cursor:pointer; font-weight:600; font-size:14px;" onclick="return confirm('🗑️ Delete this review? This cannot be undone.');">
+          🗑️ Delete
+        </button>
+      </form>
+    {% elif review.is_approved %}
+      <!-- Already Approved -->
+      <div style="grid-column:1/-1; padding:16px; background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.3); border-radius:8px; text-align:center;">
+        <div style="font-size:18px; font-weight:600; color:rgba(34,197,94,0.9);">✅ This review has been approved</div>
+        <form method="post" style="margin-top:12px;">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="delete">
+          <button type="submit" style="padding:8px 16px; background:rgba(251,113,133,0.15); border:1px solid rgba(251,113,133,0.3); color:rgba(251,113,133,0.9); border-radius:4px; cursor:pointer; font-weight:600; font-size:12px;" onclick="return confirm('🗑️ Delete this review?');">
+            🗑️ Delete
+          </button>
+        </form>
+      </div>
+    {% elif review.is_flagged %}
+      <!-- Flagged -->
+      <div style="grid-column:1/-1; padding:16px; background:rgba(251,113,133,0.1); border:1px solid rgba(251,113,133,0.3); border-radius:8px; text-align:center;">
+        <div style="font-size:18px; font-weight:600; color:rgba(251,113,133,0.9);">⚠️ This review has been flagged</div>
+        <form method="post" style="margin-top:12px; display:flex; gap:12px; justify-content:center;">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="approve">
+          <button type="submit" style="padding:8px 16px; background:rgba(34,197,94,0.15); border:1px solid rgba(34,197,94,0.3); color:rgba(34,197,94,0.9); border-radius:4px; cursor:pointer; font-weight:600; font-size:12px;" onclick="return confirm('✅ Approve this flagged review?');">
+            ✅ Approve Anyway
+          </button>
+          <form method="post" style="margin:0;">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="delete">
+            <button type="submit" style="padding:8px 16px; background:rgba(251,113,133,0.15); border:1px solid rgba(251,113,133,0.3); color:rgba(251,113,133,0.9); border-radius:4px; cursor:pointer; font-weight:600; font-size:12px;" onclick="return confirm('🗑️ Delete this review?');">
+              🗑️ Delete
+            </button>
+          </form>
+        </form>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

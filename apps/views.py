@@ -118,8 +118,6 @@ def app_download(request, slug):
 
 
 @login_required(login_url='accounts:login')
-@login_required(login_url='accounts:login')
-@login_required(login_url='accounts:login')
 def app_upload(request):
     """Upload a new app - authenticated users only"""
     if request.method == 'POST':
