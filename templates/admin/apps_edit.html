@@ -57,20 +57,31 @@
       </div>
     </div>
 
-    <!-- Android Version Requirements -->
+    <!-- Technical Details -->
     <div style="padding:20px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:12px;">
-      <h3 style="margin:0 0 20px; font-size:18px;">🤖 Android Version Requirements</h3>
+      <h3 style="margin:0 0 20px; font-size:18px;">Technical Details</h3>
       
-        <!-- Min Android Version -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:16px;">
+        <!-- Platform -->
         <div>
-          <label style="display:block; margin-bottom:8px; font-weight:500;">Min Android Version</label>
-          <input type="text" name="min_android_version" value="{{ app.min_android_version }}" placeholder="e.g., 5.0" style="width:100%; padding:10px 12px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box; font-size:14px;">
+          <label style="display:block; margin-bottom:8px; font-weight:500;">Platform</label>
+          <select name="platform" style="width:100%; padding:10px 12px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box; font-size:14px;">
+            {% for value, label in platforms %}
+              <option value="{{ value }}" {% if app.platform == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
         </div>
 
-        <!-- Target Android Version -->
+        <!-- Version -->
         <div>
-          <label style="display:block; margin-bottom:8px; font-weight:500;">Target Android Version</label>
-          <input type="text" name="target_android_version" value="{{ app.target_android_version }}" placeholder="e.g., 15.0" style="width:100%; padding:10px 12px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box; font-size:14px;">
+          <label style="display:block; margin-bottom:8px; font-weight:500;">Version</label>
+          <input type="text" name="version" value="{{ app.version }}" placeholder="e.g., 1.0.0" style="width:100%; padding:10px 12px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box; font-size:14px;">
+        </div>
+
+        <!-- Size (MB) -->
+        <div>
+          <label style="display:block; margin-bottom:8px; font-weight:500;">Size (MB)</label>
+          <input type="number" name="size_mb" value="{{ app.size_mb }}" step="0.01" min="0" style="width:100%; padding:10px 12px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box; font-size:14px;">
         </div>
 
         <!-- Category -->

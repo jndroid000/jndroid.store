@@ -8,8 +8,11 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.conf import settings
 from allauth.account.models import EmailAddress, EmailConfirmationHMAC
-from .models import User
+from .models import User, PasswordResetOTP
 from .forms import SignUpForm, LoginForm, ProfileUpdateForm
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 @require_http_methods(["GET", "POST"])
@@ -121,7 +124,8 @@ def signup_view(request):
                     fail_silently=False,
                 )
             except Exception as e:
-                # Log error but don't fail signup
+                # Log error with full details for debugging
+                logger.error(f"[SIGNUP EMAIL ERROR] Failed to send confirmation email to {user.email}: {str(e)}", exc_info=True)
                 print(f"[ERROR] Error sending confirmation email: {e}")
             
             messages.success(
@@ -325,6 +329,7 @@ def resend_verification_email(request):
                 'দয়া করে আপনার ইনবক্স চেক করুন।'
             )
         except Exception as e:
+            logger.error(f"[RESEND EMAIL ERROR] Failed to resend confirmation email: {str(e)}", exc_info=True)
             print(f"Error resending email: {e}")
             messages.error(request, 'ইমেইল পাঠানোর সময় সমস্যা হয়েছে। দয়া করে পরে চেষ্টা করুন।')
         
@@ -386,3 +391,194 @@ def edit_profile_view(request):
         'title': 'Edit Profile',
     }
     return render(request, 'accounts/edit_profile.html', context)
+
+
+# ==================== PASSWORD RESET VIEWS ====================
+
+@require_http_methods(["GET", "POST"])
+@csrf_protect
+def password_reset_view(request):
+    """Request password reset - user enters email"""
+    from django.utils import timezone
+    from datetime import timedelta
+    
+    if request.method == 'POST':
+        email = request.POST.get('email', '').strip()
+        
+        if not email:
+            messages.error(request, 'দয়া করে একটি ইমেইল ঠিকানা প্রদান করুন।')
+            return render(request, 'accounts/password_reset.html')
+        
+        try:
+            user = User.objects.get(email=email)
+            
+            # Generate OTP
+            otp = PasswordResetOTP.generate_otp()
+            
+            # Delete old OTP if exists and create new one
+            PasswordResetOTP.objects.filter(user=user).delete()
+            
+            password_reset_otp = PasswordResetOTP.objects.create(
+                user=user,
+                otp=otp,
+                expires_at=timezone.now() + timedelta(minutes=10),
+                is_verified=False,
+                attempts=0
+            )
+            
+            # Send OTP via email
+            try:
+                subject = "আপনার পাসওয়ার্ড রিসেট কোড"
+                
+                email_context = {
+                    'user': user,
+                    'otp': otp,
+                    'valid_time': '10 মিনিট'
+                }
+                
+                html_message = render_to_string(
+                    'accounts/email/password_reset_otp.html',
+                    email_context
+                )
+                
+                send_mail(
+                    subject,
+                    f'আপনার পাসওয়ার্ড রিসেট কোড: {otp}\n\nকোডটি 10 মিনিটের জন্য বৈধ।',
+                    settings.DEFAULT_FROM_EMAIL,
+                    [user.email],
+                    html_message=html_message,
+                    fail_silently=False,
+                )
+                
+                messages.success(request, f'পাসওয়ার্ড রিসেট কোড {user.email} এ পাঠানো হয়েছে।')
+                return redirect('accounts:password_reset_verify_otp', email=user.email)
+            
+            except Exception as e:
+                logger.error(f"[PASSWORD RESET EMAIL ERROR] Failed to send OTP to {user.email}: {str(e)}", exc_info=True)
+                print(f"Error sending OTP email: {e}")
+                messages.error(request, 'ইমেইল পাঠানোর সময় সমস্যা হয়েছে। দয়া করে পরে চেষ্টা করুন।')
+                return render(request, 'accounts/password_reset.html')
+        
+        except User.DoesNotExist:
+            # Don't reveal if email exists or not (security)
+            messages.info(request, 'যদি এই ইমেইলের সাথে একটি অ্যাকাউন্ট থাকে তবে একটি রিসেট কোড পাঠানো হয়েছে।')
+            return render(request, 'accounts/password_reset.html')
+    
+    context = {'title': 'Reset Password'}
+    return render(request, 'accounts/password_reset.html', context)
+
+
+@require_http_methods(["GET", "POST"])
+@csrf_protect
+def password_reset_verify_otp_view(request, email):
+    """Verify OTP for password reset"""
+    from django.utils import timezone
+    
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        messages.error(request, 'অবৈধ ইমেইল ঠিকানা।')
+        return redirect('accounts:password_reset')
+    
+    try:
+        otp_record = user.password_reset_otp
+    except PasswordResetOTP.DoesNotExist:
+        messages.error(request, 'কোনো সক্রিয় পাসওয়ার্ড রিসেট রিকোয়েস্ট নেই। নতুন রিকোয়েস্ট শুরু করুন।')
+        return redirect('accounts:password_reset')
+    
+    # Check if OTP is expired
+    if otp_record.is_expired():
+        otp_record.delete()
+        messages.error(request, 'OTP এর মেয়াদ শেষ হয়েছে। একটি নতুন কোড পান।')
+        return redirect('accounts:password_reset')
+    
+    # Check if locked due to too many attempts
+    if otp_record.is_locked():
+        messages.error(request, 'অনেক ব্যর্থ প্রচেষ্টা। পরে চেষ্টা করুন।')
+        return redirect('accounts:password_reset')
+    
+    if request.method == 'POST':
+        entered_otp = request.POST.get('otp', '').strip()
+        
+        if not entered_otp:
+            messages.error(request, 'দয়া করে OTP কোড প্রবেশ করুন।')
+            return render(request, 'accounts/password_reset_verify_otp.html', {'email': email})
+        
+        if entered_otp == otp_record.otp:
+            # OTP verified
+            otp_record.is_verified = True
+            otp_record.save()
+            messages.success(request, 'OTP যাচাই সফল! এখন আপনার নতুন পাসওয়ার্ড সেট করুন।')
+            return redirect('accounts:password_reset_new_password', email=email)
+        else:
+            # Increment attempts
+            otp_record.increment_attempts()
+            remaining = otp_record.max_attempts - otp_record.attempts
+            messages.error(request, f'ভুল OTP। অবশিষ্ট প্রচেষ্টা: {remaining}')
+            return render(request, 'accounts/password_reset_verify_otp.html', {'email': email})
+    
+    context = {
+        'title': 'Verify OTP',
+        'email': email,
+    }
+    return render(request, 'accounts/password_reset_verify_otp.html', context)
+
+
+@require_http_methods(["GET", "POST"])
+@csrf_protect
+def password_reset_new_password_view(request, email):
+    """Set new password after OTP verification"""
+    
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        messages.error(request, 'অবৈধ ইমেইল ঠিকানা।')
+        return redirect('accounts:password_reset')
+    
+    try:
+        otp_record = user.password_reset_otp
+    except PasswordResetOTP.DoesNotExist:
+        messages.error(request, 'কোনো সক্রিয় পাসওয়ার্ড রিসেট রিকোয়েস্ট নেই।')
+        return redirect('accounts:password_reset')
+    
+    # Check if OTP is verified
+    if not otp_record.is_verified:
+        messages.error(request, 'দয়া করে প্রথমে OTP যাচাই করুন।')
+        return redirect('accounts:password_reset_verify_otp', email=email)
+    
+    # Check if OTP is expired
+    if otp_record.is_expired():
+        otp_record.delete()
+        messages.error(request, 'OTP এর মেয়াদ শেষ হয়েছে।')
+        return redirect('accounts:password_reset')
+    
+    if request.method == 'POST':
+        new_password = request.POST.get('new_password', '').strip()
+        confirm_password = request.POST.get('confirm_password', '').strip()
+        
+        if not new_password or not confirm_password:
+            messages.error(request, 'দয়া করে পাসওয়ার্ড প্রবেশ করুন।')
+            return render(request, 'accounts/password_reset_new_password.html', {'email': email})
+        
+        if new_password != confirm_password:
+            messages.error(request, 'পাসওয়ার্ড মিলছে না।')
+            return render(request, 'accounts/password_reset_new_password.html', {'email': email})
+        
+        if len(new_password) < 8:
+            messages.error(request, 'পাসওয়ার্ড কমপক্ষে 8 অক্ষর দীর্ঘ হতে হবে।')
+            return render(request, 'accounts/password_reset_new_password.html', {'email': email})
+        
+        # Update password and delete OTP
+        user.set_password(new_password)
+        user.save()
+        otp_record.delete()
+        
+        messages.success(request, 'পাসওয়ার্ড সফলভাবে পরিবর্তন হয়েছে! এখন লগইন করুন।')
+        return redirect('accounts:login')
+    
+    context = {
+        'title': 'Set New Password',
+        'email': email,
+    }
+    return render(request, 'accounts/password_reset_new_password.html', context)
+

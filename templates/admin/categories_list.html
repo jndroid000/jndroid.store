@@ -1,70 +1,64 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}Categories Management - Admin{% endblock %}
-{% block extra_css %}<link rel="stylesheet" href="{% static 'css/review_form.css' %}">{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/categories_admin.css' %}">{% endblock %}
 
 {% block content %}
-<div style="padding:20px;">
+<div class="categories-container">
   <!-- Header -->
-  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:32px;">
-    <div>
-      <h1 style="margin:0 0 8px; font-size:32px;">Categories Management</h1>
-      <p style="color:var(--muted);">Total: {{ categories|length }} categories</p>
+  <div class="categories-header">
+    <div class="categories-header-left">
+      <h1>Categories Management</h1>
+      <p>Total: {{ categories|length }} categories</p>
     </div>
-    <a href="{% url 'admin_panel:dashboard' %}" class="btn secondary" style="padding:10px 20px;">← Back to Dashboard</a>
+    <a href="{% url 'admin_panel:dashboard' %}" class="btn-dashboard">← Back to Dashboard</a>
   </div>
 
   <!-- Add Category Form -->
-  <div style="margin-bottom:32px; padding:20px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:12px;">
-    <h3 style="margin:0 0 16px;">Add New Category</h3>
-    <form method="post" action="{% url 'admin_panel:categories_create' %}" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:12px; align-items:flex-end;">
+  <div class="add-category-section">
+    <h3>Add New Category</h3>
+    <form method="post" action="{% url 'admin_panel:categories_create' %}" class="add-category-form">
       {% csrf_token %}
-      <div>
-        <label style="display:block; font-size:13px; margin-bottom:4px;">Category Name</label>
-        <input type="text" name="name" placeholder="e.g. Games" required style="width:100%; padding:10px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text);">
+      <div class="form-group">
+        <label>Category Name</label>
+        <input type="text" name="name" placeholder="e.g. Games" required>
       </div>
-      <div>
-        <label style="display:block; font-size:13px; margin-bottom:4px;">Description</label>
-        <input type="text" name="description" placeholder="Brief description" style="width:100%; padding:10px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text);">
+      <div class="form-group">
+        <label>Description</label>
+        <input type="text" name="description" placeholder="Brief description">
       </div>
-      <button type="submit" class="btn primary" style="padding:10px 20px; width:100%;">Create Category</button>
+      <button type="submit" class="btn-primary">Create Category</button>
     </form>
   </div>
 
   <!-- Categories Table -->
-  <div style="overflow-x:auto; border:1px solid var(--line); border-radius:12px;">
-    <table style="width:100%; border-collapse:collapse; font-size:14px;">
+  <div class="table-container">
+    <table class="categories-table">
       <thead>
-        <tr style="background:rgba(255,255,255,0.04); border-bottom:1px solid var(--line);">
-          <th style="padding:12px; text-align:left; color:var(--muted); font-weight:500;">Category</th>
-          <th style="padding:12px; text-align:left; color:var(--muted); font-weight:500;">Description</th>
-          <th style="padding:12px; text-align:center; color:var(--muted); font-weight:500;">Apps</th>
-          <th style="padding:12px; text-align:center; color:var(--muted); font-weight:500;">Actions</th>
+        <tr>
+          <th>Category</th>
+          <th>Description</th>
+          <th>Apps</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         {% for category in categories %}
-          <tr style="border-bottom:1px solid var(--line); hover:background:rgba(255,255,255,0.02);">
-            <td style="padding:12px;">
-              <div style="font-weight:500;">{{ category.name }}</div>
-            </td>
-            <td style="padding:12px;">
-              <div style="color:var(--muted); font-size:13px;">{{ category.description|default:"No description" }}</div>
-            </td>
-            <td style="padding:12px; text-align:center;">{{ category.apps.count }}</td>
-            <td style="padding:12px; text-align:center;">
-              <div style="display:flex; gap:6px; justify-content:center;">
-                <a href="{% url 'admin_panel:categories_edit' pk=category.pk %}" class="btn secondary" style="padding:6px 10px; font-size:12px;">Edit</a>
-                <form method="post" action="{% url 'admin_panel:categories_delete' pk=category.pk %}" style="display:inline;" onsubmit="return confirm('Are you sure?');">
-                  {% csrf_token %}
-                  <button type="submit" class="btn" style="padding:6px 10px; font-size:12px; background:rgba(251,113,133,0.15); border:1px solid rgba(251,113,133,0.3); color:rgba(251,113,133,0.9); cursor:pointer;">Delete</button>
-                </form>
+          <tr>
+            <td class="category-name">{{ category.name }}</td>
+            <td class="category-description">{{ category.description|default:"No description" }}</td>
+            <td class="apps-count">{{ category.apps.count }}</td>
+            <td class="actions-cell">
+              <div class="actions-group">
+                <a href="{% url 'admin_panel:categories_view' pk=category.pk %}" class="btn-action view">View</a>
+                <a href="{% url 'admin_panel:categories_edit' pk=category.pk %}" class="btn-action edit">Edit</a>
+                <button type="button" onclick="openDeleteModal({{ category.pk }}, '{{ category.name }}')" class="btn-action delete">Delete</button>
               </div>
             </td>
           </tr>
         {% empty %}
           <tr>
-            <td colspan="4" style="padding:32px; text-align:center; color:var(--muted);">No categories found</td>
+            <td colspan="4" class="empty-state">No categories found</td>
           </tr>
         {% endfor %}
       </tbody>
@@ -72,11 +66,63 @@
   </div>
 </div>
 
-<style>
-  input[type="text"],
-  textarea,
-  select {
-    box-sizing: border-box;
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="modal">
+  <div class="modal-content">
+    <!-- Icon & Title -->
+    <div class="modal-icon">⚠️</div>
+    <div class="modal-header">
+      <h2>Delete Category?</h2>
+      <p>This action cannot be undone</p>
+    </div>
+
+    <!-- Warning Message -->
+    <div class="modal-warning">
+      <strong id="categoryName"></strong> will be permanently deleted
+    </div>
+
+    <!-- Buttons -->
+    <div class="modal-actions">
+      <button type="button" onclick="closeDeleteModal()" class="btn-cancel">Cancel</button>
+      <form id="deleteForm" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn-delete-confirm">Delete Permanently</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+var currentCategoryId = null;
+
+function openDeleteModal(categoryId, categoryName) {
+  currentCategoryId = categoryId;
+  document.getElementById('categoryName').textContent = categoryName;
+  
+  // Set form action dynamically
+  const form = document.getElementById('deleteForm');
+  form.action = '/admin-panel/categories/' + categoryId + '/delete/';
+  
+  document.getElementById('deleteModal').classList.add('show');
+}
+
+function closeDeleteModal() {
+  document.getElementById('deleteModal').classList.remove('show');
+  currentCategoryId = null;
+}
+
+// Close modal when clicking outside of it
+document.getElementById('deleteModal').addEventListener('click', function(e) {
+  if (e.target === this) {
+    closeDeleteModal();
   }
-</style>
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeDeleteModal();
+  }
+});
+</script>
 {% endblock %}

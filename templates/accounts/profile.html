@@ -188,18 +188,118 @@
     
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
       <!-- Change Password -->
-      <button type="button" class="btn" style="background:rgba(251,191,36,0.15); border:1px solid rgba(251,191,36,0.3); color:rgba(251,191,36,0.9); display:block; text-align:center; padding:10px; width:100%; cursor:pointer;" onclick="alert('Password change feature coming soon!');">
-        Change Password
+      <button type="button" class="btn" style="background:rgba(251,191,36,0.15); border:1px solid rgba(251,191,36,0.3); color:rgba(251,191,36,0.9); display:block; text-align:center; padding:10px; width:100%; cursor:pointer; font-weight:600;" onclick="openPasswordResetModal();">
+        🔑 Change Password
       </button>
       
       <!-- Logout -->
       <form method="post" action="{% url 'accounts:logout' %}" style="display:inline-block; width:100%;">
         {% csrf_token %}
-        <button type="submit" class="btn" style="background:rgba(251,113,133,0.15); border:1px solid rgba(251,113,133,0.3); color:rgba(251,113,133,0.9); width:100%; cursor:pointer;">
-          Logout
+        <button type="submit" class="btn" style="background:rgba(251,113,133,0.15); border:1px solid rgba(251,113,133,0.3); color:rgba(251,113,133,0.9); width:100%; cursor:pointer; font-weight:600;">
+          🚪 Logout
         </button>
       </form>
     </div>
   </div>
 </div>
+
+<!-- Password Reset Confirmation Modal -->
+<div id="passwordResetModal" style="
+  display:none; 
+  position:fixed; 
+  top:0; 
+  left:0; 
+  right:0; 
+  bottom:0; 
+  background:rgba(0,0,0,0.7); 
+  backdrop-filter:blur(4px);
+  z-index:1000; 
+  justify-content:center; 
+  align-items:center;
+  padding:20px;
+">
+  <div style="
+    background:var(--bg); 
+    border:1px solid var(--line); 
+    border-radius:16px; 
+    padding:32px; 
+    max-width:400px; 
+    width:100%;
+    box-shadow:0 20px 60px rgba(0,0,0,0.4);
+  ">
+    <!-- Icon & Title -->
+    <div style="text-align:center; margin-bottom:24px;">
+      <div style="font-size:48px; margin-bottom:16px;">🔐</div>
+      <h2 style="margin:0 0 8px; font-size:20px;">Change Password?</h2>
+      <p style="margin:0; color:var(--muted); font-size:14px;">We'll send a verification code to your email</p>
+    </div>
+
+    <!-- Info Box -->
+    <div style="
+      padding:12px 16px; 
+      background:rgba(59,130,246,0.15); 
+      border:1px solid rgba(59,130,246,0.3); 
+      border-radius:8px; 
+      color:rgba(59,130,246,0.9); 
+      font-size:13px;
+      margin-bottom:24px;
+      line-height:1.6;
+    ">
+      <strong style="display:block; margin-bottom:6px;">📧 Process:</strong>
+      <ul style="margin:0; padding-left:16px;">
+        <li>Receive a 6-digit code on your email</li>
+        <li>Verify the code</li>
+        <li>Create your new password</li>
+      </ul>
+    </div>
+
+    <!-- Buttons -->
+    <div style="display:flex; gap:12px;">
+      <button type="button" onclick="closePasswordResetModal()" class="btn secondary" style="flex:1; padding:10px; cursor:pointer; border-radius:8px; border:1px solid var(--line); background:rgba(255,255,255,0.04); color:var(--text); font-weight:500;">
+        Cancel
+      </button>
+      <a href="{% url 'accounts:password_reset' %}" class="btn primary" style="
+        flex:1; 
+        padding:10px; 
+        background:linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+        border:none;
+        color:white; 
+        border-radius:8px; 
+        cursor:pointer; 
+        font-weight:600;
+        text-decoration:none;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+      ">
+        Continue
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+function openPasswordResetModal() {
+  document.getElementById('passwordResetModal').style.display = 'flex';
+}
+
+function closePasswordResetModal() {
+  document.getElementById('passwordResetModal').style.display = 'none';
+}
+
+// Close modal when clicking outside of it
+document.getElementById('passwordResetModal').addEventListener('click', function(e) {
+  if (e.target === this) {
+    closePasswordResetModal();
+  }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closePasswordResetModal();
+  }
+});
+</script>
 {% endblock %}

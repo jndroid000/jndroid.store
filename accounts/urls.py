@@ -12,4 +12,9 @@ urlpatterns = [
     path("resend-verification/", views.resend_verification_email, name="resend_verification"),
     path("profile/", views.profile_view, name="profile"),
     path("edit-profile/", views.edit_profile_view, name="edit_profile"),
+    
+    # Password Reset URLs
+    path("password-reset/", views.password_reset_view, name="password_reset"),
+    path("password-reset/verify-otp/<str:email>/", views.password_reset_verify_otp_view, name="password_reset_verify_otp"),
+    path("password-reset/new-password/<str:email>/", views.password_reset_new_password_view, name="password_reset_new_password"),
 ]

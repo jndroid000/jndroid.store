@@ -1,69 +1,290 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}Edit Category - Admin{% endblock %}
-{% block extra_css %}<link rel="stylesheet" href="{% static 'css/review_form.css' %}">{% endblock %}
 
 {% block content %}
-<div style="padding:20px; max-width:600px; margin:0 auto;">
-  <!-- Header -->
+<div style="padding:20px; max-width:700px; margin:0 auto;">
+  <!-- Header with Navigation -->
   <div style="margin-bottom:32px;">
-    <a href="{% url 'admin_panel:categories_list' %}" style="display:inline-flex; align-items:center; gap:8px; color:#3b82f6; text-decoration:none; margin-bottom:20px;">
-      <span>←</span> Back to Categories
+    <a href="{% url 'admin_panel:categories_list' %}" style="display:inline-flex; align-items:center; gap:8px; color:#3b82f6; text-decoration:none; margin-bottom:20px; font-size:14px; font-weight:500; cursor:pointer;">
+      <span style="font-size:18px;">←</span> Back to Categories
     </a>
-    <h1 style="margin:0 0 8px; font-size:32px;">Edit Category</h1>
-    <p style="color:var(--muted);">{{ category.name }}</p>
+    <h1 style="margin:0 0 4px; font-size:32px;">✏️ Edit Category</h1>
+    <p style="margin:0; color:var(--muted); font-size:14px;">Update category information</p>
   </div>
 
   <!-- Messages -->
   {% if messages %}
-    <div style="margin-bottom:16px;">
+    <div style="margin-bottom:24px;">
       {% for message in messages %}
-        <div style="padding:12px; border-radius:12px; margin-bottom:8px; background:rgba(34,197,94,0.15); border:1px solid rgba(34,197,94,0.3); color:rgba(34,197,94,0.9);">
-          {{ message }}
+        <div style="
+          padding:12px 16px; 
+          border-radius:8px; 
+          margin-bottom:8px; 
+          background:rgba(34,197,94,0.15); 
+          border:1px solid rgba(34,197,94,0.3); 
+          color:rgba(34,197,94,0.9);
+          font-size:14px;
+        ">
+          ✓ {{ message }}
         </div>
       {% endfor %}
     </div>
   {% endif %}
 
-  <!-- Form -->
-  <form method="post" class="reviewForm">
+  <!-- Edit Form -->
+  <form method="post" style="padding:24px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:16px; margin-bottom:24px;">
     {% csrf_token %}
     
-    <div class="formGroup">
-      <label for="name">Category Name *</label>
-      <input type="text" name="name" id="name" value="{{ category.name }}" required style="width:100%; padding:10px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box;">
+    <!-- Category Name -->
+    <div style="margin-bottom:24px;">
+      <label for="name" style="display:block; margin-bottom:8px; font-weight:600; font-size:14px;">Category Name *</label>
+      <input 
+        type="text" 
+        name="name" 
+        id="name" 
+        value="{{ category.name }}" 
+        required 
+        style="
+          width:100%; 
+          padding:12px; 
+          background:rgba(255,255,255,0.04); 
+          border:1px solid var(--line); 
+          border-radius:8px; 
+          color:var(--text); 
+          box-sizing:border-box;
+          font-size:14px;
+          transition:all 0.2s ease;
+        "
+      >
+      <p style="margin:4px 0 0; color:var(--muted); font-size:12px;">The name of the category as shown to users</p>
     </div>
 
-    <div class="formGroup">
-      <label for="description">Description</label>
-      <textarea name="description" id="description" style="width:100%; padding:10px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:8px; color:var(--text); box-sizing:border-box; min-height:100px;">{{ category.description }}</textarea>
+    <!-- Description -->
+    <div style="margin-bottom:24px;">
+      <label for="description" style="display:block; margin-bottom:8px; font-weight:600; font-size:14px;">Description</label>
+      <textarea 
+        name="description" 
+        id="description" 
+        style="
+          width:100%; 
+          padding:12px; 
+          background:rgba(255,255,255,0.04); 
+          border:1px solid var(--line); 
+          border-radius:8px; 
+          color:var(--text); 
+          box-sizing:border-box;
+          min-height:120px;
+          font-size:14px;
+          font-family:inherit;
+          resize:vertical;
+          transition:all 0.2s ease;
+        "
+      >{{ category.description }}</textarea>
+      <p style="margin:4px 0 0; color:var(--muted); font-size:12px;">A detailed description of the category for users</p>
     </div>
 
-    <div style="padding:16px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:12px; margin-bottom:24px;">
-      <div style="color:var(--muted); font-size:13px;">
-        <strong>Apps in this category:</strong> {{ category.apps.count }}
+    <!-- Info Section -->
+    <div style="padding:16px; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.3); border-radius:12px; margin-bottom:24px;">
+      <div style="color:rgba(59,130,246,0.9); font-size:13px; line-height:1.6;">
+        <strong style="display:block; margin-bottom:8px;">📊 Category Stats</strong>
+        <div>Apps in this category: <strong>{{ category.apps.count }}</strong></div>
+        <div>Category slug: <strong style="font-family:monospace; background:rgba(0,0,0,0.2); padding:2px 6px; border-radius:4px;">{{ category.slug }}</strong></div>
+        <div>Display order: <strong>#{{ category.order }}</strong></div>
       </div>
     </div>
 
-    <div style="display:flex; gap:12px;">
-      <button type="submit" class="btn primary" style="flex:1; padding:12px;">Save Changes</button>
-      <a href="{% url 'admin_panel:categories_list' %}" class="btn secondary" style="flex:1; padding:12px; text-align:center; text-decoration:none;">Cancel</a>
+    <!-- Form Actions -->
+    <div style="display:flex; gap:12px; margin-bottom:24px; padding-top:24px; border-top:1px solid var(--line);">
+      <button type="submit" class="btn primary" style="
+        flex:1; 
+        padding:12px; 
+        cursor:pointer; 
+        border-radius:8px;
+        font-weight:600;
+        border:none;
+        background:linear-gradient(135deg, #3b82f6 0%, #2d5fe8 100%);
+        color:white;
+        transition:all 0.2s ease;
+      ">
+        💾 Save Changes
+      </button>
+      <a href="{% url 'admin_panel:categories_list' %}" class="btn secondary" style="
+        flex:1; 
+        padding:12px; 
+        text-align:center; 
+        text-decoration:none;
+        border-radius:8px;
+        font-weight:600;
+        background:rgba(255,255,255,0.08);
+        border:1px solid var(--line);
+        color:var(--text);
+        cursor:pointer;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        transition:all 0.2s ease;
+      ">
+        ✕ Cancel
+      </a>
+    </div>
+
+    <!-- Delete Section -->
+    <div style="padding:16px; background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); border-radius:12px; padding-bottom:16px;">
+      <div style="color:rgba(239,68,68,0.9); margin-bottom:12px; font-size:13px;">
+        <strong style="display:block; margin-bottom:6px;">⚠️ Danger Zone</strong>
+        Delete this category permanently
+      </div>
+      <button type="button" onclick="showDeleteModal()" class="btn" style="
+        width:100%; 
+        padding:10px; 
+        background:rgba(239,68,68,0.9); 
+        border:1px solid rgba(239,68,68,0.9); 
+        color:white; 
+        border-radius:8px; 
+        cursor:pointer; 
+        font-weight:600;
+        transition:all 0.2s ease;
+      ">
+        🗑️ Delete Category
+      </button>
     </div>
   </form>
 </div>
 
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" style="
+  display:none; 
+  position:fixed; 
+  top:0; 
+  left:0; 
+  right:0; 
+  bottom:0; 
+  background:rgba(0,0,0,0.7); 
+  backdrop-filter:blur(4px);
+  z-index:1000; 
+  justify-content:center; 
+  align-items:center;
+  padding:20px;
+">
+  <div style="
+    background:var(--bg); 
+    border:1px solid var(--line); 
+    border-radius:16px; 
+    padding:32px; 
+    max-width:400px; 
+    width:100%;
+    box-shadow:0 20px 60px rgba(0,0,0,0.4);
+  ">
+    <!-- Icon & Title -->
+    <div style="text-align:center; margin-bottom:24px;">
+      <div style="font-size:48px; margin-bottom:16px;">⚠️</div>
+      <h2 style="margin:0 0 8px; font-size:20px;">Delete Category?</h2>
+      <p style="margin:0; color:var(--muted); font-size:14px;">This action cannot be undone</p>
+    </div>
+
+    <!-- Warning Message -->
+    <div style="
+      padding:12px 16px; 
+      background:rgba(239,68,68,0.15); 
+      border:1px solid rgba(239,68,68,0.3); 
+      border-radius:8px; 
+      color:rgba(239,68,68,0.9); 
+      font-size:13px;
+      margin-bottom:24px;
+    ">
+      <strong>{{ category.name }}</strong> will be permanently deleted
+    </div>
+
+    <!-- Buttons -->
+    <div style="display:flex; gap:12px;">
+      <button type="button" onclick="hideDeleteModal()" class="btn secondary" style="
+        flex:1; 
+        padding:10px; 
+        cursor:pointer; 
+        border-radius:8px; 
+        border:1px solid var(--line);
+        background:rgba(255,255,255,0.04);
+        color:var(--text);
+        font-weight:500;
+        transition:all 0.2s ease;
+      ">
+        Cancel
+      </button>
+      <form method="post" action="{% url 'admin_panel:categories_delete' pk=category.pk %}" style="flex:1;">
+        {% csrf_token %}
+        <button type="submit" class="btn" style="
+          width:100%; 
+          padding:10px; 
+          background:rgba(239,68,68,0.9); 
+          border:1px solid rgba(239,68,68,0.9); 
+          color:white; 
+          border-radius:8px; 
+          cursor:pointer; 
+          font-weight:500;
+          transition:all 0.2s ease;
+        ">
+          Delete Permanently
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+function showDeleteModal() {
+  document.getElementById('deleteModal').style.display = 'flex';
+}
+
+function hideDeleteModal() {
+  document.getElementById('deleteModal').style.display = 'none';
+}
+
+// Close modal when clicking outside of it
+document.getElementById('deleteModal').addEventListener('click', function(e) {
+  if (e.target === this) {
+    hideDeleteModal();
+  }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    hideDeleteModal();
+  }
+});
+
+// Add focus effects to inputs
+document.querySelectorAll('input, textarea').forEach(input => {
+  input.addEventListener('focus', function() {
+    this.style.background = 'rgba(59,130,246,0.08)';
+    this.style.borderColor = '#3b82f6';
+  });
+  input.addEventListener('blur', function() {
+    this.style.background = 'rgba(255,255,255,0.04)';
+    this.style.borderColor = 'var(--line)';
+  });
+});
+</script>
+
 <style>
-  .formGroup {
-    margin-bottom: 24px;
+  input[type="text"],
+  textarea,
+  select {
+    box-sizing: border-box;
   }
-  .formGroup label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    font-size: 14px;
+
+  .btn.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(59,130,246,0.3);
   }
-  textarea {
-    resize: vertical;
+
+  .btn.secondary:hover {
+    background:rgba(255,255,255,0.12);
+  }
+
+  button:hover {
+    transform: translateY(-2px);
   }
 </style>
 {% endblock %}

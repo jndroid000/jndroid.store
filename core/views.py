@@ -277,6 +277,8 @@ def users_edit(request, pk):
 
 @login_required(login_url='accounts:login')
 @user_passes_test(is_admin)
+@login_required(login_url='accounts:login')
+@user_passes_test(is_admin)
 def categories_list(request):
     """List all categories"""
     categories = Category.objects.all().annotate(apps_count=Count('apps'))
@@ -286,6 +288,22 @@ def categories_list(request):
         'title': 'Categories Management',
     }
     return render(request, 'admin/categories_list.html', context)
+
+
+@login_required(login_url='accounts:login')
+@user_passes_test(is_admin)
+@require_http_methods(["GET"])
+def categories_view(request, pk):
+    """View category details (read-only)"""
+    category = get_object_or_404(Category, pk=pk)
+    apps = category.apps.all().count()
+    
+    context = {
+        'category': category,
+        'apps': apps,
+        'title': f'View {category.name}',
+    }
+    return render(request, 'admin/categories_view.html', context)
 
 
 @login_required(login_url='accounts:login')

@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}View Category - Admin{% endblock %}
+
+{% block content %}
+<div style="padding:20px; max-width:700px; margin:0 auto;">
+  <!-- Header with Navigation -->
+  <div style="margin-bottom:32px;">
+    <a href="{% url 'admin_panel:categories_list' %}" style="display:inline-flex; align-items:center; gap:8px; color:#3b82f6; text-decoration:none; margin-bottom:20px; font-size:14px; font-weight:500; cursor:pointer;">
+      <span style="font-size:18px;">←</span> Back to Categories
+    </a>
+  </div>
+
+  <!-- Category Card -->
+  <div style="background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:16px; padding:32px; margin-bottom:24px;">
+    <!-- Category Header -->
+    <div style="display:flex; align-items:center; gap:16px; margin-bottom:32px;">
+      <div style="font-size:64px; line-height:1;">{{ category.icon }}</div>
+      <div>
+        <h1 style="margin:0 0 4px; font-size:32px;">{{ category.name }}</h1>
+        <p style="margin:0; color:var(--muted); font-size:14px;">Category ID: #{{ category.pk }}</p>
+      </div>
+    </div>
+
+    <!-- Details Grid -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:16px; margin-bottom:32px;">
+      <!-- Apps Count -->
+      <div style="padding:16px; background:rgba(255,255,255,0.02); border:1px solid var(--line); border-radius:12px; text-align:center;">
+        <div style="font-size:28px; font-weight:bold; color:#3b82f6; margin-bottom:4px;">{{ apps }}</div>
+        <div style="color:var(--muted); font-size:12px;">Apps in Category</div>
+      </div>
+
+      <!-- Slug -->
+      <div style="padding:16px; background:rgba(255,255,255,0.02); border:1px solid var(--line); border-radius:12px;">
+        <div style="color:var(--muted); font-size:11px; text-transform:uppercase; margin-bottom:4px;">Slug</div>
+        <div style="font-family:monospace; font-size:13px; word-break:break-all;">{{ category.slug }}</div>
+      </div>
+
+      <!-- Color -->
+      <div style="padding:16px; background:rgba(255,255,255,0.02); border:1px solid var(--line); border-radius:12px;">
+        <div style="color:var(--muted); font-size:11px; text-transform:uppercase; margin-bottom:4px;">Color</div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div style="width:24px; height:24px; background:{{ category.color }}; border-radius:6px; border:1px solid var(--line);"></div>
+          <code style="font-size:12px;">{{ category.color }}</code>
+        </div>
+      </div>
+
+      <!-- Order -->
+      <div style="padding:16px; background:rgba(255,255,255,0.02); border:1px solid var(--line); border-radius:12px; text-align:center;">
+        <div style="font-size:20px; font-weight:bold; color:#f39c12; margin-bottom:4px;">{{ category.order }}</div>
+        <div style="color:var(--muted); font-size:12px;">Display Order</div>
+      </div>
+    </div>
+
+    <!-- Description Section -->
+    {% if category.description %}
+      <div style="margin-bottom:32px;">
+        <h3 style="margin:0 0 12px; font-size:14px; text-transform:uppercase; color:var(--muted);">Description</h3>
+        <div style="padding:16px; background:rgba(255,255,255,0.02); border:1px solid var(--line); border-radius:12px; color:var(--text); line-height:1.6;">
+          {{ category.description }}
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- Icon Class Section -->
+    {% if category.icon_class %}
+      <div style="margin-bottom:32px;">
+        <h3 style="margin:0 0 12px; font-size:14px; text-transform:uppercase; color:var(--muted);">Icon Class (FontAwesome)</h3>
+        <div style="padding:12px 16px; background:rgba(255,255,255,0.02); border:1px solid var(--line); border-radius:12px;">
+          <code style="font-family:monospace; font-size:13px;">{{ category.icon_class }}</code>
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- Status Section -->
+    <div style="display:flex; gap:12px; margin-bottom:32px; padding-top:12px; border-top:1px solid var(--line);">
+      <div style="flex:1;">
+        <div style="color:var(--muted); font-size:12px; text-transform:uppercase; margin-bottom:6px;">Status</div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <div style="width:8px; height:8px; border-radius:50%; background:{% if category.is_active %}#22c55e{% else %}#ef4444{% endif %};"></div>
+          <span style="font-weight:500;">{% if category.is_active %}Active{% else %}Inactive{% endif %}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="display:flex; gap:12px; padding-top:12px; border-top:1px solid var(--line);">
+      <a href="{% url 'admin_panel:categories_edit' pk=category.pk %}" class="btn primary" style="flex:1; padding:12px; text-align:center; text-decoration:none; display:block; border-radius:8px;">
+        ✏️ Edit Category
+      </a>
+      <button type="button" onclick="showDeleteModal()" class="btn" style="flex:1; padding:12px; border-radius:8px; background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); color:rgba(239,68,68,0.9); cursor:pointer; font-weight:500;">
+        🗑️ Delete Category
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" style="
+  display:none; 
+  position:fixed; 
+  top:0; 
+  left:0; 
+  right:0; 
+  bottom:0; 
+  background:rgba(0,0,0,0.7); 
+  backdrop-filter:blur(4px);
+  z-index:1000; 
+  justify-content:center; 
+  align-items:center;
+  padding:20px;
+">
+  <div style="
+    background:var(--bg); 
+    border:1px solid var(--line); 
+    border-radius:16px; 
+    padding:32px; 
+    max-width:400px; 
+    width:100%;
+    box-shadow:0 20px 60px rgba(0,0,0,0.4);
+  ">
+    <!-- Icon & Title -->
+    <div style="text-align:center; margin-bottom:24px;">
+      <div style="font-size:48px; margin-bottom:16px;">⚠️</div>
+      <h2 style="margin:0 0 8px; font-size:20px;">Delete Category?</h2>
+      <p style="margin:0; color:var(--muted); font-size:14px;">This action cannot be undone</p>
+    </div>
+
+    <!-- Warning Message -->
+    <div style="
+      padding:12px 16px; 
+      background:rgba(239,68,68,0.15); 
+      border:1px solid rgba(239,68,68,0.3); 
+      border-radius:8px; 
+      color:rgba(239,68,68,0.9); 
+      font-size:13px;
+      margin-bottom:24px;
+    ">
+      <strong>{{ category.name }}</strong> will be permanently deleted
+    </div>
+
+    <!-- Buttons -->
+    <div style="display:flex; gap:12px;">
+      <button type="button" onclick="hideDeleteModal()" class="btn secondary" style="flex:1; padding:10px; cursor:pointer; border-radius:8px;">
+        Cancel
+      </button>
+      <form method="post" action="{% url 'admin_panel:categories_delete' pk=category.pk %}" style="flex:1;">
+        {% csrf_token %}
+        <button type="submit" class="btn" style="
+          width:100%; 
+          padding:10px; 
+          background:rgba(239,68,68,0.9); 
+          border:1px solid rgba(239,68,68,0.9); 
+          color:white; 
+          border-radius:8px; 
+          cursor:pointer; 
+          font-weight:500;
+        ">
+          Delete Permanently
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+function showDeleteModal() {
+  document.getElementById('deleteModal').style.display = 'flex';
+}
+
+function hideDeleteModal() {
+  document.getElementById('deleteModal').style.display = 'none';
+}
+
+// Close modal when clicking outside of it
+document.getElementById('deleteModal').addEventListener('click', function(e) {
+  if (e.target === this) {
+    hideDeleteModal();
+  }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    hideDeleteModal();
+  }
+});
+</script>
+
+<style>
+.btn {
+  transition: all 0.2s ease;
+  font-size:14px;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn.primary:hover {
+  background:linear-gradient(135deg, #3b82f6 0%, #2d5fe8 100%);
+}
+
+.btn.secondary {
+  background:rgba(255,255,255,0.08);
+  border:1px solid var(--line);
+  color:var(--text);
+}
+
+.btn.secondary:hover {
+  background:rgba(255,255,255,0.12);
+}
+</style>
+{% endblock %}

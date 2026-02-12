@@ -21,6 +21,7 @@ urlpatterns = [
     # Categories Management
     path("categories/", views.categories_list, name="categories_list"),
     path("categories/create/", views.categories_create, name="categories_create"),
+    path("categories/<int:pk>/view/", views.categories_view, name="categories_view"),
     path("categories/<int:pk>/edit/", views.categories_edit, name="categories_edit"),
     path("categories/<int:pk>/delete/", views.categories_delete, name="categories_delete"),
     

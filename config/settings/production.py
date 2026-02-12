@@ -64,7 +64,7 @@ ADMIN_EMAIL = os.getenv('ADMIN_EMAIL', 'admin@jndroid.store')
 # ==================== ALLAUTH SETTINGS ====================
 # Email verification
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = os.getenv('ACCOUNT_EMAIL_VERIFICATION', 'optional')  # 'optional', 'mandatory', 'none'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # Force email verification on production
 ACCOUNT_AUTHENTICATE_ON_EMAIL = True
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 
