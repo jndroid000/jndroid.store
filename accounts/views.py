@@ -29,17 +29,13 @@ def login_view(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            try:
-                # User is authenticated in form.clean()
-                login(request, form.user, backend='django.contrib.auth.backends.ModelBackend')
-                messages.success(request, 'Login successful!')
-                
-                # Redirect to next page or home
-                next_page = request.GET.get('next', 'home')
-                return redirect(next_page)
-            except Exception as e:
-                logger.error(f"Error during login process: {str(e)}", exc_info=True)
-                messages.error(request, 'An error occurred during login. Please try again.')
+            # User is authenticated in form.clean()
+            login(request, form.user, backend='django.contrib.auth.backends.ModelBackend')
+            messages.success(request, 'Login successful!')
+            
+            # Redirect to next page or home
+            next_page = request.GET.get('next', 'home')
+            return redirect(next_page)
         else:
             # Check if form has unverified email
             if hasattr(form, 'unverified_email') and form.unverified_email:

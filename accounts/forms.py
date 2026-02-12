@@ -124,9 +124,7 @@ class LoginForm(forms.Form):
     def clean(self):
         """Authenticate user"""
         from django.contrib.auth.hashers import check_password
-        import logging
         
-        logger = logging.getLogger(__name__)
         cleaned_data = super().clean()
         username = cleaned_data.get('username')
         password = cleaned_data.get('password')
@@ -146,7 +144,6 @@ class LoginForm(forms.Form):
                     user = User.objects.get(email=username)
                 except User.DoesNotExist:
                     # User doesn't exist
-                    logger.warning(f"Login attempt for non-existent user: {username}")
                     raise forms.ValidationError('Invalid username/email or password')
             
             # Now check password
@@ -156,17 +153,14 @@ class LoginForm(forms.Form):
                 if not user.is_active:
                     # Email is not verified - store email for modal display
                     self.unverified_email = user.email
-                    logger.info(f"Login attempted with unverified email: {user.email}")
                     raise forms.ValidationError('UNVERIFIED_EMAIL')
                 
                 # User is verified, set authenticated user with backend
                 # Required when multiple backends are configured
                 user.backend = 'django.contrib.auth.backends.ModelBackend'
                 self.user = user
-                logger.info(f"User authenticated successfully: {user.username}")
             else:
                 # Password is incorrect
-                logger.warning(f"Login attempt with incorrect password for user: {username}")
                 raise forms.ValidationError('Invalid username/email or password')
         
         return cleaned_data
