@@ -20,7 +20,7 @@ Ubuntu VPS এ Update করার Steps:
 ssh root@217.15.164.196
 
 # 2. Backend folder এ যাও
-cd /var/www/jndroid.store/backend
+cd /var/www/jndroid.store/
 
 # 3. Git থেকে latest code pull করো
 git pull origin main
