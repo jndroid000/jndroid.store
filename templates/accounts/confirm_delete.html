@@ -1,0 +1,473 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Confirm Account Deletion - JnDroid Store{% endblock %}
+{% block extra_css %}
+<style>
+  .confirm-container { max-width: 700px; margin: 40px auto; padding: 20px; }
+  
+  .confirm-header {
+    background: linear-gradient(135deg, rgba(229,62,62,0.15) 0%, rgba(239,68,68,0.1) 100%);
+    border: 2px solid rgba(229,62,62,0.3);
+    border-radius: 16px;
+    padding: 40px 24px;
+    margin-bottom: 32px;
+    text-align: center;
+  }
+  
+  .confirm-header h1 { 
+    color: rgba(239,68,68,0.95);
+    margin: 0 0 12px;
+    font-size: 28px;
+  }
+  
+  .confirm-header p {
+    color: var(--muted);
+    margin: 0;
+    font-size: 14px;
+  }
+  
+  .countdown-box {
+    background: linear-gradient(135deg, rgba(249,115,22,0.15) 0%, rgba(249,115,22,0.08) 100%);
+    border: 2px solid rgba(249,115,22,0.3);
+    border-radius: 16px;
+    padding: 40px 24px;
+    margin-bottom: 32px;
+    text-align: center;
+  }
+  
+  .countdown-box h2 {
+    color: rgba(249,115,22,0.95);
+    margin: 0 0 16px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .countdown-value {
+    font-size: 56px;
+    font-weight: bold;
+    color: rgba(249,115,22,0.95);
+    margin: 20px 0;
+    font-family: 'Courier New', monospace;
+  }
+  
+  .countdown-label {
+    color: var(--muted);
+    font-size: 14px;
+  }
+  
+  .countdown-date {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(249,115,22,0.2);
+    border-radius: 10px;
+    padding: 12px;
+    margin-top: 16px;
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  
+  .info-section {
+    background: rgba(16,185,129,0.1);
+    border: 1px solid rgba(16,185,129,0.3);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 28px;
+  }
+  
+  .info-section h2 {
+    color: rgba(5,150,105,0.95);
+    font-size: 16px;
+    margin: 0 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .info-section p {
+    color: var(--text);
+    font-size: 14px;
+    margin: 12px 0;
+    line-height: 1.6;
+  }
+  
+  .info-section p:first-of-type { margin-top: 0; }
+  
+  .warning-section {
+    background: rgba(255,193,7,0.1);
+    border: 1px solid rgba(255,193,7,0.3);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 28px;
+  }
+  
+  .warning-section h2 {
+    color: rgba(217,119,6,0.95);
+    font-size: 16px;
+    margin: 0 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .warning-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .warning-section li {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,193,7,0.1);
+    color: var(--text);
+    font-size: 14px;
+  }
+  
+  .warning-section li:last-child { border-bottom: none; }
+  
+  .action-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+  
+  .action-buttons form {
+    flex: 1;
+    min-width: 160px;
+  }
+  
+  .action-buttons button {
+    width: 100%;
+    padding: 14px 24px;
+    border-radius: 10px;
+    border: none;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-cancel {
+    background: linear-gradient(135deg, rgba(34,197,94,0.15), rgba(34,197,94,0.08));
+    border: 1px solid rgba(34,197,94,0.3);
+    color: rgba(34,197,94,0.95);
+  }
+  
+  .btn-cancel:hover {
+    background: linear-gradient(135deg, rgba(34,197,94,0.25), rgba(34,197,94,0.15));
+    border-color: rgba(34,197,94,0.5);
+  }
+  
+  .btn-confirm {
+    background: linear-gradient(135deg, rgba(239,68,68,0.2), rgba(239,68,68,0.1));
+    border: 1px solid rgba(239,68,68,0.3);
+    color: rgba(239,68,68,0.95);
+  }
+  
+  .btn-confirm:hover {
+    background: linear-gradient(135deg, rgba(239,68,68,0.3), rgba(239,68,68,0.15));
+    border-color: rgba(239,68,68,0.5);
+  }
+  
+  .confirmation-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin: 20px 0;
+    padding: 16px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+  }
+  
+  .confirmation-checkbox input {
+    margin-top: 4px;
+    accent-color: rgba(239,68,68,0.95);
+    cursor: pointer;
+  }
+  
+  .confirmation-checkbox label {
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text);
+    flex: 1;
+  }
+  
+  /* Popup Modal Styles */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  .modal-overlay.active {
+    display: flex;
+  }
+  
+  .modal-content {
+    background: var(--bg);
+    border: 2px solid rgba(239,68,68,0.3);
+    border-radius: 16px;
+    padding: 40px 32px;
+    max-width: 450px;
+    width: 100%;
+    box-shadow: 0 25px 50px rgba(239,68,68,0.2);
+    animation: scaleUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  
+  .modal-icon {
+    font-size: 64px;
+    text-align: center;
+    margin-bottom: 20px;
+    animation: bounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  
+  .modal-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: rgba(239,68,68,0.95);
+    margin: 0 0 12px;
+    text-align: center;
+  }
+  
+  .modal-message {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.6;
+    margin: 0 0 28px;
+    text-align: center;
+  }
+  
+  .modal-buttons {
+    display: flex;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .modal-buttons button {
+    flex: 1;
+    padding: 12px 20px;
+    border-radius: 10px;
+    border: none;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .modal-btn-ok {
+    background: linear-gradient(135deg, rgba(239,68,68,0.2), rgba(239,68,68,0.1));
+    border: 1px solid rgba(239,68,68,0.3);
+    color: rgba(239,68,68,0.95);
+  }
+  
+  .modal-btn-ok:hover {
+    background: linear-gradient(135deg, rgba(239,68,68,0.3), rgba(239,68,68,0.15));
+    border-color: rgba(239,68,68,0.5);
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes scaleUp {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  
+  @keyframes bounce {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { opacity: 1; }
+    70% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="confirm-container">
+  <!-- Header -->
+  <div class="confirm-header">
+    <h1>⏳ Account Deletion Confirmed</h1>
+    <p>Your account will be permanently deleted in 3 days</p>
+  </div>
+
+  <!-- Messages -->
+  {% if messages %}
+    <div style="margin-bottom:24px;">
+      {% for message in messages %}
+        <div style="padding:16px 20px; border-radius:12px; background:linear-gradient(135deg, {% if message.tags %}
+        {% if 'error' in message.tags %}rgba(239,68,68,0.15), rgba(239,68,68,0.08){% elif 'info' in message.tags %}rgba(59,130,246,0.15), rgba(59,130,246,0.08){% else %}rgba(34,197,94,0.15), rgba(34,197,94,0.08){% endif %}
+        {% else %}rgba(34,197,94,0.15), rgba(34,197,94,0.08){% endif %}); border:1px solid {% if message.tags %}
+        {% if 'error' in message.tags %}rgba(239,68,68,0.3){% elif 'info' in message.tags %}rgba(59,130,246,0.3){% else %}rgba(34,197,94,0.3){% endif %}
+        {% else %}rgba(34,197,94,0.3){% endif %}; color:{% if message.tags %}
+        {% if 'error' in message.tags %}rgba(239,68,68,0.95){% elif 'info' in message.tags %}rgba(59,130,246,0.95){% else %}rgba(34,197,94,0.95){% endif %}
+        {% else %}rgba(34,197,94,0.95){% endif %}; font-size:14px; display:flex; align-items:center; gap:10px; font-weight:500;">
+          <i class="fas {% if message.tags %}
+          {% if 'error' in message.tags %}fa-exclamation-circle{% elif 'info' in message.tags %}fa-info-circle{% else %}fa-check-circle{% endif %}
+          {% else %}fa-check-circle{% endif %}"></i>
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Countdown Box -->
+  <div class="countdown-box">
+    <h2>
+      <i class="fas fa-hourglass-end"></i> Time Remaining
+    </h2>
+    <div class="countdown-value">{{ countdown_days }} Days</div>
+    <div class="countdown-label">Until your account is permanently deleted</div>
+    <div class="countdown-date">
+      📅 Will be deleted on: {{ deletion_date|date:"l, F j, Y \a\t g:i A" }}
+    </div>
+  </div>
+
+  <!-- Good News Section -->
+  <div class="info-section">
+    <h2>
+      <i class="fas fa-smile"></i> Good News - You Can Cancel
+    </h2>
+    <p>
+      During the next 3 days, you can return to your profile and click "Cancel Deletion" to stop the process. Your account will be fully restored and you can continue using it normally.
+    </p>
+    <p>
+      Simply log in to your account anytime and access the "Danger Zone" section in your profile settings.
+    </p>
+  </div>
+
+  <!-- What Will Happen Section -->
+  <div class="warning-section">
+    <h2>
+      <i class="fas fa-exclamation-triangle"></i> What Will Happen After 3 Days
+    </h2>
+    <ul>
+      <li>✗ Your account will be permanently deleted</li>
+      <li>✗ All personal data will be removed</li>
+      <li>✗ You won't be able to log in anymore</li>
+      <li>✗ Your reviews will be anonymized</li>
+      <li>✗ This action cannot be reversed</li>
+    </ul>
+  </div>
+
+  <!-- Confirmation Form -->
+  <form method="post" id="confirmForm">
+    {% csrf_token %}
+    
+    <!-- Confirmation Checkbox -->
+    <div class="confirmation-checkbox">
+      <input 
+        type="checkbox" 
+        id="understand" 
+        name="understand" 
+      >
+      <label for="understand">
+        I understand that my account will be permanently deleted in 3 days and I can cancel anytime during this period.
+      </label>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <form method="post" style="flex: 1; min-width: 160px;">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="cancel">
+        <button type="submit" class="btn-cancel">
+          <i class="fas fa-undo"></i> Cancel Deletion Now
+        </button>
+      </form>
+      
+      <button type="button" class="btn-confirm" id="proceedBtn" onclick="handleProceed()">
+        <i class="fas fa-check"></i> Proceed with Deletion
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- Confirmation Popup Modal -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-content">
+    <div class="modal-icon">⚠️</div>
+    <h2 class="modal-title">Confirmation Required</h2>
+    <p class="modal-message">
+      Please confirm that you understand the deletion process by checking the checkbox before proceeding.
+    </p>
+    <div class="modal-buttons">
+      <button type="button" class="modal-btn-ok" onclick="closeModal()">
+        <i class="fas fa-check"></i> I Understand
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Handle Proceed button click
+  function handleProceed() {
+    const checkbox = document.getElementById('understand');
+    
+    // Check if checkbox is checked
+    if (!checkbox.checked) {
+      // Show modal popup
+      showModal();
+      return false;
+    }
+    
+    // If checkbox is checked, submit the form with action=confirm
+    const form = document.getElementById('confirmForm');
+    const actionInput = document.createElement('input');
+    actionInput.type = 'hidden';
+    actionInput.name = 'action';
+    actionInput.value = 'confirm';
+    form.appendChild(actionInput);
+    form.submit();
+  }
+  
+  // Show modal
+  function showModal() {
+    const modal = document.getElementById('confirmModal');
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  
+  // Close modal
+  function closeModal() {
+    const modal = document.getElementById('confirmModal');
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  
+  // Close modal when clicking outside
+  document.getElementById('confirmModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      closeModal();
+    }
+  });
+  
+  // Close modal with Escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeModal();
+    }
+  });
+</script>
+{% endblock %}
+
+

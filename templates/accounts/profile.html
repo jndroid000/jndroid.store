@@ -1,211 +1,580 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Developer Profile - JnDroid Store{% endblock %}
-{% block extra_css %}{% endblock %}
+{% block title %}My Profile - JnDroid Store{% endblock %}
+{% block extra_css %}
+<style>
+  .profile-container { max-width: 1200px; margin: 0 auto; }
+  
+  .profile-header {
+    background: linear-gradient(135deg, rgba(139,92,246,0.25) 0%, rgba(59,130,246,0.15) 100%);
+    border: 1px solid rgba(139,92,246,0.4);
+    border-radius: 16px;
+    padding: 32px 24px;
+    margin-bottom: 32px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(139,92,246,0.1);
+    animation: slideDown 0.5s ease;
+  }
+  
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .profile-header-content { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; }
+  
+  .profile-avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    flex-shrink: 0;
+    border: 3px solid rgba(139,92,246,0.6);
+    box-shadow: 0 10px 30px rgba(139,92,246,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .profile-avatar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.2), transparent);
+    animation: shimmer 3s infinite;
+  }
+  
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  
+  .profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .profile-info { flex: 1; min-width: 250px; }
+  .profile-info h1 { margin: 0 0 8px; font-size: 28px; font-weight: 700; }
+  .profile-info-username { color: var(--muted); margin: 0 0 4px; font-size: 15px; display: flex; align-items: center; gap: 6px; }
+  .profile-info-joined { color: var(--muted); font-size: 13px; margin: 0; }
+  
+  .profile-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    background: rgba(34,197,94,0.15);
+    border: 1px solid rgba(34,197,94,0.3);
+    border-radius: 20px;
+    color: rgba(34,197,94,0.9);
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 8px;
+  }
+  
+  .edit-profile-btn {
+    padding: 12px 24px;
+    font-size: 14px;
+    border-radius: 10px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    font-weight: 600;
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 16px rgba(139,92,246,0.3);
+  }
+  
+  .edit-profile-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(139,92,246,0.4);
+  }
+  
+  .section-title {
+    margin: 0 0 24px;
+    font-size: 20px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .section-title::before {
+    content: '';
+    width: 4px;
+    height: 24px;
+    background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+    border-radius: 2px;
+  }
+  
+  .info-card {
+    padding: 24px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+  }
+  
+  .info-card:hover {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(139,92,246,0.4);
+  }
+  
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  
+  .info-row:last-child { border-bottom: none; }
+  .info-label { color: var(--muted); font-size: 14px; font-weight: 500; }
+  .info-value { font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+  
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  
+  .stat-card {
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .stat-card:hover {
+    transform: translateY(-4px);
+  }
+  
+  .stat-card:hover::before { opacity: 1; }
+  .stat-icon { font-size: 24px; margin-bottom: 12px; }
+  .stat-label { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+  .stat-value { font-size: 18px; font-weight: 700; }
+  
+  .quick-links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+  }
+  
+  .quick-link {
+    padding: 20px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--text);
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .quick-link:hover {
+    background: rgba(139,92,246,0.15);
+    border-color: rgba(139,92,246,0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(139,92,246,0.15);
+  }
+  
+  .quick-link-icon { font-size: 28px; margin-bottom: 10px; }
+  .quick-link-text { font-weight: 600; font-size: 13px; }
+  
+  .action-buttons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+  }
+  
+  .action-btn {
+    padding: 14px 16px;
+    border: 1px solid;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-align: center;
+    background: rgba(255,255,255,0.04);
+  }
+  
+  .action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139,92,246,0.2);
+  }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="profile-container">
   <!-- Profile Header -->
-  <div style="margin-bottom:32px; padding:24px; background:linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1)); border-radius:16px; border:1px solid rgba(139,92,246,0.2);">
-    <div style="display:flex; align-items:center; gap:20px; margin-bottom:20px;">
+  <div class="profile-header">
+    <div class="profile-header-content">
       <!-- Avatar -->
-      <div style="width:100px; height:100px; border-radius:12px; background:linear-gradient(135deg, #3b82f6, #8b5cf6); display:flex; align-items:center; justify-content:center; color:white; font-size:40px; font-weight:bold;">
-        {{ user.username|first|upper }}
+      <div class="profile-avatar">
+        {% if user.profile.avatar %}
+          <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}">
+        {% else %}
+          {{ user.first_name|first|default:user.username|first|upper }}
+        {% endif %}
       </div>
       
       <!-- Basic Info -->
-      <div style="flex:1;">
-        <h1 style="margin:0 0 8px; font-size:28px;">{{ user.username }}</h1>
-        <p style="color:var(--muted); margin:0 0 8px;">Developer Account</p>
-        <p style="color:var(--muted); font-size:13px; margin:0;">Member since {{ user.date_joined|date:"F Y" }}</p>
+      <div class="profile-info">
+        <h1>{{ user.get_full_name|default:user.username }}</h1>
+        <p class="profile-info-username">
+          <i class="fas fa-at"></i>{{ user.username }}
+        </p>
+        <p class="profile-info-joined">
+          <i class="fas fa-calendar-alt"></i> Joined {{ user.date_joined|date:"F d, Y" }}
+        </p>
+        {% if user.is_active %}
+          <span class="profile-badge">✓ Active Account</span>
+        {% endif %}
       </div>
       
-      <!-- Developer Badge -->
-      <div style="padding:12px 16px; background:rgba(34,197,94,0.15); border:1px solid rgba(34,197,94,0.3); border-radius:12px; color:rgba(34,197,94,0.9);">
-        ✓ Verified Developer
-      </div>
+      <!-- Edit Button -->
+      <a href="{% url 'accounts:edit_profile' %}" class="edit-profile-btn">
+        <i class="fas fa-edit"></i> Edit Profile
+      </a>
     </div>
   </div>
 
   <!-- Messages -->
   {% if messages %}
-    <div style="margin-bottom:16px;">
+    <div style="margin-bottom:24px; animation: slideDown 0.5s ease;">
       {% for message in messages %}
-        <div style="padding:12px; border-radius:12px; margin-bottom:8px; background:rgba(34,197,94,0.15); border:1px solid rgba(34,197,94,0.3); color:rgba(34,197,94,0.9);">
+        <div style="padding:16px 20px; border-radius:12px; background:linear-gradient(135deg, rgba(34,197,94,0.15), rgba(34,197,94,0.08)); border:1px solid rgba(34,197,94,0.3); color:rgba(34,197,94,0.95); font-size:14px; display:flex; align-items:center; gap:10px; font-weight:500;">
+          <i class="fas fa-check-circle"></i>
           {{ message }}
         </div>
       {% endfor %}
     </div>
   {% endif %}
 
-  <!-- Developer Stats -->
-  <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:32px;">
-    <!-- Total Apps -->
-    <div style="padding:20px; background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.2); border-radius:12px;">
-      <div style="font-size:24px; font-weight:bold; color:#3b82f6; margin-bottom:4px;">{{ user.apps.count }}</div>
-      <div style="color:var(--muted); font-size:13px;">Apps Published</div>
-    </div>
-    
-    <!-- Total Downloads -->
-    <div style="padding:20px; background:rgba(139,92,246,0.1); border:1px solid rgba(139,92,246,0.2); border-radius:12px;">
-      <div style="font-size:24px; font-weight:bold; color:#8b5cf6; margin-bottom:4px;">{{ total_downloads }}</div>
-      <div style="color:var(--muted); font-size:13px;">Total Downloads</div>
-    </div>
-    
-    <!-- Avg Rating -->
-    <div style="padding:20px; background:rgba(251,191,36,0.1); border:1px solid rgba(251,191,36,0.2); border-radius:12px;">
-      <div style="font-size:24px; font-weight:bold; color:#fbbf24; margin-bottom:4px;">{{ avg_rating|floatformat:1 }}/5</div>
-      <div style="color:var(--muted); font-size:13px;">Average Rating</div>
-    </div>
-    
-    <!-- Total Reviews -->
-    <div style="padding:20px; background:rgba(236,72,153,0.1); border:1px solid rgba(236,72,153,0.2); border-radius:12px;">
-      <div style="font-size:24px; font-weight:bold; color:#ec4899; margin-bottom:4px;">{{ total_reviews }}</div>
-      <div style="color:var(--muted); font-size:13px;">Reviews Received</div>
-    </div>
-  </div>
-
-  <!-- My Apps Section -->
-  <div style="margin-bottom:32px;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-      <h2 style="margin:0;">My Applications</h2>
-      <div style="display:flex; gap:12px;">
-        <a href="{% url 'apps:my_apps' %}" class="btn secondary" style="padding:8px 16px; font-size:14px;">📋 View All Apps</a>
-        <a href="{% url 'apps:upload' %}" class="btn primary" style="padding:8px 16px; font-size:14px;">+ Upload New App</a>
+  <!-- Account Deletion Status Alert -->
+  {% if user.is_pending_deletion %}
+    <div style="margin-bottom:24px; padding:20px; border-radius:14px; background:linear-gradient(135deg, rgba(249,115,22,0.15), rgba(249,115,22,0.08)); border:2px solid rgba(249,115,22,0.3); animation: slideDown 0.5s ease; backdrop-filter: blur(10px);">
+      <div style="display:flex; align-items:flex-start; gap:16px;">
+        <div style="font-size:28px; flex-shrink:0; animation: pulse 2s infinite;">⏳</div>
+        <div style="flex:1;">
+          <h3 style="margin:0 0 8px; font-size:16px; font-weight:700; color:rgba(249,115,22,0.95);">Account Deletion in Progress</h3>
+          <p style="margin:0 0 12px; color:var(--text); font-size:14px;">Your account is scheduled for permanent deletion.</p>
+          <div style="background:rgba(249,115,22,0.1); padding:12px; border-radius:8px; margin-bottom:12px; font-size:13px; color:var(--muted);">
+            <strong style="color:rgba(249,115,22,0.95);">Days Remaining: </strong>{{ user.get_deletion_countdown_days }} days (Deletes on {{ user.deletion_scheduled_at|date:"F d, Y \a\t g:i A" }})
+          </div>
+          <p style="margin:0 0 12px; color:var(--text); font-size:13px;">You can still <strong>log in and cancel</strong> the deletion during this period. Once cancelled, your account will be fully restored.</p>
+          <form method="post" action="{% url 'accounts:cancel_delete' %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" style="padding:8px 16px; background:linear-gradient(135deg, rgba(34,197,94,0.2), rgba(34,197,94,0.1)); border:1px solid rgba(34,197,94,0.3); border-radius:6px; color:rgba(34,197,94,0.95); font-weight:600; font-size:12px; cursor:pointer; transition:all 0.3s ease;" onmouseover="this.style.background='linear-gradient(135deg, rgba(34,197,94,0.3), rgba(34,197,94,0.15))'; this.style.borderColor='rgba(34,197,94,0.5)'" onmouseout="this.style.background='linear-gradient(135deg, rgba(34,197,94,0.2), rgba(34,197,94,0.1))'; this.style.borderColor='rgba(34,197,94,0.3)'">
+              <i class="fas fa-undo"></i> Cancel Deletion
+            </button>
+          </form>
+        </div>
       </div>
     </div>
     
-    {% if user.apps.all %}
-      <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(250px, 1fr)); gap:16px;">
-        {% for app in user.apps.all %}
-          <div style="padding:16px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:12px; transition:.12s;">
-            <!-- App Header -->
+    <style>
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.1); opacity: 0.8; }
+      }
+    </style>
+  {% endif %}
+
+  <!-- Account Information Section -->
+  <div style="margin-bottom:32px; animation: slideDown 0.5s ease 0.1s both;">
+    <h2 class="section-title">
+      <i class="fas fa-user"></i> Personal Information
+    </h2>
+    
+    <div class="info-card">
+      <div class="info-row">
+        <span class="info-label"><i class="fas fa-id-card"></i> Full Name</span>
+        <span class="info-value">{{ user.get_full_name|default:"<i class='fas fa-minus' style='color:var(--muted)'></i> Not set" }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label"><i class="fas fa-at"></i> Username</span>
+        <span class="info-value">@{{ user.username }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label"><i class="fas fa-envelope"></i> Email</span>
+        <span class="info-value">{{ user.email }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label"><i class="fas fa-phone"></i> Phone</span>
+        <span class="info-value">{{ user.phone|default:"<i class='fas fa-minus' style='color:var(--muted)'></i> Not set" }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label"><i class="fas fa-calendar"></i> Joined</span>
+        <span class="info-value">{{ user.date_joined|date:"M d, Y" }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Account Stats Section -->
+  <div style="margin-bottom:32px; animation: slideDown 0.5s ease 0.15s both;">
+    <h2 class="section-title">
+      <i class="fas fa-chart-line"></i> Account Activity
+    </h2>
+    
+    <div class="stats-grid">
+      <!-- Last Login -->
+      <div class="stat-card" style="background: rgba(59,130,246,0.1); border-color: rgba(59,130,246,0.2);">
+        <div class="stat-icon">📅</div>
+        <div class="stat-label">Last Login</div>
+        <div class="stat-value" style="color: #3b82f6;">{{ user.last_login|date:"M d, Y H:i"|default:"Never" }}</div>
+      </div>
+      
+      <!-- Account Status -->
+      <div class="stat-card" style="background: rgba(34,197,94,0.1); border-color: rgba(34,197,94,0.2);">
+        <div class="stat-icon">✓</div>
+        <div class="stat-label">Account Status</div>
+        <div class="stat-value" style="color: rgba(34,197,94,0.9);">Active</div>
+      </div>
+      
+      <!-- Email Verification -->
+      <div class="stat-card" style="background: rgba(139,92,246,0.1); border-color: rgba(139,92,246,0.2);">
+        <div class="stat-icon">📧</div>
+        <div class="stat-label">Email Status</div>
+        <div class="stat-value" style="color: #8b5cf6;">{% if user.emailaddress.verified %}Verified{% else %}Pending{% endif %}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Favorite Apps Section -->
+  <div style="margin-bottom:32px; animation: slideDown 0.5s ease 0.2s both;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <h2 class="section-title">
+        <i class="fas fa-heart"></i> Favorite Apps
+      </h2>
+      <span style="background:rgba(255,255,255,0.08); padding:6px 12px; border-radius:20px; font-size:13px; color:var(--muted);">{{ total_favorites }} total</span>
+    </div>
+    
+    {% if favorites %}
+      <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:16px;">
+        {% for favorite in favorites %}
+          <div style="padding:16px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:12px; transition:all 0.3s ease; hover:background:rgba(255,255,255,0.06); hover:border-color:rgba(236,72,153,0.4);">
             <div style="margin-bottom:12px;">
-              <h3 style="margin:0 0 8px; font-size:16px; font-weight:600;">{{ app.title }}</h3>
-              <p style="margin:0; color:var(--muted); font-size:13px;">v{{ app.version }}</p>
-            </div>
-            
-            <!-- Stats -->
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid var(--line);">
-              <div>
-                <div style="font-size:14px; font-weight:600;">{{ app.downloads }}</div>
-                <div style="font-size:12px; color:var(--muted);">Downloads</div>
-              </div>
-              <div>
-                <div style="font-size:14px; font-weight:600;">{{ app.reviews.count }}</div>
-                <div style="font-size:12px; color:var(--muted);">Reviews</div>
-              </div>
-            </div>
-            
-            <!-- Status -->
-            <div style="margin-bottom:12px;">
-              {% if app.is_published %}
-                <span style="display:inline-block; padding:4px 8px; background:rgba(34,197,94,0.15); border:1px solid rgba(34,197,94,0.3); color:rgba(34,197,94,0.9); border-radius:6px; font-size:12px;">Published</span>
+              {% if favorite.app.cover_image %}
+                <img src="{{ favorite.app.cover_image.url }}" alt="{{ favorite.app.title }}" style="width:100%; height:120px; object-fit:cover; border-radius:8px; margin-bottom:12px;">
               {% else %}
-                <span style="display:inline-block; padding:4px 8px; background:rgba(156,163,175,0.15); border:1px solid rgba(156,163,175,0.3); color:rgba(156,163,175,0.9); border-radius:6px; font-size:12px;">Draft</span>
+                <div style="width:100%; height:120px; background:linear-gradient(135deg, rgba(139,92,246,0.3), rgba(59,130,246,0.2)); border-radius:8px; margin-bottom:12px; display:flex; align-items:center; justify-content:center; color:var(--muted);">📱</div>
               {% endif %}
+              <h4 style="margin:0 0 4px; font-size:14px; font-weight:600;">{{ favorite.app.title }}</h4>
+              <p style="margin:0; color:var(--muted); font-size:12px;">{{ favorite.app.category.name }}</p>
             </div>
-            
-            <!-- Actions -->
             <div style="display:flex; gap:8px;">
-              <a href="{% url 'apps:detail' slug=app.slug %}" class="btn secondary" style="flex:1; padding:8px; font-size:13px; text-align:center;">View</a>
-              <a href="{% url 'apps:edit' slug=app.slug %}" class="btn secondary" style="flex:1; padding:8px; font-size:13px; text-align:center;">Edit</a>
+              <a href="{% url 'apps:detail' slug=favorite.app.slug %}" style="flex:1; padding:8px; background:linear-gradient(135deg, rgba(139,92,246,0.15), rgba(139,92,246,0.08)); border:1px solid rgba(139,92,246,0.2); border-radius:6px; text-align:center; text-decoration:none; color:rgba(139,92,246,0.9); font-size:12px; font-weight:600; transition:all 0.3s ease;">
+                View App
+              </a>
             </div>
           </div>
         {% endfor %}
       </div>
     {% else %}
-      <div style="padding:32px; text-align:center; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:12px;">
-        <p style="color:var(--muted); margin:0 0 16px;">You haven't uploaded any apps yet.</p>
-        <a href="{% url 'apps:upload' %}" class="btn primary">Upload Your First App</a>
+      <div style="padding:40px; text-align:center; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:12px;">
+        <div style="font-size:32px; margin-bottom:12px;">❤️</div>
+        <p style="color:var(--muted); margin:0; font-size:14px;">No favorite apps yet. Start adding your favorite apps!</p>
       </div>
     {% endif %}
   </div>
 
-  <!-- Account Information Section -->
-  <div style="margin-bottom:32px;">
+  <!-- Download History Section -->
+  <div style="margin-bottom:32px; animation: slideDown 0.5s ease 0.25s both;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-      <h2 style="margin:0;">Account Information</h2>
-      <a href="{% url 'accounts:edit_profile' %}" class="btn primary" style="padding:8px 16px; font-size:14px;">Edit Profile</a>
+      <h2 class="section-title">
+        <i class="fas fa-download"></i> Download History
+      </h2>
+      <span style="background:rgba(255,255,255,0.08); padding:6px 12px; border-radius:20px; font-size:13px; color:var(--muted);">{{ total_downloads }} downloads</span>
     </div>
     
-    <div style="padding:20px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:12px;">
+    {% if recent_downloads %}
+      <div class="info-card" style="max-height:400px; overflow-y:auto;">
+        {% for download in recent_downloads %}
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:14px; border-bottom:1px solid rgba(255,255,255,0.05); last-child:border-bottom:none;">
+            <div style="display:flex; align-items:center; gap:12px; flex:1;">
+              <div style="width:40px; height:40px; background:linear-gradient(135deg, #59f346, #3b82f6); border-radius:8px; display:flex; align-items:center; justify-content:center; color:white; font-size:18px;">📱</div>
+              <div style="flex:1;">
+                <div style="font-weight:600; font-size:14px;">{{ download.app.title }}</div>
+                <div style="color:var(--muted); font-size:12px;">Downloaded on {{ download.downloaded_at|date:"M d, Y" }}</div>
+              </div>
+            </div>
+            <a href="{% url 'apps:detail' slug=download.app.slug %}" style="padding:6px 12px; background:rgba(139,92,246,0.15); border:1px solid rgba(139,92,246,0.2); border-radius:6px; text-decoration:none; color:rgba(139,92,246,0.9); font-size:12px; font-weight:600;">
+              View
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div style="padding:40px; text-align:center; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:12px;">
+        <div style="font-size:32px; margin-bottom:12px;">📥</div>
+        <p style="color:var(--muted); margin:0; font-size:14px;">No download history yet. Download some apps to see your history here.</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- My Reviews Section -->
+  <div style="margin-bottom:32px; animation: slideDown 0.5s ease 0.3s both;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <h2 class="section-title">
+        <i class="fas fa-star"></i> My Reviews
+      </h2>
+      <span style="background:rgba(255,255,255,0.08); padding:6px 12px; border-radius:20px; font-size:13px; color:var(--muted);">{{ total_reviews }} reviews</span>
+    </div>
+    
+    {% if user_reviews %}
       <div style="display:grid; gap:16px;">
-        <div style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--line);">
-          <div style="color:var(--muted);">Username</div>
-          <div style="font-weight:500;">{{ user.username }}</div>
-        </div>
-        <div style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--line);">
-          <div style="color:var(--muted);">Email</div>
-          <div style="font-weight:500;">{{ user.email }}</div>
-        </div>
-        <div style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--line);">
-          <div style="color:var(--muted);">Full Name</div>
-          <div style="font-weight:500;">{{ user.get_full_name|default:"Not set" }}</div>
-        </div>
-        <div style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--line);">
-          <div style="color:var(--muted);">Phone</div>
-          <div style="font-weight:500;">{{ user.phone|default:"Not set" }}</div>
-        </div>
-        <div style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--line);">
-          <div style="color:var(--muted);">User ID</div>
-          <div style="font-weight:500;">#{{ user.id }}</div>
-        </div>
-        <div style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--line);">
-          <div style="color:var(--muted);">Joined</div>
-          <div style="font-weight:500;">{{ user.date_joined|date:"M d, Y" }}</div>
-        </div>
-        <div style="display:flex; justify-content:space-between; padding:12px 0;">
-          <div style="color:var(--muted);">Last Login</div>
-          <div style="font-weight:500;">{{ user.last_login|date:"M d, Y H:i"|default:"Never" }}</div>
-        </div>
+        {% for review in user_reviews %}
+          <div style="padding:16px; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:10px;">
+              <div>
+                <h4 style="margin:0 0 4px; font-size:14px; font-weight:600;">{{ review.app.title }}</h4>
+                <div style="color:var(--muted); font-size:12px;">{{ review.created_at|date:"M d, Y" }}</div>
+              </div>
+              <div style="display:flex; color:#fbbf24;">
+                {% for i in "12345" %}
+                  {% if i|add:"0" <= review.rating %}★{% else %}☆{% endif %}
+                {% endfor %}
+              </div>
+            </div>
+            {% if review.comment %}
+              <p style="margin:0; color:var(--text); font-size:13px; line-height:1.5;">{{ review.comment|truncatewords:30 }}</p>
+            {% endif %}
+            <a href="{% url 'apps:detail' slug=review.app.slug %}" style="display:inline-block; margin-top:10px; padding:6px 12px; background:rgba(139,92,246,0.15); border:1px solid rgba(139,92,246,0.2); border-radius:6px; text-decoration:none; color:rgba(139,92,246,0.9); font-size:12px; font-weight:600;">
+              View App
+            </a>
+          </div>
+        {% endfor %}
       </div>
-    </div>
+    {% else %}
+      <div style="padding:40px; text-align:center; background:rgba(255,255,255,0.04); border:1px solid var(--line); border-radius:12px;">
+        <div style="font-size:32px; margin-bottom:12px;">⭐</div>
+        <p style="color:var(--muted); margin:0; font-size:14px;">You haven't written any reviews yet. Review apps you've tried!</p>
+      </div>
+    {% endif %}
   </div>
-
-  <!-- Developer Resources -->
-  <div style="margin-bottom:32px; padding:20px; background:linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1)); border:1px solid rgba(139,92,246,0.2); border-radius:12px;">
-    <h3 style="margin:0 0 16px;">Developer Resources</h3>
-    <div style="display:grid; gap:12px;">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <div>
-          <div style="font-weight:500; margin-bottom:4px;">Guidelines</div>
-          <div style="color:var(--muted); font-size:13px;">App submission and quality guidelines</div>
-        </div>
-        <a href="/community-guidelines/" class="btn secondary" style="padding:8px 12px; font-size:13px;">Read</a>
-      </div>
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <div>
-          <div style="font-weight:500; margin-bottom:4px;">Support</div>
-          <div style="color:var(--muted); font-size:13px;">Get help with your apps</div>
-        </div>
-        <a href="/support/" class="btn secondary" style="padding:8px 12px; font-size:13px;">Contact</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- Danger Zone -->
-  <div style="margin-top:32px; padding:20px; border:1px solid rgba(251,113,133,0.3); background:rgba(251,113,133,0.05); border-radius:12px;">
-    <h3 style="margin:0 0 16px; color:rgba(251,113,133,0.9);">Danger Zone</h3>
-    <p style="color:var(--muted); margin:0 0 16px; font-size:13px;">Irreversible and destructive actions</p>
+  <div style="margin-bottom:32px; animation: slideDown 0.5s ease 0.2s both;">
+    <h2 class="section-title">
+      <i class="fas fa-link"></i> Quick Links
+    </h2>
     
-    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+    <div class="quick-links-grid">
+      <a href="{% url 'support' %}" class="quick-link">
+        <div class="quick-link-icon">❓</div>
+        <div class="quick-link-text">Support</div>
+      </a>
+      
+      <a href="/community-guidelines/" class="quick-link">
+        <div class="quick-link-icon">📋</div>
+        <div class="quick-link-text">Guidelines</div>
+      </a>
+      
+      <a href="/privacy/" class="quick-link">
+        <div class="quick-link-icon">🔒</div>
+        <div class="quick-link-text">Privacy</div>
+      </a>
+      
+      <a href="{% url 'terms_of_service' %}" class="quick-link">
+        <div class="quick-link-icon">⚖️</div>
+        <div class="quick-link-text">Terms</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Security & Account Management -->
+  <div style="margin-bottom:32px; padding:28px; border:1px solid rgba(139,92,246,0.3); background:linear-gradient(135deg, rgba(139,92,246,0.08), rgba(139,92,246,0.03)); border-radius:12px; animation: slideDown 0.5s ease 0.25s both; backdrop-filter: blur(10px);">
+    <h3 class="section-title">
+      <i class="fas fa-lock"></i> Security & Account
+    </h3>
+    <p style="color:var(--muted); margin:0 0 20px; font-size:14px;">Manage your account security and preferences</p>
+    
+    <div class="action-buttons-grid">
       <!-- Change Password -->
-      <button type="button" class="btn" style="background:rgba(251,191,36,0.15); border:1px solid rgba(251,191,36,0.3); color:rgba(251,191,36,0.9); display:block; text-align:center; padding:10px; width:100%; cursor:pointer; font-weight:600;" onclick="openPasswordResetModal();">
-        🔑 Change Password
+      <button type="button" class="action-btn" style="background:linear-gradient(135deg, rgba(251,191,36,0.15), rgba(251,191,36,0.08)); border-color: rgba(251,191,36,0.3); color:rgba(251,191,36,0.9);" onclick="openPasswordResetModal();">
+        <i class="fas fa-key"></i> Change Password
       </button>
       
+      <!-- Settings -->
+      <a href="{% url 'accounts:settings' %}" class="action-btn" style="background:linear-gradient(135deg, rgba(139,92,246,0.15), rgba(139,92,246,0.08)); border-color: rgba(139,92,246,0.3); color:rgba(139,92,246,0.9); text-decoration:none;">
+        <i class="fas fa-cog"></i> Settings
+      </a>
+      
       <!-- Logout -->
-      <form method="post" action="{% url 'accounts:logout' %}" style="display:inline-block; width:100%;">
+      <form method="post" action="{% url 'accounts:logout' %}" style="width:100%;">
         {% csrf_token %}
-        <button type="submit" class="btn" style="background:rgba(251,113,133,0.15); border:1px solid rgba(251,113,133,0.3); color:rgba(251,113,133,0.9); width:100%; cursor:pointer; font-weight:600;">
-          🚪 Logout
+        <button type="submit" class="action-btn" style="background:linear-gradient(135deg, rgba(251,113,133,0.15), rgba(251,113,133,0.08)); border-color: rgba(251,113,133,0.3); color:rgba(251,113,133,0.9); width:100%;">
+          <i class="fas fa-sign-out-alt"></i> Logout
         </button>
       </form>
     </div>
   </div>
-</div>
 
+  <!-- Danger Zone - Delete Account -->
+  <div style="margin-bottom:32px; padding:28px; border:1px solid rgba(251,113,133,0.4); background:linear-gradient(135deg, rgba(251,113,133,0.1), rgba(251,113,133,0.03)); border-radius:12px; animation: slideDown 0.5s ease 0.45s both; backdrop-filter: blur(10px);">
+    <h3 class="section-title" style="color:rgba(251,113,133,0.9);">
+      <i class="fas fa-exclamation-triangle"></i> Danger Zone
+    </h3>
+    {% if user.is_pending_deletion %}
+      <p style="color:var(--muted); margin:0 0 20px; font-size:14px;">Your account deletion is in progress and will be completed in {{ user.get_deletion_countdown_days }} days.</p>
+      <div style="padding:16px; background:rgba(251,113,133,0.05); border:1px solid rgba(251,113,133,0.2); border-radius:10px; margin-bottom:20px;">
+        <p style="margin:0; font-size:13px; color:var(--text); line-height:1.6;">
+          <strong>What happens next:</strong> Your account and all associated data will be permanently deleted on <strong>{{ user.deletion_scheduled_at|date:"F d, Y \a\t g:i A" }}</strong>. You can still cancel this process anytime.
+        </p>
+      </div>
+      <form method="post" action="{% url 'accounts:cancel_delete' %}" style="width:100%;">
+        {% csrf_token %}
+        <button type="submit" class="action-btn" style="background:linear-gradient(135deg, rgba(34,197,94,0.15), rgba(34,197,94,0.08)); border-color: rgba(34,197,94,0.3); color:rgba(34,197,94,0.9); width:100%;">
+          <i class="fas fa-undo"></i> Cancel Account Deletion
+        </button>
+      </form>
+    {% else %}
+      <p style="color:var(--muted); margin:0 0 20px; font-size:14px;">Irreversible and permanent actions</p>
+      
+      <a href="{% url 'accounts:delete_account_request' %}" class="action-btn" style="background:linear-gradient(135deg, rgba(251,113,133,0.2), rgba(251,113,133,0.1)); border-color: rgba(251,113,133,0.4); color:rgba(251,113,133,0.95); width:100%; text-decoration:none; display:block; text-align:center;">
+        <i class="fas fa-trash-alt"></i> Delete Account Permanently
+      </a>
+    {% endif %}
+  </div>
+</div>
 <!-- Password Reset Confirmation Modal -->
 <div id="passwordResetModal" style="
   display:none; 
@@ -215,59 +584,78 @@
   right:0; 
   bottom:0; 
   background:rgba(0,0,0,0.7); 
-  backdrop-filter:blur(4px);
+  backdrop-filter:blur(8px);
   z-index:1000; 
   justify-content:center; 
   align-items:center;
   padding:20px;
+  animation: fadeIn 0.3s ease;
 ">
   <div style="
     background:var(--bg); 
     border:1px solid var(--line); 
     border-radius:16px; 
-    padding:32px; 
-    max-width:400px; 
+    padding:40px; 
+    max-width:420px; 
     width:100%;
-    box-shadow:0 20px 60px rgba(0,0,0,0.4);
+    box-shadow:0 25px 50px rgba(0,0,0,0.5);
+    animation: scaleUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   ">
     <!-- Icon & Title -->
-    <div style="text-align:center; margin-bottom:24px;">
-      <div style="font-size:48px; margin-bottom:16px;">🔐</div>
-      <h2 style="margin:0 0 8px; font-size:20px;">Change Password?</h2>
+    <div style="text-align:center; margin-bottom:28px;">
+      <div style="
+        font-size:56px; 
+        margin-bottom:16px;
+        animation: bounceIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s;
+      ">🔐</div>
+      <h2 style="margin:0 0 8px; font-size:22px; font-weight:700;">Change Password?</h2>
       <p style="margin:0; color:var(--muted); font-size:14px;">We'll send a verification code to your email</p>
     </div>
 
     <!-- Info Box -->
     <div style="
-      padding:12px 16px; 
-      background:rgba(59,130,246,0.15); 
+      padding:16px 20px; 
+      background:linear-gradient(135deg, rgba(59,130,246,0.15), rgba(59,130,246,0.08)); 
       border:1px solid rgba(59,130,246,0.3); 
-      border-radius:8px; 
-      color:rgba(59,130,246,0.9); 
-      font-size:13px;
-      margin-bottom:24px;
-      line-height:1.6;
+      border-radius:10px; 
+      color:rgba(59,130,246,0.95); 
+      font-size:14px;
+      margin-bottom:28px;
+      line-height:1.7;
     ">
-      <strong style="display:block; margin-bottom:6px;">📧 Process:</strong>
-      <ul style="margin:0; padding-left:16px;">
-        <li>Receive a 6-digit code on your email</li>
-        <li>Verify the code</li>
-        <li>Create your new password</li>
+      <strong style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+        <i class="fas fa-info-circle"></i> Process:
+      </strong>
+      <ul style="margin:0; padding-left:24px; list-style:none;">
+        <li style="margin-bottom:8px;"><i class="fas fa-circle-notch" style="margin-right:8px; font-size:8px;"></i> Receive a 6-digit code on your email</li>
+        <li style="margin-bottom:8px;"><i class="fas fa-circle-notch" style="margin-right:8px; font-size:8px;"></i> Verify the code</li>
+        <li><i class="fas fa-circle-notch" style="margin-right:8px; font-size:8px;"></i> Create your new password</li>
       </ul>
     </div>
 
     <!-- Buttons -->
     <div style="display:flex; gap:12px;">
-      <button type="button" onclick="closePasswordResetModal()" class="btn secondary" style="flex:1; padding:10px; cursor:pointer; border-radius:8px; border:1px solid var(--line); background:rgba(255,255,255,0.04); color:var(--text); font-weight:500;">
+      <button type="button" onclick="closePasswordResetModal()" class="btn secondary" style="
+        flex:1; 
+        padding:12px; 
+        cursor:pointer; 
+        border-radius:10px; 
+        border:1px solid var(--line); 
+        background:rgba(255,255,255,0.04); 
+        color:var(--text); 
+        font-weight:600;
+        transition:all 0.3s ease;
+        font-size:14px;
+      " onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background='rgba(255,255,255,0.04)'">
         Cancel
       </button>
       <a href="{% url 'accounts:password_reset' %}" class="btn primary" style="
         flex:1; 
-        padding:10px; 
+        padding:12px; 
         background:linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
         border:none;
         color:white; 
-        border-radius:8px; 
+        border-radius:10px; 
         cursor:pointer; 
         font-weight:600;
         text-decoration:none;
@@ -275,30 +663,57 @@
         align-items:center;
         justify-content:center;
         text-align:center;
-      ">
-        Continue
+        gap:8px;
+        transition:all 0.3s ease;
+        font-size:14px;
+        box-shadow:0 4px 15px rgba(249, 158, 11, 0.3);
+      " onmouseover="this.style.boxShadow='0 8px 25px rgba(249, 158, 11, 0.4)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.boxShadow='0 4px 15px rgba(249, 158, 11, 0.3)'; this.style.transform='translateY(0)'">
+        <i class="fas fa-arrow-right"></i> Continue
       </a>
     </div>
   </div>
 </div>
 
+<style>
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes scaleUp {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  
+  @keyframes bounceIn {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { opacity: 1; }
+    70% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+</style>
+
 <script>
 function openPasswordResetModal() {
-  document.getElementById('passwordResetModal').style.display = 'flex';
+  const modal = document.getElementById('passwordResetModal');
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
 }
 
 function closePasswordResetModal() {
-  document.getElementById('passwordResetModal').style.display = 'none';
+  const modal = document.getElementById('passwordResetModal');
+  modal.style.display = 'none';
+  document.body.style.overflow = '';
 }
 
-// Close modal when clicking outside of it
+// Close modals when clicking outside
 document.getElementById('passwordResetModal').addEventListener('click', function(e) {
   if (e.target === this) {
     closePasswordResetModal();
   }
 });
 
-// Close modal with Escape key
+// Close modals with Escape key
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
     closePasswordResetModal();

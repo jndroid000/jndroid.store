@@ -1,43 +1,582 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Categories - JN App Store{% endblock %}
-{% block extra_css %}<link rel="stylesheet" href="{% static 'css/categories_list.css' %}">{% endblock %}
-
-{% block content %}
-<div class="pageHeader">
-  <h1>📱 Categories</h1>
-  <p>আপনার পছন্দের ক্যাটাগরি খুঁজে পান এবং অ্যাপ ডাউনলোড করুন।</p>
-  <p style="color: #666; margin-top: 10px;">মোট <strong>{{ total_categories }}</strong>টি ক্যাটাগরি</p>
-</div>
-
-{% if categories %}
-<div class="grid3">
-  {% for c in categories %}
-    <a href="{% url 'categories:detail' c.slug %}" class="card" style="--card-color: {{ c.color }}; text-decoration:none; color:inherit; border-left: 4px solid var(--card-color);">
-      <div class="icon" style="font-size: 2.5em;">{{ c.icon }}</div>
-      <h3>{{ c.name }}</h3>
-      {% if c.description %}
-        <p style="font-size: 0.9em; color: #666;">{{ c.description }}</p>
-      {% endif %}
-      <p style="font-weight: bold; color: #3498db;">
-        📥 {{ c.app_count }} App{{ c.app_count|pluralize }}
-      </p>
-    </a>
-  {% endfor %}
-</div>
-{% else %}
-  <div class="noReviews">
-    <p>কোনো ক্যাটাগরি পাওয়া যায়নি।</p>
-  </div>
-{% endif %}
-
+{% block title %}All Categories - JnDroid Store{% endblock %}
+{% block extra_css %}
 <style>
-  .card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  /* Header Section */
+  .categories-header {
+    background: linear-gradient(135deg, rgba(139,92,246,0.15) 0%, rgba(59,130,246,0.1) 100%);
+    border-bottom: 2px solid rgba(139,92,246,0.2);
+    padding: 60px 20px;
+    margin-bottom: 48px;
+    text-align: center;
+    animation: slideDown 0.6s ease;
   }
-  .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+  
+  .categories-header h1 {
+    font-size: 36px;
+    font-weight: 800;
+    margin: 0 0 12px;
+    background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .categories-header p {
+    color: var(--muted);
+    font-size: 14px;
+    margin: 8px 0;
+  }
+  
+  .categories-stats {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  
+  .stat-item strong {
+    color: rgba(139,92,246,0.9);
+    font-size: 16px;
+  }
+  
+  /* Categories Grid */
+  .categories-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+
+  /* Responsive Header */
+  @media (max-width: 1024px) {
+    .categories-header {
+      padding: 50px 20px;
+      margin-bottom: 40px;
+    }
+    
+    .categories-header h1 {
+      font-size: 32px;
+    }
+    
+    .categories-stats {
+      gap: 16px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .categories-header {
+      padding: 40px 16px;
+      margin-bottom: 32px;
+    }
+    
+    .categories-header h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+    
+    .categories-header p {
+      font-size: 13px;
+    }
+    
+    .categories-stats {
+      gap: 12px;
+      margin-top: 16px;
+    }
+    
+    .stat-item {
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+    
+    .stat-item strong {
+      font-size: 14px;
+    }
+    
+    .categories-container {
+      padding: 0 16px 60px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .categories-header {
+      padding: 32px 12px;
+      margin-bottom: 24px;
+    }
+    
+    .categories-header h1 {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+    
+    .categories-header p {
+      font-size: 12px;
+      margin: 6px 0;
+    }
+    
+    .categories-stats {
+      gap: 10px;
+      margin-top: 12px;
+    }
+    
+    .stat-item {
+      padding: 5px 10px;
+      font-size: 11px;
+    }
+    
+    .stat-item strong {
+      font-size: 13px;
+    }
+    
+    .categories-container {
+      padding: 0 12px 50px;
+    }
+  }
+  
+  @media (max-width: 320px) {
+    .categories-header {
+      padding: 24px 10px;
+      margin-bottom: 20px;
+    }
+    
+    .categories-header h1 {
+      font-size: 20px;
+    }
+  }
+  
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    animation: fadeIn 0.8s ease 0.2s both;
+  }
+  
+  /* Large Desktop (1200px+) */
+  @media (max-width: 1200px) {
+    .categories-grid {
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+  }
+  
+  /* Tablet (768px - 1023px) */
+  @media (max-width: 1024px) {
+    .categories-grid {
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 18px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .categories-grid {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 14px;
+    }
+  }
+  
+  /* Small Tablet (480px - 767px) */
+  @media (max-width: 600px) {
+    .categories-grid {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 12px;
+    }
+  }
+  
+  /* Mobile (320px - 479px) */
+  @media (max-width: 480px) {
+    .categories-grid {
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px;
+    }
+  }
+  
+  @media (max-width: 380px) {
+    .categories-grid {
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 8px;
+    }
+  }
+  
+  /* Category Card */
+  .category-card {
+    position: relative;
+    padding: 32px 24px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+    border: 1px solid rgba(139,92,246,0.2);
+    overflow: hidden;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .category-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  
+  .category-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(139,92,246,0.4);
+    background: linear-gradient(135deg, rgba(139,92,246,0.15), rgba(59,130,246,0.08));
+    box-shadow: 0 20px 40px rgba(139,92,246,0.2);
+  }
+  
+  .category-card:hover::before {
+    opacity: 1;
+  }
+  
+  /* Responsive Card Padding */
+  @media (max-width: 768px) {
+    .category-card {
+      padding: 24px 16px;
+      border-radius: 12px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .category-card {
+      padding: 16px 12px;
+      border-radius: 10px;
+    }
+  }
+  
+  @media (max-width: 380px) {
+    .category-card {
+      padding: 12px 8px;
+      border-radius: 8px;
+    }
+  }
+  
+  /* Category Icon */
+  .category-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    background: rgba(139,92,246,0.1);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+  }
+  
+  .category-card:hover .category-icon {
+    background: rgba(139,92,246,0.2);
+    transform: scale(1.1);
+  }
+  
+  /* Responsive Icon */
+  @media (max-width: 768px) {
+    .category-icon {
+      font-size: 40px;
+      width: 70px;
+      height: 70px;
+      margin-bottom: 12px;
+      border-radius: 10px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .category-icon {
+      font-size: 32px;
+      width: 60px;
+      height: 60px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+    }
+  }
+  
+  @media (max-width: 380px) {
+    .category-icon {
+      font-size: 28px;
+      width: 50px;
+      height: 50px;
+      margin-bottom: 8px;
+      border-radius: 6px;
+    }
+  }
+  
+  /* Category Name */
+  .category-name {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--text);
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Category Description */
+  .category-description {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 0 0 16px;
+    line-height: 1.5;
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* App Count */
+  .category-count {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: rgba(139,92,246,0.1);
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(139,92,246,0.95);
+    position: relative;
+    z-index: 1;
+    margin-top: auto;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .category-card:hover .category-count {
+    background: rgba(139,92,246,0.2);
+  }
+  
+  /* Responsive Typography */
+  @media (max-width: 768px) {
+    .category-name {
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+    
+    .category-description {
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+    
+    .category-count {
+      padding: 6px 10px;
+      font-size: 11px;
+      gap: 4px;
+      border-radius: 6px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .category-name {
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    
+    .category-description {
+      font-size: 11px;
+      margin-bottom: 8px;
+    }
+    
+    .category-count {
+      padding: 5px 8px;
+      font-size: 10px;
+      gap: 3px;
+      border-radius: 5px;
+    }
+  }
+  
+  @media (max-width: 380px) {
+    .category-name {
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+    
+    .category-description {
+      font-size: 10px;
+      margin-bottom: 6px;
+    }
+    
+    .category-count {
+      padding: 4px 6px;
+      font-size: 9px;
+      gap: 2px;
+    }
+  }
+  
+  /* Empty State */
+  .empty-state {
+    text-align: center;
+    padding: 80px 40px;
+    animation: fadeIn 0.6s ease;
+  }
+  
+  .empty-state-icon {
+    font-size: 80px;
+    margin-bottom: 20px;
+    opacity: 0.5;
+  }
+  
+  .empty-state h2 {
+    font-size: 24px;
+    margin: 0 0 12px;
+    color: var(--text);
+  }
+  
+  .empty-state p {
+    color: var(--muted);
+    margin: 0;
+    font-size: 14px;
+  }
+  
+  /* Responsive Empty State */
+  @media (max-width: 768px) {
+    .empty-state {
+      padding: 60px 30px;
+    }
+    
+    .empty-state-icon {
+      font-size: 60px;
+      margin-bottom: 16px;
+    }
+    
+    .empty-state h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+    
+    .empty-state p {
+      font-size: 13px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .empty-state {
+      padding: 40px 20px;
+    }
+    
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+    
+    .empty-state h2 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+    
+    .empty-state p {
+      font-size: 12px;
+    }
+  }
+  
+  @media (max-width: 380px) {
+    .empty-state {
+      padding: 30px 15px;
+    }
+    
+    .empty-state-icon {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+    
+    .empty-state h2 {
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+    
+    .empty-state p {
+      font-size: 11px;
+    }
+  }
+  
+  /* Animations */
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 </style>
 {% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="categories-header">
+  <h1>📱 All Categories</h1>
+  <p>আপনার পছন্দের ক্যাটাগরি খুঁজে পান এবং সেরা অ্যাপস আবিষ্কার করুন</p>
+  
+  {% if categories %}
+    <div class="categories-stats">
+      <div class="stat-item">
+        <span>📊 মোট</span>
+        <strong>{{ total_categories }}</strong>
+        <span>ক্যাটাগরি</span>
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+<!-- Categories Container -->
+<div class="categories-container">
+  {% if categories %}
+    <!-- Categories Grid -->
+    <div class="categories-grid">
+      {% for category in categories %}
+        <a href="{% url 'categories:detail' category.slug %}" class="category-card">
+          <!-- Icon -->
+          <div class="category-icon">{{ category.icon }}</div>
+          
+          <!-- Name -->
+          <h3 class="category-name">{{ category.name }}</h3>
+          
+          <!-- Description -->
+          {% if category.description %}
+            <p class="category-description">{{ category.description|truncatewords:5 }}</p>
+          {% endif %}
+          
+          <!-- App Count -->
+          <div class="category-count">
+            <i class="fas fa-download"></i>
+            {{ category.app_count }} App{{ category.app_count|pluralize }}
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <!-- Empty State -->
+    <div class="empty-state">
+      <div class="empty-state-icon">🔍</div>
+      <h2>কোনো ক্যাটাগরি পাওয়া যায়নি</h2>
+      <p>আপস্থানে বর্তমানে কোনো ক্যাটাগরি নেই। পরে আবার চেষ্টা করুন।</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
+

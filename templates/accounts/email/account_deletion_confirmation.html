@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Deletion Confirmation - jnDroid Store</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #ff6b6b;
+            padding-bottom: 20px;
+        }
+        .header h1 {
+            color: #ff6b6b;
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            margin: 20px 0;
+        }
+        .content p {
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        .greeting {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .warning-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .warning-box h3 {
+            color: #ff6b6b;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .warning-box ul {
+            margin: 10px 0;
+            padding-left: 20px;
+            font-size: 13px;
+        }
+        .warning-box li {
+            margin: 5px 0;
+        }
+        .info-box {
+            background-color: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+        .info-box h3 {
+            color: #2196F3;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #666;
+            font-size: 12px;
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .company-info {
+            color: #999;
+            font-size: 11px;
+            margin-top: 15px;
+        }
+        strong {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚠️ Account Deletion Confirmed</h1>
+        </div>
+
+        <div class="content">
+            <p class="greeting">Hello {{ username }},</p>
+
+            <p>
+                This email confirms that your jnDroid Store account has been <strong>permanently deleted</strong> on <strong>{{ date|date:"M d, Y \a\t g:i A" }}</strong>.
+            </p>
+
+            <div class="warning-box">
+                <h3>🔔 What This Means</h3>
+                <ul>
+                    <li>Your account and all associated data have been permanently removed</li>
+                    <li>You can no longer log in with this email address</li>
+                    <li>Your app reviews and downloads history are no longer visible</li>
+                    <li>Any apps you favorited have been removed from your list</li>
+                    <li>Your profile and personal information are no longer accessible</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <h3>📌 Important Information</h3>
+                <p>
+                    If you did not initiate this request or changed your mind, unfortunately the deletion cannot be reversed as it is permanent. However, you can create a new account using the same or a different email address.
+                </p>
+            </div>
+
+            <p>
+                If you have any questions or concerns, please contact our support team at 
+                <strong>support@jndroid.store</strong>.
+            </p>
+
+            <p>Thank you for being part of jnDroid Store!</p>
+        </div>
+
+        <div class="footer">
+            <p><strong>jnDroid Store</strong></p>
+            <p>Your trusted app store for Android applications</p>
+            <div class="company-info">
+                <p>© 2024 jnDroid Store. All rights reserved.</p>
+                <p>This is an automated email. Please do not reply to this message.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

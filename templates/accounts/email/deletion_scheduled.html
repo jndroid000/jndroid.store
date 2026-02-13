@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Deletion Scheduled - jnDroid Store</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #f59e0b;
+            padding-bottom: 20px;
+        }
+        .header h1 {
+            color: #f59e0b;
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            margin: 20px 0;
+        }
+        .content p {
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        .greeting {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .countdown-box {
+            background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+        .countdown-box h3 {
+            margin-top: 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .deletion-date {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .warning-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .warning-box h3 {
+            color: #856404;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .warning-box ul {
+            margin: 10px 0;
+            padding-left: 20px;
+            font-size: 13px;
+        }
+        .warning-box li {
+            margin: 5px 0;
+        }
+        .info-box {
+            background-color: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+        .info-box h3 {
+            color: #10b981;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .cta-box {
+            background-color: #f0f9ff;
+            border-left: 4px solid #0ea5e9;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+        .cta-box h3 {
+            color: #0ea5e9;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .cta-link {
+            color: #0ea5e9;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #666;
+            font-size: 12px;
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .company-info {
+            color: #999;
+            font-size: 11px;
+            margin-top: 15px;
+        }
+        strong {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⏳ Account Deletion Scheduled</h1>
+        </div>
+
+        <div class="content">
+            <p class="greeting">Hello {{ username }},</p>
+
+            <p>
+                Your account deletion request has been confirmed and verified. Your account will be <strong>permanently deleted</strong> on the date shown below.
+            </p>
+
+            <div class="countdown-box">
+                <h3>Your Account Will Be Deleted On</h3>
+                <div class="deletion-date">{{ deletion_date|date:"M d, Y \a\t g:i A" }}</div>
+                <p style="margin: 0; font-size: 13px; opacity: 0.9;">⏰ 3 Days from now</p>
+            </div>
+
+            <div class="warning-box">
+                <h3>⚠️ What Will Happen</h3>
+                <ul>
+                    <li>Your account and all personal data will be permanently deleted</li>
+                    <li>You will no longer be able to log in</li>
+                    <li>Your app reviews and download history will be anonymized</li>
+                    <li>Your profile and preferences will be removed</li>
+                    <li>This action <strong>CANNOT be reversed</strong></li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <h3>✓ Good News - You Can Still Cancel</h3>
+                <p>
+                    During the next 3 days, you can still <strong>log in to your account and cancel the deletion</strong>. Simply go to your profile settings and click "Cancel Deletion" to stop the process.
+                </p>
+            </div>
+
+            <div class="cta-box">
+                <h3>🔐 Want to Cancel?</h3>
+                <p>
+                    You can cancel your account deletion anytime during the 3-day period by visiting <a href="{{ support_link }}" class="cta-link">your account settings</a> or logging in to your account.
+                </p>
+            </div>
+
+            <p>
+                If you have any questions or need assistance, please contact our support team at 
+                <strong>support@jndroid.store</strong>.
+            </p>
+        </div>
+
+        <div class="footer">
+            <p><strong>jnDroid Store</strong></p>
+            <p>Your trusted app store for Android applications</p>
+            <div class="company-info">
+                <p>© 2024 jnDroid Store. All rights reserved.</p>
+                <p>This is an automated email. Please do not reply to this message.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

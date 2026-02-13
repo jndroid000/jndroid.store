@@ -1,0 +1,258 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Verify OTP - Delete Account - JnDroid Store{% endblock %}
+{% block extra_css %}
+<style>
+  .otp-container { max-width: 500px; margin: 40px auto; padding: 20px; }
+  
+  .otp-header {
+    background: linear-gradient(135deg, rgba(139,92,246,0.15) 0%, rgba(59,130,246,0.1) 100%);
+    border: 2px solid rgba(139,92,246,0.3);
+    border-radius: 16px;
+    padding: 32px 24px;
+    margin-bottom: 32px;
+    text-align: center;
+  }
+  
+  .otp-header h1 { 
+    color: rgba(139,92,246,0.95);
+    margin: 0 0 12px;
+    font-size: 28px;
+  }
+  
+  .otp-header p {
+    color: var(--muted);
+    margin: 0;
+    font-size: 14px;
+  }
+  
+  .otp-timer {
+    background: rgba(249,115,22,0.1);
+    border: 1px solid rgba(249,115,22,0.3);
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+    margin-bottom: 24px;
+    color: rgba(139,92,246,0.95);
+    font-weight: 600;
+    font-size: 14px;
+  }
+  
+  .otp-timer i {
+    margin-right: 8px;
+  }
+  
+  .otp-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .otp-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .otp-input-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  
+  .otp-input {
+    padding: 16px;
+    font-size: 24px;
+    letter-spacing: 8px;
+    text-align: center;
+    border: 2px solid rgba(139,92,246,0.2);
+    border-radius: 10px;
+    background: rgba(139,92,246,0.05);
+    font-weight: 600;
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+  }
+  
+  .otp-input:focus {
+    outline: none;
+    border-color: rgba(139,92,246,0.5);
+    background: rgba(139,92,246,0.1);
+    box-shadow: 0 0 0 3px rgba(139,92,246,0.1);
+  }
+  
+  .otp-info {
+    background: rgba(59,130,246,0.1);
+    border: 1px solid rgba(59,130,246,0.3);
+    border-radius: 10px;
+    padding: 16px;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  
+  .otp-info strong {
+    color: rgba(59,130,246,0.95);
+  }
+  
+  .attempts-warning {
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.3);
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+    color: rgba(239,68,68,0.95);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+  }
+  
+  .action-buttons button,
+  .action-buttons a {
+    flex: 1;
+    padding: 14px 24px;
+    border-radius: 10px;
+    border: none;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-back {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--line);
+    color: var(--text);
+  }
+  
+  .btn-back:hover {
+    background: rgba(255,255,255,0.08);
+  }
+  
+  .btn-verify {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    border: none;
+    color: white;
+    box-shadow: 0 4px 15px rgba(139,92,246,0.3);
+  }
+  
+  .btn-verify:hover {
+    box-shadow: 0 8px 24px rgba(139,92,246,0.4);
+    transform: translateY(-2px);
+  }
+  
+  .btn-verify:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .resend-link {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .resend-link a {
+    color: rgba(139,92,246,0.9);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  
+  .resend-link a:hover {
+    text-decoration: underline;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="otp-container">
+  <!-- Header -->
+  <div class="otp-header">
+    <h1>🔐 Verify OTP</h1>
+    <p>Enter the 6-digit code sent to your email</p>
+  </div>
+
+  <!-- Messages -->
+  {% if messages %}
+    <div style="margin-bottom:24px;">
+      {% for message in messages %}
+        <div style="padding:16px 20px; border-radius:12px; background:linear-gradient(135deg, {% if message.tags %}
+        {% if 'error' in message.tags %}rgba(239,68,68,0.15), rgba(239,68,68,0.08){% elif 'info' in message.tags %}rgba(59,130,246,0.15), rgba(59,130,246,0.08){% else %}rgba(34,197,94,0.15), rgba(34,197,94,0.08){% endif %}
+        {% else %}rgba(34,197,94,0.15), rgba(34,197,94,0.08){% endif %}); border:1px solid {% if message.tags %}
+        {% if 'error' in message.tags %}rgba(239,68,68,0.3){% elif 'info' in message.tags %}rgba(59,130,246,0.3){% else %}rgba(34,197,94,0.3){% endif %}
+        {% else %}rgba(34,197,94,0.3){% endif %}; color:{% if message.tags %}
+        {% if 'error' in message.tags %}rgba(239,68,68,0.95){% elif 'info' in message.tags %}rgba(59,130,246,0.95){% else %}rgba(34,197,94,0.95){% endif %}
+        {% else %}rgba(34,197,94,0.95){% endif %}; font-size:14px; display:flex; align-items:center; gap:10px; font-weight:500;">
+          <i class="fas {% if message.tags %}
+          {% if 'error' in message.tags %}fa-exclamation-circle{% elif 'info' in message.tags %}fa-info-circle{% else %}fa-check-circle{% endif %}
+          {% else %}fa-check-circle{% endif %}"></i>
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Timer -->
+  <div class="otp-timer">
+    <i class="fas fa-clock"></i> Code expires in {{ minutes_remaining }} minutes
+  </div>
+
+  <!-- OTP Form -->
+  <form method="post" class="otp-form">
+    {% csrf_token %}
+    
+    <div class="otp-input-group">
+      <label for="otp">Verification Code</label>
+      <input 
+        type="text" 
+        id="otp" 
+        name="otp" 
+        class="otp-input" 
+        placeholder="000000" 
+        maxlength="6" 
+        inputmode="numeric"
+        required
+        autocomplete="off"
+      >
+    </div>
+
+    <!-- Info Box -->
+    <div class="otp-info">
+      <strong>Check your email:</strong> We sent a 6-digit code to your registered email address. It may take a few minutes to arrive. Don't forget to check your spam folder!
+    </div>
+
+    <!-- Attempts Warning -->
+    {% if attempts_remaining <= 2 %}
+      <div class="attempts-warning">
+        ⚠️ {{ attempts_remaining }} attempt{{ attempts_remaining|pluralize }} remaining
+      </div>
+    {% endif %}
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <a href="{% url 'accounts:profile' %}" class="btn-back">
+        <i class="fas fa-times"></i> Cancel
+      </a>
+      <button type="submit" class="btn-verify">
+        <i class="fas fa-check"></i> Verify Code
+      </button>
+    </div>
+  </form>
+
+  <!-- Resend Link -->
+  <div class="resend-link">
+    <p style="color: var(--muted); font-size: 13px; margin-bottom: 12px;">Didn't received the code?</p>
+    <a href="{% url 'accounts:delete_account_request' %}">Request a new code</a>
+  </div>
+</div>
+{% endblock %}

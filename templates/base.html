@@ -235,12 +235,29 @@
   <div class="bottom-menu-modal" id="bottomMenuModal">
     <div class="bottom-menu-content">
       <div class="bottom-menu-header">
+        {% if user.is_authenticated %}
+        <h3>{{ user.first_name|default:user.username }}</h3>
+        {% else %}
         <h3>Menu</h3>
+        {% endif %}
         <button class="bottom-menu-close" id="bottomMenuClose" aria-label="Close menu">
           <i class="fas fa-times"></i>
         </button>
       </div>
       <nav class="bottom-menu-nav">
+        <!-- User Profile Section -->
+        {% if user.is_authenticated %}
+        <a href="{% url 'accounts:profile' %}" class="bottom-menu-item">
+          <i class="fas fa-user-circle"></i>
+          <span>My Profile</span>
+        </a>
+        <a href="{% url 'apps:my_apps' %}" class="bottom-menu-item">
+          <i class="fas fa-star"></i>
+          <span>My Apps</span>
+        </a>
+        {% endif %}
+
+        <!-- Common Menu Items -->
         <a href="{% url 'pwa_guide' %}" class="bottom-menu-item">
           <i class="fas fa-mobile-alt"></i>
           <span>অ্যাপ ইনস্টল গাইড</span>
@@ -249,10 +266,16 @@
           <i class="fas fa-question-circle"></i>
           <span>Support</span>
         </a>
+
+        <!-- Settings - Only for authenticated users -->
+        {% if user.is_authenticated %}
         <a href="{% url 'accounts:settings' %}" class="bottom-menu-item">
           <i class="fas fa-cog"></i>
           <span>Settings</span>
         </a>
+        {% endif %}
+
+        <!-- Legal & Theme -->
         <a href="{% url 'terms_of_service' %}" class="bottom-menu-item">
           <i class="fas fa-file-contract"></i>
           <span>Terms of Service</span>
@@ -261,11 +284,40 @@
           <i class="fas fa-shield-alt"></i>
           <span>Privacy Policy</span>
         </a>
+        
+        <!-- Theme Toggle -->
+        <button class="bottom-menu-item theme-toggle-mobile" id="themeToggleMobile" aria-label="Toggle dark/light mode">
+          <i class="fas fa-moon" id="themeMobileIcon"></i>
+          <span id="themeMobileText">Dark Mode</span>
+        </button>
+
+        <!-- Admin Section -->
         {% if user.is_superuser or user.is_staff %}
         <hr class="menu-divider">
         <a href="{% url 'admin_panel:dashboard' %}" class="bottom-menu-item admin-item">
           <i class="fas fa-crown"></i>
           <span>Admin Dashboard</span>
+        </a>
+        {% endif %}
+
+        <!-- Authentication Buttons -->
+        <hr class="menu-divider">
+        {% if user.is_authenticated %}
+        <form method="post" action="{% url 'accounts:logout' %}" style="width: 100%;">
+          {% csrf_token %}
+          <button type="submit" class="bottom-menu-item logout-item">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+          </button>
+        </form>
+        {% else %}
+        <a href="{% url 'accounts:login' %}" class="bottom-menu-item login-item">
+          <i class="fas fa-sign-in-alt"></i>
+          <span>Login</span>
+        </a>
+        <a href="{% url 'accounts:signup' %}" class="bottom-menu-item signup-item">
+          <i class="fas fa-user-plus"></i>
+          <span>Sign Up</span>
         </a>
         {% endif %}
       </nav>

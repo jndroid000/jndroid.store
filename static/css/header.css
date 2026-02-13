@@ -802,6 +802,116 @@
   margin: 8px 0;
 }
 
+/* ==================== MOBILE MENU AUTHENTICATION BUTTONS ==================== */
+
+.login-item {
+  color: #7c5cff !important;
+}
+
+.login-item:hover {
+  color: #7c5cff !important;
+  border-left: 3px solid #7c5cff !important;
+}
+
+.login-item i {
+  color: #7c5cff;
+}
+
+.signup-item {
+  color: #22c55e !important;
+}
+
+.signup-item:hover {
+  color: #22c55e !important;
+  border-left: 3px solid #22c55e !important;
+}
+
+.signup-item i {
+  color: #22c55e;
+}
+
+.logout-item {
+  color: #ff3e3e !important;
+}
+
+.logout-item:hover {
+  color: #ff3e3e !important;
+  border-left: 3px solid #ff3e3e !important;
+}
+
+.logout-item i {
+  color: #ff3e3e;
+}
+
+.theme-toggle-mobile {
+  color: var(--muted) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: flex !important;
+}
+
+.theme-toggle-mobile:hover {
+  color: #ffd500 !important;
+  border-left: 3px solid #ffd500 !important;
+}
+
+.theme-toggle-mobile i {
+  transition: transform 0.3s ease;
+}
+
+.theme-toggle-mobile:hover i {
+  transform: scale(1.2) rotateZ(20deg) !important;
+}
+
+/* Form button in bottom menu */
+.bottom-menu-nav form {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  display: block;
+}
+
+.bottom-menu-nav form button {
+  width: 100%;
+  margin: 0;
+  padding: 14px 18px;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.bottom-menu-nav form button::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 100%;
+  background: rgba(124, 92, 255, 0.1);
+  transition: width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: -1;
+}
+
+.bottom-menu-nav form button:hover::before {
+  width: 100%;
+}
+
+.bottom-menu-nav form button:hover {
+  border-left: 3px solid #ff3e3e;
+  padding-left: 15px;
+  transform: translateX(2px);
+}
+
 /* Bottom Menu Overlay */
 .bottom-menu-overlay {
   position: fixed;

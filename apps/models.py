@@ -297,3 +297,52 @@ class AppVersion(models.Model):
 
     def __str__(self):
         return f"{self.app.title} v{self.version_number}"
+
+class Favorite(models.Model):
+    """User's favorite/wishlist apps"""
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="favorite_apps"
+    )
+    app = models.ForeignKey(
+        App,
+        on_delete=models.CASCADE,
+        related_name="favorited_by"
+    )
+    added_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ("user", "app")
+        ordering = ["-added_at"]
+        verbose_name_plural = "Favorites"
+    
+    def __str__(self):
+        return f"{self.user.username} favorited {self.app.title}"
+
+
+class AppDownload(models.Model):
+    """Track app downloads for user history"""
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="app_downloads"
+    )
+    app = models.ForeignKey(
+        App,
+        on_delete=models.CASCADE,
+        related_name="downloads_by"
+    )
+    downloaded_at = models.DateTimeField(auto_now_add=True)
+    ip_address = models.GenericIPAddressField(blank=True, null=True)
+    user_agent = models.TextField(blank=True)
+    
+    class Meta:
+        ordering = ["-downloaded_at"]
+        indexes = [
+            models.Index(fields=['user', '-downloaded_at']),
+            models.Index(fields=['app', '-downloaded_at']),
+        ]
+    
+    def __str__(self):
+        return f"{self.user.username} downloaded {self.app.title}"

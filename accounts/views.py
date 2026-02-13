@@ -7,12 +7,15 @@ from django.views.decorators.csrf import csrf_protect
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.conf import settings
+from django.utils import timezone
 from allauth.account.models import EmailAddress, EmailConfirmationHMAC
-from .models import User, PasswordResetOTP
+from .models import User, PasswordResetOTP, AccountDeletionOTP
 from .forms import SignUpForm, LoginForm, ProfileUpdateForm
+from datetime import timedelta
 import logging
 
 logger = logging.getLogger(__name__)
+
 
 
 @require_http_methods(["GET", "POST"])
@@ -356,21 +359,40 @@ def logout_view(request):
 @require_http_methods(["GET"])
 def profile_view(request):
     """Handle user profile viewing"""
-    from django.db.models import Avg, Sum, Count
+    from django.db.models import Count
+    from django.utils import timezone
+    from datetime import timedelta
     
-    # Get developer stats
-    user_apps = request.user.apps.all()
-    total_downloads = user_apps.aggregate(total=Sum('downloads'))['total'] or 0
-    avg_rating = user_apps.aggregate(avg=Avg('reviews__rating'))['avg']
-    total_reviews = sum(app.reviews.count() for app in user_apps)
+    # Get favorites
+    favorites = request.user.favorite_apps.all()[:6]
+    total_favorites = request.user.favorite_apps.count()
+    
+    # Get download history (last 30 days)
+    thirty_days_ago = timezone.now() - timedelta(days=30)
+    recent_downloads = request.user.app_downloads.filter(
+        downloaded_at__gte=thirty_days_ago
+    ).select_related('app')[:10]
+    total_downloads = request.user.app_downloads.count()
+    
+    # Get user reviews
+    user_reviews = request.user.reviews.all()[:6]
+    total_reviews = request.user.reviews.count()
+    
+    # Get login history (last login times)
+    login_history = request.user.app_downloads.values(
+        'downloaded_at'
+    ).distinct()[:5] if request.user.app_downloads.exists() else []
     
     context = {
         'title': 'My Profile',
         'user': request.user,
-        'user_apps': user_apps,
+        'favorites': favorites,
+        'total_favorites': total_favorites,
+        'recent_downloads': recent_downloads,
         'total_downloads': total_downloads,
-        'avg_rating': avg_rating or 0.0,
+        'user_reviews': user_reviews,
         'total_reviews': total_reviews,
+        'last_login': request.user.last_login,
     }
     return render(request, 'accounts/profile.html', context)
 
@@ -614,3 +636,297 @@ def password_reset_new_password_view(request, email):
     }
     return render(request, 'accounts/password_reset_new_password.html', context)
 
+
+@login_required(login_url='accounts:login')
+@login_required(login_url='accounts:login')
+@require_http_methods(["GET", "POST"])
+@csrf_protect
+def delete_account_request_view(request):
+    """Handle user account deletion request - initiate 3-day countdown"""
+    user = request.user
+    
+    if request.method == 'POST':
+        # Generate OTP
+        otp = AccountDeletionOTP.generate_otp()
+        expires_at = timezone.now() + timedelta(minutes=10)  # OTP expires in 10 minutes
+        
+        # Delete any existing OTP and create a new one
+        AccountDeletionOTP.objects.filter(user=user).delete()
+        
+        deletion_otp = AccountDeletionOTP.objects.create(
+            user=user,
+            otp=otp,
+            expires_at=expires_at,
+            is_verified=False,
+            attempts=0,
+        )
+        
+        # Send OTP email
+        try:
+            email_context = {
+                'username': user.username,
+                'otp': otp,
+                'expires_in': '10 minutes',
+            }
+            email_html = render_to_string('accounts/email/deletion_otp.html', email_context)
+            send_mail(
+                '🔐 Account Deletion Verification Code - JnDroid Store',
+                f'Your OTP is: {otp}',
+                settings.DEFAULT_FROM_EMAIL,
+                [user.email],
+                html_message=email_html,
+                fail_silently=False,
+            )
+            messages.info(request, '📧 Verification code sent to your email. Please check your inbox.')
+            return redirect('accounts:verify_delete_otp')
+        except Exception as e:
+            logger.error(f"Failed to send deletion OTP email to {user.email}: {str(e)}")
+            messages.error(request, 'Failed to send verification code. Please try again.')
+            return redirect('accounts:profile')
+    
+    context = {
+        'title': 'Delete Account',
+        'user': request.user,
+    }
+    return render(request, 'accounts/delete_account_request.html', context)
+
+
+@login_required(login_url='accounts:login')
+@require_http_methods(["GET", "POST"])
+@csrf_protect
+def verify_delete_otp_view(request):
+    """Handle OTP verification for account deletion"""
+    user = request.user
+    
+    try:
+        deletion_otp = AccountDeletionOTP.objects.get(user=user)
+    except AccountDeletionOTP.DoesNotExist:
+        messages.error(request, 'No deletion request found. Please start over.')
+        return redirect('accounts:profile')
+    
+    # Check if OTP is already verified
+    if deletion_otp.is_verified:
+        messages.info(request, 'Your deletion request has already been verified.')
+        return redirect('accounts:confirm_delete')
+    
+    if request.method == 'POST':
+        otp = request.POST.get('otp', '').strip()
+        
+        # Check if locked
+        if deletion_otp.is_locked():
+            messages.error(request, '❌ Too many attempts. Please request a new code.')
+            deletion_otp.delete()
+            return redirect('accounts:delete_account_request')
+        
+        # Check if expired
+        if deletion_otp.is_expired():
+            messages.error(request, '⏰ Verification code has expired. Please request a new one.')
+            deletion_otp.delete()
+            return redirect('accounts:delete_account_request')
+        
+        # Verify OTP
+        if otp == deletion_otp.otp:
+            deletion_otp.is_verified = True
+            deletion_otp.save()
+            
+            messages.success(request, '✓ Verification successful!')
+            return redirect('accounts:confirm_delete')
+        else:
+            deletion_otp.increment_attempts()
+            remaining_attempts = deletion_otp.max_attempts - deletion_otp.attempts
+            
+            if remaining_attempts > 0:
+                messages.error(request, f'❌ Incorrect code. {remaining_attempts} attempts remaining.')
+            else:
+                messages.error(request, '❌ Too many attempts. Please request a new code.')
+                deletion_otp.delete()
+                return redirect('accounts:delete_account_request')
+            
+            return redirect('accounts:verify_delete_otp')
+    
+    # Calculate OTP expiration time
+    time_remaining = (deletion_otp.expires_at - timezone.now()).total_seconds()
+    minutes_remaining = int(time_remaining / 60)
+    
+    context = {
+        'title': 'Verify Deletion',
+        'user': request.user,
+        'minutes_remaining': max(0, minutes_remaining),
+        'attempts_remaining': deletion_otp.max_attempts - deletion_otp.attempts,
+    }
+    return render(request, 'accounts/verify_delete_otp.html', context)
+
+
+@login_required(login_url='accounts:login')
+@require_http_methods(["GET", "POST"])
+@csrf_protect
+def confirm_delete_view(request):
+    """Show confirmation page with 3-day countdown before deletion"""
+    user = request.user
+    
+    # Check if user already has a pending deletion
+    if user.is_pending_deletion:
+        # Delete from database
+        user_id = user.id
+        username = user.username
+        email = user.email
+        
+        # Send final deletion email
+        try:
+            email_context = {
+                'username': username,
+                'date': timezone.now().strftime('%B %d, %Y at %H:%M %Z'),
+            }
+            email_html = render_to_string('accounts/email/account_deletion_confirmation.html', email_context)
+            send_mail(
+                '❌ Account Permanently Deleted - JnDroid Store',
+                'Your account has been permanently deleted.',
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                html_message=email_html,
+                fail_silently=True,
+            )
+        except Exception as e:
+            logger.error(f"Failed to send final deletion email: {str(e)}")
+        
+        # Delete user
+        user.delete()
+        logout(request)
+        messages.success(request, '✓ Your account has been permanently deleted.')
+        return redirect('home')
+    
+    # Check if OTP is verified
+    try:
+        deletion_otp = AccountDeletionOTP.objects.get(user=user)
+        if not deletion_otp.is_verified:
+            messages.error(request, 'Please verify your OTP first.')
+            return redirect('accounts:verify_delete_otp')
+    except AccountDeletionOTP.DoesNotExist:
+        messages.error(request, 'No deletion request found.')
+        return redirect('accounts:profile')
+    
+    if request.method == 'POST':
+        action = request.POST.get('action', '')
+        
+        if action == 'confirm':
+            # Set account as pending deletion
+            deletion_time = timezone.now() + timedelta(days=3)
+            user.is_pending_deletion = True
+            user.deletion_requested_at = timezone.now()
+            user.deletion_scheduled_at = deletion_time
+            user.save()
+            
+            # Delete the OTP record
+            deletion_otp.delete()
+            
+            # Send notification email
+            try:
+                email_context = {
+                    'username': user.username,
+                    'deletion_date': deletion_time.strftime('%B %d, %Y at %H:%M'),
+                    'support_link': request.build_absolute_uri('/support/'),
+                }
+                email_html = render_to_string('accounts/email/deletion_scheduled.html', email_context)
+                send_mail(
+                    '⏳ Your Account Will Be Deleted in 3 Days - JnDroid Store',
+                    'Your account deletion has been scheduled for 3 days from now.',
+                    settings.DEFAULT_FROM_EMAIL,
+                    [user.email],
+                    html_message=email_html,
+                    fail_silently=True,
+                )
+            except Exception as e:
+                logger.error(f"Failed to send deletion scheduled email: {str(e)}")
+            
+            messages.success(request, f'✓ Your account will be deleted on {deletion_time.strftime("%B %d, %Y")}. You can still login and cancel during the 3-day period.')
+            return redirect('accounts:profile')
+        
+        elif action == 'cancel':
+            deletion_otp.delete()
+            messages.info(request, 'Account deletion cancelled.')
+            return redirect('accounts:profile')
+    
+    # Calculate countdown
+    countdown_days = 3
+    
+    context = {
+        'title': 'Confirm Account Deletion',
+        'user': request.user,
+        'countdown_days': countdown_days,
+        'deletion_date': timezone.now() + timedelta(days=3),
+    }
+    return render(request, 'accounts/confirm_delete.html', context)
+
+
+@login_required(login_url='accounts:login')
+@require_http_methods(["POST"])
+@csrf_protect
+def cancel_delete_account_view(request):
+    """Cancel pending account deletion"""
+    user = request.user
+    
+    if user.is_pending_deletion:
+        user.is_pending_deletion = False
+        user.deletion_requested_at = None
+        user.deletion_scheduled_at = None
+        user.save()
+        
+        # Clean up any remaining OTP records
+        AccountDeletionOTP.objects.filter(user=user).delete()
+        
+        # Send cancellation email
+        try:
+            email_context = {
+                'username': user.username,
+            }
+            email_html = render_to_string('accounts/email/deletion_cancelled.html', email_context)
+            send_mail(
+                '✓ Your Account Deletion Has Been Cancelled - JnDroid Store',
+                'Your account deletion has been cancelled.',
+                settings.DEFAULT_FROM_EMAIL,
+                [user.email],
+                html_message=email_html,
+                fail_silently=True,
+            )
+        except Exception as e:
+            logger.error(f"Failed to send deletion cancellation email: {str(e)}")
+        
+        messages.success(request, '✓ Your account deletion has been cancelled. Your account is now active.')
+    else:
+        messages.info(request, 'No active deletion request found.')
+    
+    return redirect('accounts:profile')
+
+
+def delete_account_view(request):
+    """Permanently delete user account (called by management command)"""
+    user = request.user
+    username = user.username
+    email = user.email
+    
+    # Send deletion confirmation email
+    try:
+        email_context = {
+            'username': username,
+            'date': timezone.now().strftime('%B %d, %Y at %H:%M %Z'),
+        }
+        email_html = render_to_string('accounts/email/account_deletion_confirmation.html', email_context)
+        send_mail(
+            '❌ Account Deleted - JnDroid Store',
+            'Your account has been permanently deleted.',
+            settings.DEFAULT_FROM_EMAIL,
+            [email],
+            html_message=email_html,
+            fail_silently=True,
+        )
+    except Exception as e:
+        logger.error(f"Failed to send deletion email to {email}: {str(e)}")
+    
+    # Delete user account
+    user.delete()
+    
+    # Logout
+    logout(request)
+    
+    messages.success(request, '✓ Your account has been permanently deleted. All your data has been removed.')
+    return redirect('home')

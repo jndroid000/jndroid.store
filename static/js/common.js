@@ -81,6 +81,15 @@ function initBottomMenuFunctionality() {
     item.addEventListener('click', closeBottomMenu);
   });
 
+  // Also close menu when clicking form buttons in the menu
+  const bottomMenuForms = document.querySelectorAll('.bottom-menu-nav form');
+  bottomMenuForms.forEach(form => {
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.addEventListener('click', closeBottomMenu);
+    }
+  });
+
   // Close menu on ESC key
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && bottomMenuModal.classList.contains('active')) {
@@ -110,31 +119,53 @@ function initFooterFunctionality() {
 // Initialize theme toggle functionality
 function initThemeToggle() {
   const themeToggleMenus = document.querySelectorAll('.theme-toggle-menu');
+  const themeToggleMobile = document.getElementById('themeToggleMobile');
   
-  themeToggleMenus.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      
-      // Get the associated icon based on button ID
-      const isMenu = btn.id.includes('Menu');
-      const iconElement = isMenu ? btn.querySelector('.icon') : btn;
-      
-      // Get current theme
-      const currentTheme = localStorage.getItem('theme') || 'dark';
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      
-      // Save to localStorage
-      localStorage.setItem('theme', newTheme);
-      
-      // Update document
-      document.documentElement.setAttribute('data-theme', newTheme);
-      
-      // Update icon
+  const toggleTheme = () => {
+    // Get current theme
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    // Save to localStorage
+    localStorage.setItem('theme', newTheme);
+    
+    // Update document
+    document.documentElement.setAttribute('data-theme', newTheme);
+    
+    // Update desktop menu icons
+    themeToggleMenus.forEach(btn => {
+      const iconElement = btn.querySelector('.icon') || btn;
       if (iconElement) {
         iconElement.textContent = newTheme === 'dark' ? '☀️' : '🌙';
       }
     });
+    
+    // Update mobile menu icon and text
+    if (themeToggleMobile) {
+      const mobileIcon = document.getElementById('themeMobileIcon');
+      const mobileText = document.getElementById('themeMobileText');
+      if (mobileIcon) {
+        mobileIcon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+      }
+      if (mobileText) {
+        mobileText.textContent = newTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
+      }
+    }
+  };
+  
+  themeToggleMenus.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleTheme();
+    });
   });
+  
+  if (themeToggleMobile) {
+    themeToggleMobile.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleTheme();
+    });
+  }
 }
 
 // Load on document ready
@@ -142,6 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initHeaderFunctionality();
   initBottomMenuFunctionality();
   initSearchModal();
+  initThemeToggle();
 });
 
 // Initialize search modal functionality
