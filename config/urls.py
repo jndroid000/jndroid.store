@@ -25,6 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
     path('support/', support, name='support'),
+    path('pwa-guide/', TemplateView.as_view(template_name='pwa-guides.html'), name='pwa_guide'),
     path('community-guidelines/', community_guidelines, name='community_guidelines'),
     path('report-bug/', report_bug, name='report_bug'),
     path('terms-of-service/', terms_of_service, name='terms_of_service'),

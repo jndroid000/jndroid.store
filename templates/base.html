@@ -35,6 +35,7 @@
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
   <link rel="stylesheet" href="{% static 'css/pages.css' %}">
   <link rel="stylesheet" href="{% static 'css/header.css' %}">
+  <link rel="stylesheet" href="{% static 'css/pwa-banner.css' %}">
   <script src="{% static 'js/theme.js' %}"></script>
   {% block extra_css %}{% endblock %}
 </head>
@@ -195,6 +196,21 @@
     </div>
   </footer>
 
+  <!-- PWA Install Banner -->
+  <div class="pwa-install-banner" id="pwa-install-banner">
+    <div class="pwa-banner-content">
+      <span class="pwa-banner-icon">📱</span>
+      <div class="pwa-banner-text">
+        <span class="pwa-banner-text-title">JnDroid অ্যাপ হিসেবে ইনস্টল করুন</span>
+        <span class="pwa-banner-text-desc">অফলাইনে ব্যবহার করুন, দ্রুত লঞ্চ করুন</span>
+      </div>
+    </div>
+    <div class="pwa-banner-actions">
+      <button id="pwa-install-btn">ইনস্টল করুন</button>
+      <button id="pwa-banner-close" aria-label="Close">✕</button>
+    </div>
+  </div>
+
   <!-- Bottom Navigation Bar -->
   <nav class="bottom-nav-bar" id="bottomNavBar">
     <a href="/" class="bottom-nav-item" aria-label="Home">
@@ -225,6 +241,10 @@
         </button>
       </div>
       <nav class="bottom-menu-nav">
+        <a href="{% url 'pwa_guide' %}" class="bottom-menu-item">
+          <i class="fas fa-mobile-alt"></i>
+          <span>অ্যাপ ইনস্টল গাইড</span>
+        </a>
         <a href="{% url 'support' %}" class="bottom-menu-item">
           <i class="fas fa-question-circle"></i>
           <span>Support</span>
@@ -255,64 +275,7 @@
   <div class="bottom-menu-overlay" id="bottomMenuOverlay"></div>
 
   <script src="{% static 'js/common.js' %}"></script>
-  
-  <!-- Service Worker Registration & PWA Setup -->
-  <script>
-    // Register Service Worker
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js', { scope: '/' })
-          .then((registration) => {
-            console.log('✅ Service Worker registered:', registration);
-            
-            // Check for updates periodically
-            setInterval(() => {
-              registration.update();
-            }, 300000); // Every 5 minutes
-            
-            // Trigger background app caching immediately after registration
-            if (registration.active) {
-              registration.active.postMessage({ type: 'CACHE_POPULAR_APPS' });
-            } else {
-              registration.onupdatefound = () => {
-                const newWorker = registration.installing;
-                newWorker.onstatechange = () => {
-                  if (newWorker.state === 'activated') {
-                    newWorker.postMessage({ type: 'CACHE_POPULAR_APPS' });
-                  }
-                };
-              };
-            }
-          })
-          .catch((error) => {
-            console.warn('⚠️ Service Worker registration failed:', error);
-          });
-      });
-      
-      // Handle Service Worker updates
-      navigator.serviceWorker.addEventListener('controllerchange', () => {
-        console.log('🔄 Service Worker controller changed - page may have been updated');
-        // Optionally show update notification to user
-      });
-    } else {
-      console.log('ℹ️ Service Worker not supported in this browser');
-    }
-    
-    // PWA Install Prompt Handler
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      console.log('📦 App installable - prompt cached');
-      // You can show a custom install button here if desired
-      // document.getElementById('installBtn').style.display = 'block';
-    });
-    
-    window.addEventListener('appinstalled', () => {
-      console.log('✅ App installed to home screen');
-      deferredPrompt = null;
-    });
-  </script>
+  <script src="{% static 'js/pwa-install.js' %}"></script>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
