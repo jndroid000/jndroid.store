@@ -91,6 +91,15 @@ def terms_of_service(request):
     """Terms of Service page"""
     return render(request, "terms_of_service.html")
 
+def offline_error(request):
+    """Offline error page - shown when user tries to access a page that's not cached"""
+    response = render(request, "offline-error.html")
+    # Don't cache this page - it should always be fresh in Service Worker
+    response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response['Pragma'] = 'no-cache'
+    response['Expires'] = '0'
+    return response
+
 
 # ============================================
 # ADMIN DASHBOARD VIEWS

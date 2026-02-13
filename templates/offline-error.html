@@ -1,0 +1,536 @@
+{% load static %}
+
+<!doctype html>
+<html lang="bn">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>অফলাইন - JnDroid Store</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  
+  <style>
+    * {
+      --bg-primary: #ffffff;
+      --text-primary: #333333;
+      --text-muted: #666666;
+      --bg-card: #f8f9fa;
+      --border: #e0e0e0;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      * {
+        --bg-primary: #1a1a1a;
+        --text-primary: #f0f0f0;
+        --text-muted: #b0b0b0;
+        --bg-card: #2d2d2d;
+        --border: #404040;
+      }
+    }
+
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .offline-header {
+      background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%);
+      color: white;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .offline-header h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    /* Main Content */
+    .offline-container {
+      flex: 1;
+      padding: 30px 20px;
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Error Card */
+    .offline-error-card {
+      background: var(--bg-card);
+      border: 2px solid #ff6b6b;
+      border-radius: 12px;
+      padding: 30px;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .offline-error-icon {
+      font-size: 60px;
+      margin-bottom: 15px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .offline-error-card h2 {
+      color: #ff6b6b;
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+
+    .offline-error-card p {
+      color: var(--text-muted);
+      margin: 10px 0;
+      font-size: 15px;
+    }
+
+    /* Suggestions Section */
+    .offline-suggestions {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+
+    .offline-suggestions h3 {
+      color: #007bff;
+      font-size: 18px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .suggestion-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .suggestion-item {
+      background: var(--bg-primary);
+      padding: 12px 15px;
+      border-radius: 8px;
+      border-left: 4px solid #007bff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .suggestion-item:hover {
+      background: var(--bg-card);
+      transform: translateX(5px);
+    }
+
+    .suggestion-item i {
+      color: #007bff;
+      font-size: 18px;
+    }
+
+    /* Cached Content Section */
+    .offline-cached-section {
+      margin-top: 30px;
+    }
+
+    .offline-cached-section h3 {
+      color: #28a745;
+      font-size: 18px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cached-pages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .cached-page-card {
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .cached-page-card:hover {
+      border-color: #28a745;
+      transform: translateY(-5px);
+      box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+    }
+
+    .cached-page-icon {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .cached-page-name {
+      font-weight: 600;
+      font-size: 14px;
+      word-break: break-word;
+    }
+
+    /* Popular Apps Grid */
+    .cached-apps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 15px;
+    }
+
+    .cached-app-card {
+      background: var(--bg-card);
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      text-decoration: none;
+      color: var(--text-primary);
+      border: 2px solid transparent;
+    }
+
+    .cached-app-card:hover {
+      border-color: #007bff;
+      transform: translateY(-5px);
+      box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+    }
+
+    .cached-app-image {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      background: var(--bg-primary);
+    }
+
+    .cached-app-info {
+      padding: 10px;
+    }
+
+    .cached-app-name {
+      font-weight: 600;
+      font-size: 12px;
+      margin-bottom: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cached-app-default-icon {
+      width: 100%;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    }
+
+    /* Action Buttons */
+    .offline-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .offline-actions button,
+    .offline-actions a {
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 14px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s ease;
+    }
+
+    .btn-retry {
+      background: #ff6b6b;
+      color: white;
+    }
+
+    .btn-retry:hover {
+      background: #c92a2a;
+      transform: translateY(-2px);
+    }
+
+    .btn-home {
+      background: #007bff;
+      color: white;
+    }
+
+    .btn-home:hover {
+      background: #0056b3;
+      transform: translateY(-2px);
+    }
+
+    .btn-home:active,
+    .btn-retry:active {
+      transform: translateY(0);
+    }
+
+    /* Footer */
+    .offline-footer {
+      text-align: center;
+      padding: 20px;
+      color: var(--text-muted);
+      font-size: 13px;
+      border-top: 1px solid var(--border);
+      margin-top: auto;
+    }
+
+    .offline-footer i {
+      color: #ff6b6b;
+      margin-right: 5px;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 30px 20px;
+      background: var(--bg-card);
+      border-radius: 8px;
+    }
+
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+      opacity: 0.5;
+    }
+
+    .empty-state p {
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .offline-container {
+        padding: 20px 15px;
+      }
+
+      .offline-error-card {
+        padding: 20px;
+      }
+
+      .offline-error-icon {
+        font-size: 48px;
+      }
+
+      .cached-pages-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      }
+
+      .cached-apps-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      }
+
+      .offline-actions {
+        flex-direction: column;
+      }
+
+      .offline-actions button,
+      .offline-actions a {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <div class="offline-header">
+    <h1>
+      <i class="fas fa-wifi-off"></i>
+      অফলাইন মোড
+    </h1>
+  </div>
+
+  <!-- Main Content -->
+  <div class="offline-container">
+    <!-- Error Card -->
+    <div class="offline-error-card">
+      <div class="offline-error-icon">📱</div>
+      <h2>এই পেজটি অ্যাক্সেসযোগ্য নয়</h2>
+      <p>আপনি অফলাইন মোডে আছেন এবং এই পেজটি আগে কখনো দেখেননি।</p>
+      <p>তাই এটি ক্যাশে সংরক্ষিত নেই।</p>
+    </div>
+
+    <!-- Suggestions -->
+    <div class="offline-suggestions">
+      <h3><i class="fas fa-lightbulb"></i> পরামর্শ</h3>
+      <div class="suggestion-list">
+        <div class="suggestion-item" onclick="location.href='/'">
+          <i class="fas fa-home"></i>
+          <span>হোম পেজে যান</span>
+        </div>
+        <div class="suggestion-item" onclick="location.href='/apps/'">
+          <i class="fas fa-cube"></i>
+          <span>অ্যাপস ব্রাউজ করুন (যদি ক্যাশ করা হয়)</span>
+        </div>
+        <div class="suggestion-item" onclick="location.href='/categories/'">
+          <i class="fas fa-th-large"></i>
+          <span>ক্যাটাগরি দেখুন</span>
+        </div>
+        <div class="suggestion-item" onclick="window.location.reload()">
+          <i class="fas fa-sync-alt"></i>
+          <span>পুনরায় চেষ্টা করুন (ইন্টারনেট সংযোগ করার পর)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cached Pages -->
+    <div class="offline-cached-section">
+      <h3><i class="fas fa-check-circle"></i> আপনি এই পেজগুলি অ্যাক্সেস করতে পারবেন</h3>
+      
+      <div class="cached-pages-grid" id="cachedPages">
+        <a href="/" class="cached-page-card">
+          <div class="cached-page-icon">🏠</div>
+          <div class="cached-page-name">হোম</div>
+        </a>
+        <a href="/categories/" class="cached-page-card">
+          <div class="cached-page-icon">📂</div>
+          <div class="cached-page-name">ক্যাটাগরি</div>
+        </a>
+        <a href="/apps/" class="cached-page-card">
+          <div class="cached-page-icon">📱</div>
+          <div class="cached-page-name">অ্যাপস</div>
+        </a>
+        <a href="/privacy/" class="cached-page-card">
+          <div class="cached-page-icon">🔒</div>
+          <div class="cached-page-name">গোপনীয়তা</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Popular/Cached Apps -->
+    <div class="offline-cached-section">
+      <h3><i class="fas fa-star"></i> জনপ্রিয় অ্যাপস (ক্যাশ করা)</h3>
+      
+      <div class="cached-apps-grid" id="cachedApps">
+        <!-- Will be populated by JavaScript -->
+      </div>
+
+      <div id="noCachedApps" class="empty-state" style="display: none;">
+        <div class="empty-state-icon">📦</div>
+        <p>এখনও কোনো অ্যাপ ক্যাশ করা হয়নি।</p>
+        <p style="font-size: 12px; margin-top: 10px;">অনলাইনে অ্যাপগুলি ব্রাউজ করুন, সেগুলি স্বয়ংক্রিয়ভাবে ক্যাশ করা হবে।</p>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="offline-actions">
+      <button class="btn-retry" onclick="window.location.reload()">
+        <i class="fas fa-sync-alt"></i> পুনরায় চেষ্টা করুন
+      </button>
+      <a href="/" class="btn-home">
+        <i class="fas fa-home"></i> হোমে যান
+      </a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="offline-footer">
+    <i class="fas fa-wifi-off"></i>
+    আপনি অফলাইন - অ্যাপের সাথে সংযুক্ত থাকলে আরও সামগ্রী দেখতে পাবেন
+  </div>
+
+  <script>
+    // Load cached apps from Cache API
+    async function loadCachedApps() {
+      try {
+        const cache = await caches.open('jndroid-popular-apps-v1');
+        if (!cache) {
+          showNoCachedApps();
+          return;
+        }
+
+        const response = await cache.match('/api/popular-apps/');
+        if (!response) {
+          showNoCachedApps();
+          return;
+        }
+
+        const data = await response.json();
+        const container = document.getElementById('cachedApps');
+        const noCachedDiv = document.getElementById('noCachedApps');
+
+        if (!data.apps || data.apps.length === 0) {
+          showNoCachedApps();
+          return;
+        }
+
+        noCachedDiv.style.display = 'none';
+        container.innerHTML = '';
+
+        data.apps.forEach(app => {
+          const card = document.createElement('a');
+          card.href = `/apps/${app.slug}/`;
+          card.className = 'cached-app-card';
+          
+          let imageHTML = '';
+          if (app.cover_image) {
+            imageHTML = `<img src="${app.cover_image}" alt="${app.title}" class="cached-app-image">`;
+          } else {
+            imageHTML = `<div class="cached-app-default-icon">📦</div>`;
+          }
+
+          card.innerHTML = `
+            ${imageHTML}
+            <div class="cached-app-info">
+              <div class="cached-app-name">${app.title}</div>
+              <div style="font-size: 11px; color: var(--text-muted);">
+                ${app.category || 'অন্যান্য'}
+              </div>
+            </div>
+          `;
+
+          container.appendChild(card);
+        });
+
+      } catch (error) {
+        console.error('Error loading cached apps:', error);
+        showNoCachedApps();
+      }
+    }
+
+    function showNoCachedApps() {
+      document.getElementById('cachedApps').innerHTML = '';
+      document.getElementById('noCachedApps').style.display = 'block';
+    }
+
+    // Load cached apps on page load
+    document.addEventListener('DOMContentLoaded', loadCachedApps);
+  </script>
+</body>
+
+</html>

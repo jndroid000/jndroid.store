@@ -15,6 +15,7 @@ self.addEventListener('install', (event) => {
       console.log('📦 Caching essential files');
       return cache.addAll([
         '/',
+        '/offline-error/',
         '/static/css/styles.css',
         '/static/css/pages.css',
         '/static/css/header.css',
@@ -72,6 +73,168 @@ self.addEventListener('activate', (event) => {
   return self.clients.claim();
 });
 
+// ==================== HELPER FUNCTIONS ====================
+
+// Create offline fallback page
+function createOfflineFallbackPage(requestUrl) {
+  const offlineHTML = `<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>অফলাইন - জয়ড্রয়েড স্টোর</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    
+    @media (prefers-color-scheme: dark) {
+      body { background: #1a1a1a; color: #f0f0f0; }
+      .card { background: #2d2d2d; border-color: #404040; }
+      .link-btn { background: #0056b3; border-color: #0056b3; }
+      .link-btn:hover { background: #0d47a1; }
+    }
+    
+    body { 
+      background: #ffffff; 
+      color: #333333; 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    .container { 
+      max-width: 900px; 
+      margin: 0 auto; 
+      padding: 20px; 
+      flex: 1;
+    }
+    
+    .header { 
+      background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%); 
+      color: #ffffff; 
+      padding: 25px 20px; 
+      text-align: center; 
+      border-radius: 8px; 
+      margin-bottom: 25px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .header h1 { 
+      font-size: 24px; 
+      font-weight: 600;
+      margin: 0;
+    }
+    
+    .card { 
+      background: #f8f9fa; 
+      border: 2px solid #ff6b6b; 
+      border-radius: 8px; 
+      padding: 20px; 
+      margin-bottom: 20px; 
+    }
+    
+    .card h2 { 
+      color: #ff6b6b; 
+      margin-bottom: 10px; 
+      font-size: 18px;
+    }
+    
+    .card p { 
+      margin: 8px 0; 
+      line-height: 1.6;
+      color: #666666;
+    }
+    
+    .links { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
+      gap: 12px;
+      margin-top: 15px;
+    }
+    
+    .link-btn { 
+      background: #007bff; 
+      color: #ffffff; 
+      padding: 12px 16px; 
+      border-radius: 6px; 
+      text-decoration: none; 
+      text-align: center; 
+      cursor: pointer; 
+      border: 1px solid #007bff;
+      font-size: 14px; 
+      font-weight: 500;
+      transition: all 0.3s ease; 
+      display: inline-block;
+      width: 100%;
+    }
+    
+    .link-btn:hover { 
+      background: #0056b3; 
+      border-color: #0056b3;
+      transform: translateY(-2px); 
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    
+    .link-btn:active {
+      transform: translateY(0);
+    }
+    
+    .footer {
+      text-align: center;
+      padding: 20px;
+      color: #999999;
+      font-size: 12px;
+      border-top: 1px solid #e0e0e0;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📱 আপনি অফলাইন আছেন</h1>
+    </div>
+    
+    <div class="card">
+      <h2>এই পেজটি অ্যাক্সেসযোগ্য নয়</h2>
+      <p>আপনি অফলাইন মোডে আছেন এবং এই পেজটি আগে কখনো ভিজিট করেননি।</p>
+      <p>তাই এটি আপনার ডিভাইসে ক্যাশ করা নেই।</p>
+    </div>
+    
+    <div class="card">
+      <h2>আপনি এই পেজগুলি দেখতে পারেন:</h2>
+      <div class="links">
+        <a href="/" class="link-btn">🏠 হোম</a>
+        <a href="/apps/" class="link-btn">📱 অ্যাপস</a>
+        <a href="/categories/" class="link-btn">📂 ক্যাটাগরি</a>
+        <a href="/privacy/" class="link-btn">🔒 গোপনীয়তা</a>
+      </div>
+    </div>
+    
+    <div class="card" style="background: #e7f3ff; border-color: #007bff; text-align: center;">
+      <p style="color: #0056b3; margin: 0;">
+        <strong>💡 টিপস:</strong> ইন্টারনেট সংযোগ করলে এই পেজটি স্বয়ংক্রিয়ভাবে লোড হবে।
+      </p>
+    </div>
+  </div>
+  
+  <div class="footer">
+    📡 অফলাইন মোড - আরও সামগ্রী দেখতে ইন্টারনেট সংযোগ করুন
+  </div>
+</body>
+</html>`;
+  
+  return new Response(offlineHTML, {
+    status: 200,
+    headers: {
+      'Content-Type': 'text/html; charset=utf-8',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache'
+    }
+  });
+}
+
 // ==================== PHASE 2: Network Requests ====================
 // Intercept fetch requests - Network First, then Cache
 self.addEventListener('fetch', (event) => {
@@ -82,10 +245,8 @@ self.addEventListener('fetch', (event) => {
     return;
   }
   
-  // Strategy 1: API calls - Network First
-  if (url.pathname.startsWith('/api/') || 
-      url.pathname.startsWith('/apps/') ||
-      url.pathname.startsWith('/categories/')) {
+  // Strategy 1: API calls only - Network First (returns JSON/data)
+  if (url.pathname.startsWith('/api/')) {
     event.respondWith(networkFirst(event.request));
     return;
   }
@@ -96,7 +257,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
   
-  // Strategy 3: Pages - Network First with Cache fallback
+  // Strategy 3: Pages (including /apps/, /categories/, etc) - Network First with Cache fallback
   if (event.request.method === 'GET') {
     event.respondWith(networkFirstWithCache(event.request));
     return;
@@ -105,7 +266,7 @@ self.addEventListener('fetch', (event) => {
 
 // ==================== CACHING STRATEGIES ====================
 
-// Network First: Try network first, fallback to cache
+// Network First: Try network first, fallback to cache (for API calls)
 async function networkFirst(request) {
   try {
     const response = await fetch(request);
@@ -127,13 +288,23 @@ async function networkFirst(request) {
       return cachedResponse;
     }
     
-    // Return offline page if available
-    return new Response('⚠️ You are offline and this page is not cached.', {
+    // For navigation requests, serve offline page
+    if (request.mode === 'navigate') {
+      const offlinePageFromCache = await caches.match('/offline-error/');
+      if (offlinePageFromCache) {
+        return offlinePageFromCache;
+      }
+      return createOfflineFallbackPage(request.url);
+    }
+    
+    // For API requests, return JSON error
+    console.warn('❌ API call failed offline:', request.url);
+    return new Response(JSON.stringify({ 
+      error: 'অফলাইন - API উপলব্ধ নয়',
+      offline: true 
+    }), {
       status: 503,
-      statusText: 'Service Unavailable',
-      headers: new Headers({
-        'Content-Type': 'text/plain',
-      }),
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
     });
   }
 }
@@ -189,12 +360,30 @@ async function networkFirstWithCache(request) {
   } catch (error) {
     const cachedResponse = await caches.match(request);
     if (cachedResponse) {
+      console.log('📦 Using cached response for:', request.url);
       return cachedResponse;
     }
     
-    // Return offline page
-    const offlinePage = await caches.match('/');
-    return offlinePage || new Response('⚠️ Offline - Page not available');
+    // Return offline error page for navigation requests
+    if (request.mode === 'navigate') {
+      // First try to get offline error page from cache
+      const offlineErrorPage = await caches.match('/offline-error/');
+      if (offlineErrorPage) {
+        console.log('📄 Serving cached offline error page:', request.url);
+        return offlineErrorPage;
+      }
+      
+      // Fallback: use helper function to create offline page
+      console.log('📄 Serving inline offline fallback page for:', request.url);
+      return createOfflineFallbackPage(request.url);
+    }
+    
+    // Fallback for non-navigation requests
+    console.warn('❌ Network request failed for:', request.url);
+    return new Response('অফলাইন - সংস্থান উপলব্ধ নয়', { 
+      status: 503, 
+      headers: { 'Content-Type': 'text/plain; charset=utf-8' } 
+    });
   }
 }
 
