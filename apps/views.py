@@ -6,6 +6,9 @@ from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db import transaction
 from django.views.decorators.http import require_http_methods
+from django.http import JsonResponse
+from django.views.decorators.cache import cache_page
+from django.utils import timezone
 
 from .models import App
 from .forms import AppUploadForm
@@ -249,3 +252,56 @@ def app_delete(request, slug):
         'title': 'Delete App',
     }
     return render(request, 'apps/app_delete_confirm.html', context)
+
+
+# ==================== PWA API ENDPOINTS ====================
+
+@cache_page(60 * 30)  # Cache for 30 minutes
+@require_http_methods(["GET"])
+def popular_apps_api(request):
+    """
+    API endpoint for Service Worker to fetch popular apps for offline caching.
+    Returns top 20 popular apps with minimal data.
+    """
+    try:
+        # Get top apps by download count
+        popular_apps = App.objects.filter(
+            is_published=True
+        ).select_related(
+            'category', 'owner'
+        ).annotate(
+            review_count=Count('reviews')
+        ).order_by('-downloads')[:20]
+        
+        apps_data = []
+        for app in popular_apps:
+            app_dict = {
+                'id': app.id,
+                'slug': app.slug,
+                'title': app.title,
+                'short_description': app.short_description,
+                'version': app.version,
+                'downloads': app.downloads,
+                'rating': float(app.avg_rating or 0),
+                'category': app.category.name if app.category else 'Unknown',
+            }
+            
+            # Add cover image if available
+            if app.cover_image:
+                app_dict['cover_image'] = request.build_absolute_uri(app.cover_image.url)
+            
+            apps_data.append(app_dict)
+        
+        return JsonResponse({
+            'success': True,
+            'count': len(apps_data),
+            'apps': apps_data,
+            'timestamp': timezone.now().isoformat(),
+        })
+    
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e),
+        }, status=500)
+

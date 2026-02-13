@@ -30,7 +30,7 @@ python3 manage.py makemigrations
 python3 manage.py migrate
 
 # 5. Static files collect করো
-python3 manage.py collectstatic --noinput
+python3 manage.py collectstatic --noinput 
 
 # 6. Gunicorn/Django restart করো
 sudo systemctl restart jndroid
@@ -44,3 +44,10 @@ sudo systemctl status jndroid
 
 sudo systemctl status jndroid
 sudo tail -50 /var/log/gunicorn/error.log
+
+
+
+python3 manage.py collectstatic --noinput --clear
+
+
+DJANGO_SETTINGS_MODULE=config.settings.production python3 manage.py collectstatic --noinput --clear

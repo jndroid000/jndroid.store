@@ -9,6 +9,8 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail
 from django.utils import timezone
+import django
+import os
 from accounts.models import User
 from apps.models import App
 from apps.forms import AppUploadForm
@@ -24,6 +26,50 @@ def get_client_ip(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
     return ip
+
+
+# ==================== PWA SERVICE WORKER ====================
+
+@require_http_methods(["GET"])
+def service_worker(request):
+    """
+    Serve Service Worker with proper HTTP header for PWA scope.
+    """
+    try:
+        from django.conf import settings as django_settings
+        
+        # Get BASE_DIR properly
+        base_dir = str(django_settings.BASE_DIR)
+        sw_file = os.path.join(base_dir, 'static', 'service-worker.js')
+        
+        print(f"📍 Service Worker Path: {sw_file}")
+        print(f"📍 File exists: {os.path.exists(sw_file)}")
+        
+        if not os.path.exists(sw_file):
+            print(f"❌ File NOT found")
+            return HttpResponse(
+                f'Service Worker not found at: {sw_file}',
+                status=404,
+                content_type='text/plain'
+            )
+        
+        with open(sw_file, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        print(f"✅ File read: {len(content)} bytes")
+        
+        response = HttpResponse(content, content_type='application/javascript; charset=utf-8')
+        response['Service-Worker-Allowed'] = '/'
+        response['Cache-Control'] = 'public, max-age=3600'
+        
+        print(f"✅ Response sent")
+        return response
+    
+    except Exception as e:
+        import traceback
+        error_msg = f"❌ Error: {str(e)}\n{traceback.format_exc()}"
+        print(error_msg)
+        return HttpResponse(error_msg, status=500, content_type='text/plain')
 
 
 def home(request):

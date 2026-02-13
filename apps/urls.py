@@ -11,6 +11,7 @@ urlpatterns = [
     path("ledger/", app_ledger_view, name="ledger"),
     path("ledger/export/", app_ledger_export, name="ledger_export"),
     path("info/<slug:slug>/", app_info_sheet, name="info_sheet"),
+    path("api/popular-apps/", views.popular_apps_api, name="popular_apps_api"),
     path("<slug:slug>/", views.app_detail, name="detail"),
     path("<slug:slug>/edit/", views.app_edit, name="edit"),
     path("<slug:slug>/delete/", views.app_delete, name="delete"),

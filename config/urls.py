@@ -16,7 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from core.views import home, support, community_guidelines, report_bug, terms_of_service
+from core.views import home, support, community_guidelines, report_bug, terms_of_service, service_worker
+from apps.views import popular_apps_api
 from django.views.generic import TemplateView
 from core import views
 
@@ -27,6 +28,10 @@ urlpatterns = [
     path('community-guidelines/', community_guidelines, name='community_guidelines'),
     path('report-bug/', report_bug, name='report_bug'),
     path('terms-of-service/', terms_of_service, name='terms_of_service'),
+    
+    # PWA & API Endpoints
+    path('service-worker.js', service_worker, name='service_worker'),
+    path('api/popular-apps/', popular_apps_api, name='api_popular_apps'),
 
     path('admin-panel/', include('core.urls')),  # Admin dashboard
     path('accounts/', include('accounts.urls')),

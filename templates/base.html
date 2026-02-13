@@ -9,6 +9,15 @@
   <meta name="description" content="JnDroid Store — Verified APK, Fast Download, Clean UI. Bangla-friendly app hub." />
   <title>{% block title %}JnDroid Store{% endblock %}</title>
 
+  <!-- PWA Manifest & Meta Tags -->
+  <link rel="manifest" href="{% static 'manifest.json' %}">
+  <meta name="theme-color" content="#007bff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="JnDroid Store">
+
   <!-- Favicon Links -->
   <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
   <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon-16x16.png' %}">
@@ -246,6 +255,65 @@
   <div class="bottom-menu-overlay" id="bottomMenuOverlay"></div>
 
   <script src="{% static 'js/common.js' %}"></script>
+  
+  <!-- Service Worker Registration & PWA Setup -->
+  <script>
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js', { scope: '/' })
+          .then((registration) => {
+            console.log('✅ Service Worker registered:', registration);
+            
+            // Check for updates periodically
+            setInterval(() => {
+              registration.update();
+            }, 300000); // Every 5 minutes
+            
+            // Trigger background app caching immediately after registration
+            if (registration.active) {
+              registration.active.postMessage({ type: 'CACHE_POPULAR_APPS' });
+            } else {
+              registration.onupdatefound = () => {
+                const newWorker = registration.installing;
+                newWorker.onstatechange = () => {
+                  if (newWorker.state === 'activated') {
+                    newWorker.postMessage({ type: 'CACHE_POPULAR_APPS' });
+                  }
+                };
+              };
+            }
+          })
+          .catch((error) => {
+            console.warn('⚠️ Service Worker registration failed:', error);
+          });
+      });
+      
+      // Handle Service Worker updates
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        console.log('🔄 Service Worker controller changed - page may have been updated');
+        // Optionally show update notification to user
+      });
+    } else {
+      console.log('ℹ️ Service Worker not supported in this browser');
+    }
+    
+    // PWA Install Prompt Handler
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      console.log('📦 App installable - prompt cached');
+      // You can show a custom install button here if desired
+      // document.getElementById('installBtn').style.display = 'block';
+    });
+    
+    window.addEventListener('appinstalled', () => {
+      console.log('✅ App installed to home screen');
+      deferredPrompt = null;
+    });
+  </script>
+
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   {% block extra_js %}{% endblock %}

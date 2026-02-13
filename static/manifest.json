@@ -1,0 +1,83 @@
+{
+  "name": "JnDroid Store - Verified APK Hub",
+  "short_name": "JnDroid Store",
+  "description": "Safe, verified APK hub for Bangla speakers. Find apps, fast downloads, clean UI.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#007bff",
+  "categories": ["productivity", "utilities"],
+  "screenshots": [
+    {
+      "src": "/static/images/favicon-256x256.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/images/favicon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "form_factor": "wide",
+      "purpose": "any"
+    }
+  ],
+  "icons": [
+    {
+      "src": "/static/images/favicon-48x48.png",
+      "sizes": "48x48",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/images/favicon-64x64.png",
+      "sizes": "64x64",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/images/favicon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/images/favicon-256x256.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "Browse Apps",
+      "short_name": "Apps",
+      "description": "Browse all available apps on JnDroid Store",
+      "url": "/apps/?utm_source=pwa_shortcut",
+      "icons": [
+        {
+          "src": "/static/images/favicon-64x64.png",
+          "sizes": "64x64",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Browse Categories",
+      "short_name": "Categories",
+      "description": "Browse app categories on JnDroid Store",
+      "url": "/categories/?utm_source=pwa_shortcut",
+      "icons": [
+        {
+          "src": "/static/images/favicon-64x64.png",
+          "sizes": "64x64",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
+}
