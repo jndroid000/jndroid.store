@@ -397,6 +397,34 @@ def edit_profile_view(request):
     return render(request, 'accounts/edit_profile.html', context)
 
 
+@login_required(login_url='accounts:login')
+@require_http_methods(["GET", "POST"])
+@csrf_protect
+def settings_view(request):
+    """Handle user settings"""
+    
+    if request.method == 'POST':
+        # Handle settings updates
+        notification_email = request.POST.get('notification_email') == 'on'
+        notification_sms = request.POST.get('notification_sms') == 'on'
+        
+        # Update user preference
+        user_profile = request.user.profile
+        if hasattr(user_profile, 'notification_email'):
+            user_profile.notification_email = notification_email
+            user_profile.notification_sms = notification_sms
+            user_profile.save()
+        
+        messages.success(request, 'Settings updated successfully!')
+        return redirect('accounts:settings')
+    
+    context = {
+        'title': 'Settings',
+        'user': request.user,
+    }
+    return render(request, 'accounts/settings.html', context)
+
+
 # ==================== PASSWORD RESET VIEWS ====================
 
 @require_http_methods(["GET", "POST"])

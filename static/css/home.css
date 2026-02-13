@@ -1019,6 +1019,10 @@
     padding: 50px 20px;
   }
 
+  .section-header {
+    margin-bottom: 40px;
+  }
+
   .section-title {
     font-size: 32px;
   }
@@ -1056,6 +1060,51 @@
 
   .stat-box-desc {
     font-size: 12px;
+  }
+
+  .steps-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .steps-container::before {
+    display: none;
+  }
+
+  .step-card {
+    padding: 20px;
+  }
+
+  .step-badge {
+    width: 44px;
+    height: 44px;
+    margin: -22px auto 16px;
+    font-size: 18px;
+  }
+
+  .step-title {
+    font-size: 16px;
+  }
+
+  .step-desc {
+    font-size: 12px;
+  }
+
+  .step-visual {
+    font-size: 32px;
+    margin-top: 12px;
+  }
+
+  .apps-showcase {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .app-card {
+    padding: 16px;
+  }
+
+  .app-icon {
+    font-size: 32px;
   }
 
   .blob-1 {

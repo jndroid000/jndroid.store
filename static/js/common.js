@@ -1,70 +1,9 @@
 // Initialize mobile menu functionality
 function initHeaderFunctionality() {
-  const menuBtn = document.getElementById('menuBtn');
-  const closeBtn = document.getElementById('closeBtn');
-  const drawer = document.getElementById('drawer');
-  const drawerOverlay = document.getElementById('drawerOverlay');
-  const drawerNav = document.querySelectorAll('.drawer-nav a');
-  const drawerFormBtn = document.querySelectorAll('.drawer-form-btn');
-  
   // Profile Dropdown Functionality
   const profileBtn = document.getElementById('profileBtn');
   const profileDropdown = document.querySelector('.profile-dropdown');
   const profileMenu = document.getElementById('profileMenu');
-
-  if (!menuBtn || !drawer) return;
-
-  // Open drawer
-  menuBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    drawer.classList.add('show');
-    document.documentElement.style.overflow = 'hidden';
-    document.body.style.overflow = 'hidden';
-    document.body.style.overflowX = 'hidden';
-  });
-
-  // Close drawer
-  function closeDrawer() {
-    drawer.classList.remove('show');
-    document.documentElement.style.overflow = '';
-    document.body.style.overflow = '';
-    document.body.style.overflowX = '';
-  }
-
-  if (closeBtn) {
-    closeBtn.addEventListener('click', closeDrawer);
-  }
-
-  // Close drawer on overlay click
-  if (drawerOverlay) {
-    drawerOverlay.addEventListener('click', closeDrawer);
-  }
-
-  // Close drawer when clicking on a link
-  drawerNav.forEach(link => {
-    link.addEventListener('click', closeDrawer);
-  });
-
-  // Close drawer when clicking on form button (logout)
-  drawerFormBtn.forEach(btn => {
-    btn.addEventListener('click', closeDrawer);
-  });
-
-  // Close drawer on ESC key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeDrawer();
-    }
-  });
-
-  // Close drawer when clicking outside drawer (on web view)
-  document.addEventListener('click', (e) => {
-    if (drawer.classList.contains('show') && 
-        !drawer.contains(e.target) && 
-        !menuBtn.contains(e.target)) {
-      closeDrawer();
-    }
-  });
 
   // Profile Dropdown Click Handler
   if (profileBtn && profileDropdown && profileMenu) {
@@ -103,6 +42,61 @@ function initHeaderFunctionality() {
       }
     });
   }
+}
+
+// Initialize bottom navigation menu functionality
+function initBottomMenuFunctionality() {
+  const moreMenuBtn = document.getElementById('moreMenuBtn');
+  const bottomMenuModal = document.getElementById('bottomMenuModal');
+  const bottomMenuClose = document.getElementById('bottomMenuClose');
+  const bottomMenuOverlay = document.getElementById('bottomMenuOverlay');
+  const bottomMenuItems = document.querySelectorAll('.bottom-menu-item');
+
+  if (!moreMenuBtn || !bottomMenuModal) return;
+
+  // Open bottom menu
+  moreMenuBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    bottomMenuModal.classList.add('active');
+    bottomMenuOverlay.classList.add('active');
+  });
+
+  // Close bottom menu
+  function closeBottomMenu() {
+    bottomMenuModal.classList.remove('active');
+    bottomMenuOverlay.classList.remove('active');
+  }
+
+  if (bottomMenuClose) {
+    bottomMenuClose.addEventListener('click', closeBottomMenu);
+  }
+
+  // Close menu on overlay click
+  if (bottomMenuOverlay) {
+    bottomMenuOverlay.addEventListener('click', closeBottomMenu);
+  }
+
+  // Close menu when clicking on a link/item
+  bottomMenuItems.forEach(item => {
+    item.addEventListener('click', closeBottomMenu);
+  });
+
+  // Close menu on ESC key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && bottomMenuModal.classList.contains('active')) {
+      closeBottomMenu();
+    }
+  });
+
+  // Close menu when clicking outside
+  document.addEventListener('click', (e) => {
+    if (bottomMenuModal.classList.contains('active') && 
+        !bottomMenuModal.contains(e.target) && 
+        !moreMenuBtn.contains(e.target) &&
+        !bottomMenuOverlay.contains(e.target)) {
+      closeBottomMenu();
+    }
+  });
 }
 
 // Initialize footer functionality
@@ -146,8 +140,7 @@ function initThemeToggle() {
 // Load on document ready
 document.addEventListener('DOMContentLoaded', function() {
   initHeaderFunctionality();
-  initFooterFunctionality();
-  initThemeToggle();
+  initBottomMenuFunctionality();
   initSearchModal();
 });
 

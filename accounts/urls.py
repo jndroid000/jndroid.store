@@ -12,6 +12,7 @@ urlpatterns = [
     path("resend-verification/", views.resend_verification_email, name="resend_verification"),
     path("profile/", views.profile_view, name="profile"),
     path("edit-profile/", views.edit_profile_view, name="edit_profile"),
+    path("settings/", views.settings_view, name="settings"),
     
     # Password Reset URLs
     path("password-reset/", views.password_reset_view, name="password_reset"),

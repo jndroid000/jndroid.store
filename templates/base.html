@@ -117,39 +117,8 @@
             </div>
           </div>
 
-          <!-- Hamburger Menu - Mobile -->
-          <button class="btn menuBtn" id="menuBtn" aria-label="Open menu">
-            <span class="hamburger">☰</span>
-          </button>
         </div>
       </div>
-
-      <div class="drawer" id="drawer">
-        <div class="drawer-header">
-          <h3>Menu</h3>
-          <button class="close-btn" id="closeBtn">✕</button>
-        </div>
-        <nav class="drawer-nav">
-          <a href="/">Home</a>
-          <a href="{% url 'categories:list' %}">Categories</a>
-          <a href="{% url 'apps:list' %}">Apps</a>
-          <a href="{% url 'support' %}">Support</a>
-          <a href="{% url 'terms_of_service' %}">Terms of Service</a>
-          <a href="/privacy/">Privacy Policy</a>
-          {% if user.is_authenticated %}
-          <a href="{% url 'accounts:profile' %}">Profile</a>
-          <form method="post" action="{% url 'accounts:logout' %}" class="drawer-form">
-            {% csrf_token %}
-            <button type="submit" class="drawer-form-btn">Logout</button>
-          </form>
-          {% else %}
-          <a href="{% url 'accounts:login' %}">Login</a>
-          <a href="{% url 'accounts:signup' %}">Sign Up</a>
-          {% endif %}
-        </nav>
-      </div>
-    </div>
-    <div class="drawer-overlay" id="drawerOverlay"></div>
 
     <!-- Search Modal -->
     <div class="search-modal" id="searchModal">
@@ -216,6 +185,65 @@
       <p style="margin:12px 0 0">© <span id="year"></span> JnDroid Store. All rights reserved.</p>
     </div>
   </footer>
+
+  <!-- Bottom Navigation Bar -->
+  <nav class="bottom-nav-bar" id="bottomNavBar">
+    <a href="/" class="bottom-nav-item" aria-label="Home">
+      <i class="fas fa-home"></i>
+      <span class="label">Home</span>
+    </a>
+    <a href="{% url 'categories:list' %}" class="bottom-nav-item" aria-label="Categories">
+      <i class="fas fa-th-large"></i>
+      <span class="label">Categories</span>
+    </a>
+    <a href="{% url 'apps:list' %}" class="bottom-nav-item" aria-label="Apps">
+      <i class="fas fa-cube"></i>
+      <span class="label">Apps</span>
+    </a>
+    <button class="bottom-nav-item more-btn" id="moreMenuBtn" aria-label="More menu">
+      <i class="fas fa-bars"></i>
+      <span class="label">More</span>
+    </button>
+  </nav>
+
+  <!-- Bottom Menu Modal -->
+  <div class="bottom-menu-modal" id="bottomMenuModal">
+    <div class="bottom-menu-content">
+      <div class="bottom-menu-header">
+        <h3>Menu</h3>
+        <button class="bottom-menu-close" id="bottomMenuClose" aria-label="Close menu">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <nav class="bottom-menu-nav">
+        <a href="{% url 'support' %}" class="bottom-menu-item">
+          <i class="fas fa-question-circle"></i>
+          <span>Support</span>
+        </a>
+        <a href="{% url 'accounts:settings' %}" class="bottom-menu-item">
+          <i class="fas fa-cog"></i>
+          <span>Settings</span>
+        </a>
+        <a href="{% url 'terms_of_service' %}" class="bottom-menu-item">
+          <i class="fas fa-file-contract"></i>
+          <span>Terms of Service</span>
+        </a>
+        <a href="/privacy/" class="bottom-menu-item">
+          <i class="fas fa-shield-alt"></i>
+          <span>Privacy Policy</span>
+        </a>
+        {% if user.is_superuser or user.is_staff %}
+        <hr class="menu-divider">
+        <a href="{% url 'admin_panel:dashboard' %}" class="bottom-menu-item admin-item">
+          <i class="fas fa-crown"></i>
+          <span>Admin Dashboard</span>
+        </a>
+        {% endif %}
+      </nav>
+    </div>
+  </div>
+
+  <div class="bottom-menu-overlay" id="bottomMenuOverlay"></div>
 
   <script src="{% static 'js/common.js' %}"></script>
   <!-- Bootstrap JS -->
