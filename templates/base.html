@@ -33,9 +33,13 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-  <link rel="stylesheet" href="{% static 'css/pages.css' %}">
   <link rel="stylesheet" href="{% static 'css/header.css' %}">
+  <link rel="stylesheet" href="{% static 'css/pages.css' %}">
+  <link rel="stylesheet" href="{% static 'css/search-results.css' %}">
+  <link rel="stylesheet" href="{% static 'css/home.css' %}">
   <link rel="stylesheet" href="{% static 'css/pwa-banner.css' %}">
+  <link rel="stylesheet" href="{% static 'css/bottom-nav.css' %}">
+  <link rel="stylesheet" href="{% static 'css/messages.css' %}">
   <script src="{% static 'js/theme.js' %}"></script>
   {% block extra_css %}{% endblock %}
 </head>
@@ -57,12 +61,22 @@
           <a href="{% url 'apps:list' %}">Apps</a>
         </nav>
 
-        <div class="actions">
-          <!-- Search Button - Mobile -->
-          <button class="btn search-btn-mobile" id="searchBtnMobile" aria-label="Search">
+        <!-- Search Component -->
+        <div class="app-search">
+          <input 
+            type="text" 
+            class="app-search__input" 
+            placeholder="Search apps..." 
+            aria-label="Search applications">
+          <span class="app-search__icon">
             <i class="fas fa-search"></i>
+          </span>
+          <button class="app-search__go" type="button" aria-label="Submit search">
+            <i class="fas fa-arrow-right"></i>
           </button>
+        </div>
 
+        <div class="actions">
           <!-- Profile Dropdown - Desktop -->
           <div class="profile-dropdown">
             <button class="profile-btn" id="profileBtn" aria-label="Profile menu">
@@ -129,33 +143,38 @@
 
         </div>
       </div>
-
-    <!-- Search Modal -->
-    <div class="search-modal" id="searchModal">
-      <div class="search-modal-content">
-        <button class="search-modal-close" id="searchModalClose" aria-label="Close search">
-          <i class="fas fa-times"></i>
-        </button>
-        <form class="search-modal-form" id="searchForm" method="get" action="{% url 'apps:list' %}">
-          <div class="search-input-wrapper">
-            <i class="fas fa-search search-modal-icon"></i>
-            <input 
-              type="text" 
-              class="search-modal-input" 
-              id="searchInput" 
-              name="q" 
-              placeholder="অ্যাপ খুঁজুন..." 
-              autocomplete="off"
-            >
-          </div>
-          <button type="submit" class="search-submit-btn">অনুসন্ধান করুন</button>
-        </form>
-      </div>
     </div>
   </header>
 
+  <!-- Search Results Overlay - Available on all pages -->
+  <div id="search-results-overlay" class="search-results-overlay" style="display: none;">
+    <div class="search-results-container">
+      <div class="search-results-header">
+        <h2>Trending Apps</h2>
+        <p>Most Popular This Week</p>
+      </div>
+      <div id="search-results-grid" class="search-results-grid">
+        <!-- Trending apps will be loaded here -->
+      </div>
+    </div>
+  </div>
+
   <main>
     <div class="container">
+      <!-- Django Messages/Notifications -->
+      {% if messages %}
+        <div class="messages-container" id="messagesContainer">
+          {% for message in messages %}
+            <div class="message-toast message-{{ message.tags|default:'info' }}" role="alert">
+              <div class="message-content">
+                <span class="message-text">{{ message }}</span>
+                <button class="message-close" onclick="this.closest('.message-toast').remove()" aria-label="Close">&times;</button>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
       {% block content %}{% endblock %}
     </div>
   </main>
@@ -187,9 +206,8 @@
       <div class="disclaimer">
         <b>Disclaimer:</b>
 
-        JN App Store is a community-driven APK distribution platform. All apps and versions are user-uploaded and
+        JnDroid Store is a community-driven APK distribution platform. All apps and versions are user-uploaded and
         tested. We do not claim ownership of any applications.
-        .
       </div>
 
       <p style="margin:12px 0 0">© <span id="year"></span> JnDroid Store. All rights reserved.</p>
@@ -327,7 +345,9 @@
   <div class="bottom-menu-overlay" id="bottomMenuOverlay"></div>
 
   <script src="{% static 'js/common.js' %}"></script>
+  <script src="{% static 'js/messages.js' %}"></script>
   <script src="{% static 'js/pwa-install.js' %}"></script>
+  <script src="{% static 'js/search-expand.js' %}"></script>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

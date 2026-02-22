@@ -5,13 +5,14 @@
 .pwa-install-banner {
   display: none;
   position: fixed;
-  bottom: 80px;
-  left: 0;
-  right: 0;
+  bottom: 95px;
+  border-radius: 12px;
+  left: 20px;
+  right: 20px;
   background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
   color: white;
   padding: 15px 20px;
-  z-index: 999;
+  z-index: 998;
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
   animation: slideUp 0.3s ease-out;
   font-size: 14px;
@@ -84,7 +85,7 @@
   transform: translateY(0);
 }
 
-.pwa-banner-installed #pwa-install-btn {
+.pwa-install-banner.installed #pwa-install-btn {
   display: none;
 }
 

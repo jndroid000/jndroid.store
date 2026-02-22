@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Copyright Information - {{ app.title }} - JnDroid Store{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/app_detail.css' %}">{% endblock %}
+
+{% block content %}
+<div style="max-width: 900px; margin: 0 auto; padding: 40px 20px;">
+  <!-- Header -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; padding-bottom: 24px; border-bottom: 2px solid var(--line);">
+    <div>
+      <h1 style="margin: 0 0 8px; font-size: 32px;">⚖️ Copyright Information</h1>
+      <p style="margin: 0; color: var(--muted);">{{ app.title }} v{{ app.version|default:"1.0" }}</p>
+    </div>
+    <a href="{% url 'apps:detail' app.slug %}" style="padding: 12px 24px; background: var(--primary); color: white; border-radius: var(--radius); text-decoration: none; font-weight: 600;">
+      ← Back to App
+    </a>
+  </div>
+
+  <!-- Copyright Badges -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 40px;">
+    <!-- Protection Level -->
+    <div style="padding: 20px; background: var(--bg-secondary); border-radius: var(--radius); border: 1px solid var(--line); text-align: center;">
+      <div style="font-size: 28px; margin-bottom: 8px;">🛡️</div>
+      <h3 style="margin: 0 0 4px; font-size: 13px; font-weight: 600; color: var(--muted);">Protection Level</h3>
+      <p style="margin: 0; font-size: 16px; font-weight: 600; color: var(--primary);">
+        {% if app.copyright_protection_level == 'premium' %}
+          ⭐ Premium
+        {% elif app.copyright_protection_level == 'standard' %}
+          ✓ Standard
+        {% else %}
+          • Basic
+        {% endif %}
+      </p>
+    </div>
+
+    <!-- License Type -->
+    <div style="padding: 20px; background: var(--bg-secondary); border-radius: var(--radius); border: 1px solid var(--line); text-align: center;">
+      <div style="font-size: 28px; margin-bottom: 8px;">📜</div>
+      <h3 style="margin: 0 0 4px; font-size: 13px; font-weight: 600; color: var(--muted);">License Type</h3>
+      <p style="margin: 0; font-size: 15px; font-weight: 600;">
+        {{ app.get_copyright_license_type_display|default:"Proprietary" }}
+      </p>
+    </div>
+
+    <!-- Verification Status -->
+    <div style="padding: 20px; background: var(--bg-secondary); border-radius: var(--radius); border: 1px solid var(--line); text-align: center;">
+      <div style="font-size: 28px; margin-bottom: 8px;">✅</div>
+      <h3 style="margin: 0 0 4px; font-size: 13px; font-weight: 600; color: var(--muted);">Admin Verified</h3>
+      <p style="margin: 0; font-size: 15px; font-weight: 600; color: {% if app.copyright_verified %}#28a745{% else %}#FFC107{% endif %};">
+        {% if app.copyright_verified %}Verified{% else %}Pending{% endif %}
+      </p>
+    </div>
+
+    <!-- Original Content -->
+    <div style="padding: 20px; background: var(--bg-secondary); border-radius: var(--radius); border: 1px solid var(--line); text-align: center;">
+      <div style="font-size: 28px; margin-bottom: 8px;">📋</div>
+      <h3 style="margin: 0 0 4px; font-size: 13px; font-weight: 600; color: var(--muted);">Original Content</h3>
+      <p style="margin: 0; font-size: 15px; font-weight: 600; color: {% if app.is_original_content %}#28a745{% else %}#FFC107{% endif %};">
+        {% if app.is_original_content %}Yes{% else %}Under Review{% endif %}
+      </p>
+    </div>
+  </div>
+
+  <!-- Developer's Copyright Claim -->
+  <div style="padding: 24px; background: var(--bg-secondary); border-radius: var(--radius); border: 1px solid var(--line); margin-bottom: 32px;">
+    <h2 style="margin: 0 0 16px; font-size: 18px;">📎 Developer's Copyright Claim</h2>
+    <div style="padding: 12px; background: var(--bg); border-radius: 6px; border-left: 3px solid var(--primary);">
+      <p style="margin: 0; font-size: 13px; line-height: 1.6;">
+        {% if app.copyright_statement %}
+          {{ app.copyright_statement }}
+        {% else %}
+          No specific copyright statement provided.
+        {% endif %}
+      </p>
+    </div>
+  </div>
+
+  <!-- License Information -->
+  {% if app.copyright_license_url %}
+  <div style="padding: 24px; background: var(--bg-secondary); border-radius: var(--radius); border: 1px solid var(--line); margin-bottom: 32px;">
+    <h2 style="margin: 0 0 16px; font-size: 18px;">📜 License Details</h2>
+    <p style="margin: 0 0 12px; color: var(--muted); font-size: 13px;">License Type: <strong>{{ app.get_copyright_license_type_display }}</strong></p>
+    <a href="{{ app.copyright_license_url }}" target="_blank" rel="noopener" style="display: inline-block; padding: 10px 20px; background: var(--primary); color: white; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 13px;">
+      📖 View Full License
+    </a>
+  </div>
+  {% endif %}
+
+  <!-- Copyright Expiration -->
+  {% if app.copyright_expiration_date %}
+  <div style="padding: 24px; background: rgba(255, 193, 7, 0.1); border-radius: var(--radius); border: 1px solid #FFC107; margin-bottom: 32px;">
+    <h2 style="margin: 0 0 12px; font-size: 18px;">📅 Copyright Expiration</h2>
+    <p style="margin: 0; font-size: 13px; color: var(--muted);">
+      This app's copyright protection expires on: <strong>{{ app.copyright_expiration_date|date:"F d, Y" }}</strong>
+    </p>
+  </div>
+  {% endif %}
+
+  <!-- Infringement Reports -->
+  <div style="padding: 24px; background: var(--bg-secondary); border-radius: var(--radius); border: 1px solid var(--line); margin-bottom: 32px;">
+    <h2 style="margin: 0 0 16px; font-size: 18px;">📌 Infringement Status</h2>
+    {% if app.copyright_infringement_count > 0 %}
+      <div style="padding: 12px; background: rgba(220, 53, 69, 0.1); border-radius: 6px; border-left: 3px solid #dc3545;">
+        <p style="margin: 0; font-size: 13px;">
+          <strong style="color: #dc3545;">⚠️ {{ app.copyright_infringement_count }} infringement report{{ app.copyright_infringement_count|pluralize }} on file</strong><br>
+          <span style="color: var(--muted); font-size: 12px;">Under review by our team</span>
+        </p>
+      </div>
+    {% else %}
+      <div style="padding: 12px; background: rgba(40, 167, 69, 0.1); border-radius: 6px; border-left: 3px solid #28a745;">
+        <p style="margin: 0; font-size: 13px; color: #28a745;">
+          ✅ No active infringement reports
+        </p>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Security & Trust Info -->
+  <div style="padding: 24px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(32, 201, 51, 0.1)); border-radius: var(--radius); border-left: 4px solid var(--primary); margin-bottom: 32px;">
+    <h2 style="margin: 0 0 16px; font-size: 18px;">🛡️ JnDroid Store Copyright Protection</h2>
+    <p style="margin: 0 0 12px; color: var(--muted); font-size: 13px; line-height: 1.6;">
+      JnDroid Store is committed to protecting intellectual property rights. We:
+    </p>
+    <ul style="margin: 0; padding-left: 20px; font-size: 12px; color: var(--muted); line-height: 1.8;">
+      <li>Enforce DMCA takedown notices from copyright holders</li>
+      <li>Review all infringement claims carefully</li>
+      <li>Verify developer claims and original content</li>
+      <li>Maintain detailed records of all copyright disputes</li>
+      <li>Support legitimate copyright holders and developers</li>
+      <li>Take strong action against repeat infringers</li>
+    </ul>
+  </div>
+
+  <!-- Action Buttons -->
+  <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+    <a href="{% url 'apps:detail' app.slug %}" class="btn" style="padding: 12px 24px; background: var(--primary); color: white; border-radius: var(--radius); text-decoration: none; font-weight: 600;">
+      ← Back to App
+    </a>
+    {% if app.copyright_infringement_count <= 5 %}
+    <a href="{% url 'apps:report_infringement' app.slug %}" class="btn btn-outline" style="padding: 12px 24px; background: transparent; color: #dc3545; border: 1px solid #dc3545; border-radius: var(--radius); text-decoration: none; font-weight: 600;">
+      ⚠️ Report Infringement
+    </a>
+    {% endif %}
+    <a href="/dmca-takedown/" class="btn btn-outline" style="padding: 12px 24px; background: transparent; color: var(--primary); border: 1px solid var(--primary); border-radius: var(--radius); text-decoration: none; font-weight: 600;">
+      ⚖️ File DMCA Notice
+    </a>
+  </div>
+
+  <!-- Legal Disclaimer -->
+  <div style="margin-top: 40px; padding: 16px; background: var(--bg-secondary); border-radius: var(--radius); border: 1px solid var(--line);">
+    <p style="margin: 0; font-size: 11px; color: var(--muted); line-height: 1.6;">
+      <strong>Disclaimer:</strong> The copyright information displayed here is provided by the app developer and JnDroid Store staff. While we make efforts to verify copyright claims, we do not provide legal advice. If you have copyright concerns or disputes, we recommend consulting with a qualified attorney.
+    </p>
+  </div>
+</div>
+{% endblock %}

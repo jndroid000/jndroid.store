@@ -73,6 +73,7 @@ def service_worker(request):
 
 
 def home(request):
+    messages.success(request, 'Welcome! This is a test message.')
     return render(request, "home.html")
 
 def support(request):
@@ -990,3 +991,16 @@ def dmca_success(request):
     del request.session['dmca_submitted']
     
     return render(request, 'dmca_success.html')
+
+def search(request):
+    """
+    Search results page
+    Handles search queries from the search component
+    Query parameter: ?q=searchterm
+    """
+    query = request.GET.get('q', '').strip()
+    context = {
+        'query': query,
+    }
+    return render(request, 'search.html', context)
+

@@ -4,7 +4,7 @@ python manage.py runserver
 
 deactivate
 
-source venv/bin/activate
+.venv\Scripts\activate.bat
 
 
 

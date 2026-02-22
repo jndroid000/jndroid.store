@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Request App Takedown - JnDroid Store{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/app_upload.css' %}">{% endblock %}
+
+{% block content %}
+<div class="upload-container">
+  <!-- Header -->
+  <div class="upload-header">
+    <h1>🗑️ Request App Takedown</h1>
+    <p>Request permanent removal of your app from JnDroid Store</p>
+  </div>
+
+  <!-- Warning Alert -->
+  <div class="alert alert-warning" style="border-left: 4px solid #FFC107; background: rgba(255, 193, 7, 0.1); padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+    <span class="alert-icon">⚠️</span>
+    <div>
+      <strong>⚠️ Warning: This Action is Permanent</strong>
+      <p style="margin: 8px 0 0; color: var(--muted);">
+        Once your app is taken down, it will be completely removed from JnDroid Store. This action cannot be reversed automatically. All download links will be disabled and users will not be able to find your app.
+      </p>
+    </div>
+  </div>
+
+  <!-- Messages -->
+  {% if messages %}
+  <div class="messages">
+    {% for message in messages %}
+      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}">
+        <span class="alert-icon">
+          {% if message.tags == 'success' %}✅{% elif message.tags == 'error' %}❌{% elif message.tags == 'warning' %}⚠️{% else %}ℹ️{% endif %}
+        </span>
+        <span class="alert-message">{{ message }}</span>
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Form -->
+  <form method="POST" class="upload-form">
+    {% csrf_token %}
+
+    <!-- App Information Section -->
+    <div class="form-section">
+      <div class="section-header">
+        <span class="section-emoji">📱</span>
+        <h2 class="section-title">App Information</h2>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">App Being Requested for Takedown</label>
+        <div style="padding: 16px; background: var(--bg-secondary); border: 1px solid var(--line); border-radius: 8px; display: flex; align-items: center; gap: 16px;">
+          <div style="font-size: 48px; width: 60px; height: 60px; background: var(--bg); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            {% if app.cover_image %}
+              <img src="{{ app.cover_image.url }}" alt="{{ app.title }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+            {% else %}
+              {{ app.title|first|upper }}
+            {% endif %}
+          </div>
+          <div>
+            <h3 style="margin: 0; font-size: 18px;">{{ app.title }}</h3>
+            <p style="margin: 4px 0 0; color: var(--muted); font-size: 13px;">
+              v{{ app.version|default:"1.0" }} · 
+              <a href="{% url 'apps:list' %}?cat={{ app.category.slug }}" style="color: var(--primary); text-decoration: none;">{{ app.category.name }}</a>
+            </p>
+            <p style="margin: 4px 0 0; color: var(--muted); font-size: 12px;">
+              ⬇️ {{ app.downloads }} downloads · ⭐ {{ app.avg_rating|default:"0"|floatformat:1 }}/5
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Takedown Reason Section -->
+    <div class="form-section">
+      <div class="section-header">
+        <span class="section-emoji">�</span>
+        <h2 class="section-title">Takedown Reason</h2>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          Why are you requesting takedown? <span class="required">*</span>
+        </label>
+        <select name="reason" class="form-input {% if form.reason.errors %}is-invalid{% endif %}" required>
+          <option value="">-- Select a reason --</option>
+          <option value="no_longer_maintain">No longer maintaining the app</option>
+          <option value="personal_request">Personal/privacy request</option>
+          <option value="discontinuing">Discontinuing the app</option>
+          <option value="uploading_newer_version">Uploading newer version elsewhere</option>
+          <option value="contains_sensitive_data">Contains sensitive personal data</option>
+          <option value="violates_terms">App violates store terms</option>
+          <option value="other">Other reason</option>
+        </select>
+        {% if form.reason.errors %}
+          <div class="form-error">
+            {% for error in form.reason.errors %}{{ error }}{% endfor %}
+          </div>
+        {% endif %}
+        <span class="form-help">Select the primary reason for your takedown request</span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          Detailed Explanation <span class="required">*</span>
+        </label>
+        <textarea 
+          name="detailed_reason" 
+          class="form-input {% if form.detailed_reason.errors %}is-invalid{% endif %}"
+          rows="5"
+          placeholder="Please provide additional details about your takedown request..."
+          required
+        >{{ form.detailed_reason.value|default:'' }}</textarea>
+        {% if form.detailed_reason.errors %}
+          <div class="form-error">
+            {% for error in form.detailed_reason.errors %}{{ error }}{% endfor %}
+          </div>
+        {% endif %}
+        <span class="form-help">Be specific about why you want to take down this app</span>
+      </div>
+    </div>
+
+    <!-- Legal Confirmation Section -->
+    <div class="form-section">
+      <div class="section-header">
+        <span class="section-emoji">⚖️</span>
+        <h2 class="section-title">Legal Confirmation</h2>
+      </div>
+
+      <div style="background: rgba(220, 53, 69, 0.1); padding: 20px; border-radius: 8px; border: 1px solid rgba(220, 53, 69, 0.3); margin-bottom: 20px;">
+        <p style="margin: 0; color: #333; font-size: 14px;">
+          <strong>⚠️ Important:</strong> You are confirming that:
+          <ul style="margin: 12px 0 0; padding-left: 20px;">
+            <li>You are the owner/developer of this app</li>
+            <li>You have the authority to request its removal</li>
+            <li>This takedown request is made in good faith</li>
+            <li>The information provided is accurate and truthful</li>
+            <li>Providing false information may result in legal consequences</li>
+          </ul>
+        </p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-check">
+          <input 
+            type="checkbox" 
+            name="confirm_owner" 
+            class="form-check-input"
+            {% if form.confirm_owner.value %}checked{% endif %}
+            required
+          >
+          <span class="form-check-label">
+            I confirm I am the owner of this app and request its takedown
+          </span>
+        </label>
+        {% if form.confirm_owner.errors %}
+          <div class="form-error">
+            {% for error in form.confirm_owner.errors %}{{ error }}{% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-check">
+          <input 
+            type="checkbox" 
+            name="confirm_permanent" 
+            class="form-check-input"
+            {% if form.confirm_permanent.value %}checked{% endif %}
+            required
+          >
+          <span class="form-check-label">
+            I understand this action is permanent and cannot be reversed automatically
+          </span>
+        </label>
+        {% if form.confirm_permanent.errors %}
+          <div class="form-error">
+            {% for error in form.confirm_permanent.errors %}{{ error }}{% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div style="display: flex; gap: 12px; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--line);">
+      <button type="submit" class="btn btn-danger" style="flex: 1; padding: 12px 24px; background: #dc3545; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+        🗑️ Submit Takedown Request
+      </button>
+      <a href="{% url 'apps:detail' app.slug %}" class="btn btn-secondary" style="flex: 1; padding: 12px 24px; background: var(--bg-secondary); color: var(--text); border: 1px solid var(--line); border-radius: 8px; font-weight: 600; cursor: pointer; text-decoration: none; text-align: center;">
+        ← Cancel
+      </a>
+    </div>
+
+    <!-- Info Box -->
+    <div style="margin-top: 30px; padding: 16px; background: var(--bg-secondary); border-radius: 8px; border-left: 4px solid var(--primary);">
+      <h3 style="margin: 0 0 8px; font-size: 14px;">ℹ️ What Happens Next?</h3>
+      <ol style="margin: 0; padding-left: 20px; font-size: 12px; color: var(--muted);">
+        <li>Your takedown request will be reviewed by our team</li>
+        <li>We will verify your ownership of this app</li>
+        <li>If approved, your app will be completely removed from the store (24-48 hours)</li>
+        <li>Download links will be disabled</li>
+        <li>You will receive a confirmation email with details</li>
+        <li>Users will not be able to find or download your app</li>
+      </ol>
+    </div>
+  </form>
+</div>
+
+<style>
+.form-check {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 8px 0;
+}
+
+.form-check-input {
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+  cursor: pointer;
+  accent-color: var(--primary);
+}
+
+.form-check-label {
+  margin: 0;
+  cursor: pointer;
+}
+
+.btn-danger {
+  background: #dc3545 !important;
+}
+
+.btn-danger:hover {
+  background: #c82333 !important;
+}
+
+.alert-warning {
+  background: rgba(255, 193, 7, 0.1) !important;
+  border-left: 4px solid #FFC107 !important;
+}
+</style>
+{% endblock %}

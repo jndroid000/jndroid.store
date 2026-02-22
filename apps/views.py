@@ -10,8 +10,8 @@ from django.http import JsonResponse
 from django.views.decorators.cache import cache_page
 from django.utils import timezone
 
-from .models import App
-from .forms import AppUploadForm
+from .models import App, CopyrightClaim, CopyrightInfringementReport
+from .forms import AppUploadForm, AppTakedownRequestForm, CopyrightInfringementReportForm
 from categories.models import Category
 
 
@@ -65,7 +65,7 @@ def app_list(request):
         "cat": cat,
         "total_results": paginator.count,
     }
-    return render(request, "apps/app_list.html", context)
+    return render(request, "apps/app_list_new.html", context)
 
 
 def app_detail(request, slug):
@@ -92,7 +92,7 @@ def app_detail(request, slug):
         "reviews_count": reviews.count(),
         "related_apps": related_apps,
     }
-    return render(request, "apps/app_detail.html", context)
+    return render(request, "apps/app_detail_modern.html", context)
 
 
 @require_http_methods(["GET"])
@@ -133,7 +133,7 @@ def app_upload(request):
                     app.save()
                     messages.success(
                         request,
-                        f"✅ Success! '{app.title}' has been uploaded to JN App Store.",
+                        f"✅ Success! '{app.title}' has been uploaded to JnDroid Store.",
                         extra_tags='success'
                     )
                 return redirect('apps:detail', slug=app.slug)
@@ -179,20 +179,43 @@ def app_edit(request, slug):
     if request.method == 'POST':
         form = AppUploadForm(request.POST, request.FILES, instance=app, user=request.user)
         if form.is_valid():
-            form.save()
-            messages.success(request, f"App '{app.title}' updated successfully!")
-            return redirect('apps:detail', slug=app.slug)
+            try:
+                with transaction.atomic():
+                    form.save()
+                    messages.success(
+                        request,
+                        f"✅ App '{app.title}' updated successfully!",
+                        extra_tags='success'
+                    )
+                    return redirect('apps:detail', slug=app.slug)
+            except Exception as e:
+                messages.error(
+                    request,
+                    f"❌ Error saving app: {str(e)}. Please try again.",
+                    extra_tags='error'
+                )
+        else:
+            # Show form validation errors
+            messages.error(
+                request,
+                "⚠️ Please fix the errors below and try again.",
+                extra_tags='error'
+            )
+            # Also show detailed field errors
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"  • {error}", extra_tags='error')
     else:
         form = AppUploadForm(instance=app, user=request.user)
     
     context = {
         'form': form,
-        'title': 'Edit App',
+        'title': f'Edit {app.title}',
         'app': app,
         'is_edit': True,
         'is_superuser': request.user.is_superuser,
     }
-    return render(request, 'apps/app_upload.html', context)
+    return render(request, 'apps/app_edit.html', context)
 
 
 @login_required(login_url='accounts:login')
@@ -305,3 +328,226 @@ def popular_apps_api(request):
             'error': str(e),
         }, status=500)
 
+
+# ==================== COPYRIGHT & TAKEDOWN ====================
+
+@login_required(login_url='accounts:login')
+def app_takedown_request(request, slug):
+    """
+    Allow app owners to request takedown of their own apps.
+    This creates a CopyrightClaim with type 'owner_request'
+    """
+    app = get_object_or_404(App, slug=slug)
+    
+    # Verify user is the owner
+    if app.owner != request.user:
+        messages.error(request, 'You can only request takedown of your own apps!')
+        return redirect('apps:detail', slug=app.slug)
+    
+    # Check if takedown already requested
+    if app.takedown_requested:
+        messages.warning(request, f"Takedown for '{app.title}' is already requested and pending review.")
+        return redirect('apps:detail', slug=app.slug)
+    
+    if request.method == 'POST':
+        form = AppTakedownRequestForm(request.POST)
+        if form.is_valid():
+            try:
+                with transaction.atomic():
+                    # Create CopyrightClaim for owner-requested takedown
+                    claim = CopyrightClaim.objects.create(
+                        app=app,
+                        claim_type='owner_request',
+                        claimant_name=request.user.get_full_name() or request.user.username,
+                        claimant_email=request.user.email,
+                        description=f"Owner takedown request for: {app.title}",
+                        reason=form.cleaned_data['detailed_reason'],
+                        status='pending',
+                    )
+                    
+                    # Mark app as takedown requested
+                    app.takedown_requested = True
+                    app.takedown_reason = form.cleaned_data['detailed_reason']
+                    app.takedown_requested_at = timezone.now()
+                    app.save()
+                    
+                    messages.success(
+                        request,
+                        f"✅ Takedown request submitted! Your app '{app.title}' will be reviewed for removal within 24-48 hours.",
+                        extra_tags='success'
+                    )
+                    return redirect('apps:detail', slug=app.slug)
+            except Exception as e:
+                messages.error(
+                    request,
+                    f"❌ Error submitting takedown request: {str(e)}",
+                    extra_tags='error'
+                )
+    else:
+        form = AppTakedownRequestForm()
+    
+    context = {
+        'app': app,
+        'form': form,
+        'title': 'Request App Takedown',
+    }
+    return render(request, 'apps/app_takedown_request.html', context)
+
+
+@login_required(login_url='accounts:login')
+def app_copyright_status(request, slug):
+    """
+    Show copyright status and claims for an app
+    (only visible to app owner)
+    """
+    app = get_object_or_404(App, slug=slug)
+    
+    # Verify user is the owner or staff
+    if app.owner != request.user and not request.user.is_staff:
+        messages.error(request, 'You can only view copyright status of your own apps!')
+        return redirect('apps:detail', slug=app.slug)
+    
+    # Get all claims related to this app
+    claims = CopyrightClaim.objects.filter(app=app).order_by('-submitted_at')
+    
+    # Get pending claims count
+    pending_claims = claims.filter(status='pending').count()
+    approved_claims = claims.filter(status='approved').count()
+    
+    context = {
+        'app': app,
+        'claims': claims,
+        'pending_claims': pending_claims,
+        'approved_claims': approved_claims,
+        'title': f'Copyright Status - {app.title}',
+    }
+    return render(request, 'apps/app_copyright_status.html', context)
+
+
+# ==================== COPYRIGHT INFRINGEMENT REPORTING ====================
+
+@require_http_methods(["GET", "POST"])
+def app_report_infringement(request, slug):
+    """
+    Allow users to report copyright infringement for an app
+    """
+    app = get_object_or_404(App, slug=slug, is_published=True)
+    
+    if request.method == 'POST':
+        form = CopyrightInfringementReportForm(request.POST)
+        if form.is_valid():
+            try:
+                with transaction.atomic():
+                    report = form.save(commit=False)
+                    report.app = app
+                    report.status = 'submitted'
+                    report.save()
+                    
+                    # Update app's infringement report count
+                    app.copyright_infringement_count = F('copyright_infringement_count') + 1
+                    app.has_infringement_report = True
+                    app.save(update_fields=['copyright_infringement_count', 'has_infringement_report'])
+                    
+                    messages.success(
+                        request,
+                        "✅ Thank you! Your infringement report has been submitted. Our team will review it within 24-48 hours.",
+                        extra_tags='success'
+                    )
+                    return redirect('apps:detail', slug=app.slug)
+            except Exception as e:
+                messages.error(
+                    request,
+                    f"❌ Error submitting report: {str(e)}",
+                    extra_tags='error'
+                )
+    else:
+        form = CopyrightInfringementReportForm()
+    
+    context = {
+        'app': app,
+        'form': form,
+        'title': f'Report Infringement - {app.title}',
+    }
+    return render(request, 'apps/app_report_infringement.html', context)
+
+
+def app_copyright_check(request, slug):
+    """
+    Show copyright verification status for an app (public view)
+    """
+    app = get_object_or_404(App, slug=slug, is_published=True)
+    
+    context = {
+        'app': app,
+        'title': f'Copyright Information - {app.title}',
+    }
+    return render(request, 'apps/app_copyright_check.html', context)
+
+
+@require_http_methods(["GET"])
+def search_api(request):
+    """
+    রিয়েলটাইম API সার্চ এন্ডপয়েন্ট
+    GET /api/search/?q=query
+    
+    JSON রেসপন্স রিটার্ন করে:
+    {
+        "success": bool,
+        "query": string,
+        "count": int,
+        "apps": [
+            {
+                "id": int,
+                "title": string,
+                "slug": string,
+                "icon": string (image URL),
+                "short_description": string,
+                "category": string,
+                "rating": float,
+                "download_count": int
+            }
+        ]
+    }
+    """
+    query = request.GET.get('q', '').strip()
+    
+    # মিনিমাম ১ ক্যারেক্টার প্রয়োজন
+    if not query or len(query) < 1:
+        return JsonResponse({
+            'success': False,
+            'query': query,
+            'count': 0,
+            'apps': [],
+            'message': 'কমপক্ষে ১ ক্যারেক্টার টাইপ করুন'
+        })
+    
+    # সার্চ করো টাইটেল, ডেস্ক্রিপশন, ক্যাটাগরিতে
+    apps = App.objects.filter(
+        is_published=True
+    ).filter(
+        Q(title__icontains=query) |
+        Q(short_description__icontains=query) |
+        Q(description__icontains=query) |
+        Q(category__name__icontains=query)
+    ).select_related('category').order_by('-downloads')[:10]  # ম্যাক্স ১০ রেজাল্ট
+    
+    # JSON ফরম্যাটে রেসপন্স প্রিপেয়ার করো
+    results = []
+    for app in apps:
+        results.append({
+            'id': app.id,
+            'title': app.title,
+            'slug': app.slug,
+            'icon': app.cover_image.url if app.cover_image else '/static/images/default-app-icon.png',
+            'short_description': app.short_description[:100] if app.short_description else '',
+            'category': app.category.name if app.category else 'অন্যান্য',
+            'rating': round(app.avg_rating or 0, 1),
+            'download_count': app.downloads or 0,
+        })
+    
+    return JsonResponse({
+        'success': True,
+        'query': query,
+        'count': len(results),
+        'apps': results
+    })

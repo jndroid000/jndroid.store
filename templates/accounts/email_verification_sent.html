@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}ইমেইল যাচাইকরণ - JN App Store{% endblock %}
+{% block title %}ইমেইল যাচাইকরণ - JnDroid Store{% endblock %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/review_form.css' %}">
 <style>
@@ -40,6 +40,28 @@
     margin: 0;
     font-size: 15px;
     line-height: 1.6;
+  }
+  
+  .emailBox {
+    background: rgba(59, 130, 246, 0.08);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 24px 0;
+    text-align: center;
+  }
+  
+  .emailBox p {
+    margin: 0;
+    font-size: 14px;
+    color: #6b7280;
+  }
+  
+  .emailBox .email-address {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+    margin-top: 8px;
   }
   
   .stepsBox {
@@ -146,6 +168,23 @@
   .footerLinks a:hover {
     background: rgba(59, 130, 246, 0.2);
   }
+  
+  .resendButton {
+    display: inline-block;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, var(--brand), #4f46e5);
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s;
+    margin-top: 12px;
+  }
+  
+  .resendButton:hover {
+    opacity: 0.9;
+  }
 </style>
 {% endblock %}
 
@@ -157,21 +196,28 @@
     <h1>ইমেইল যাচাইকরণ প্রয়োজন</h1>
     <p>আপনার অ্যাকাউন্ট সক্রিয় করতে আপনার ইমেইলে পাঠানো যাচাইকরণ লিঙ্ক ক্লিক করুন</p>
     
+    {% if email %}
+    <div class="emailBox">
+      <p>✓ যাচাইকরণ মেসেজ পাঠানো হয়েছে:</p>
+      <div class="email-address">{{ email }}</div>
+    </div>
+    {% endif %}
+    
     <div class="stepsBox">
       <h3>✓ সফলভাবে সাইন আপ করেছেন!</h3>
       <p style="font-size: 14px; color: #475569; margin: 12px 0 0;">এখন শুধু আপনার ইমেইল যাচাই করুন:</p>
       <ol>
         <li>আপনার <strong>ইমেইল ইনবক্স</strong> খুলুন</li>
-        <li><strong>"JN App Store"</strong> থেকে ইমেইল খুঁজুন</li>
+        <li><strong>"JnDroid Store"</strong> থেকে ইমেইল খুঁজুন</li>
         <li><strong>"ইমেইল যাচাই করুন"</strong> লিঙ্কে ক্লিক করুন</li>
-        <li>স্বয়ংক্রিয়ভাবে আপনার প্রোফাইল পেজে পাঠানো হবেন</li>
+        <li>এই পেজ <strong>স্বয়ংক্রিয়ভাবে আপডেট</strong> হবে এবং আপনাকে সঠিক পেজে পাঠাবে</li>
       </ol>
     </div>
     
     <div class="flowBox">
       <strong>🔄 যাচাইকরণ প্রক্রিয়া:</strong>
       <br/>
-      লিঙ্কে ক্লিক করুন → অটো লগইন → প্রোফাইল পেজে রিডিরেক্ট
+      লিঙ্কে ক্লিক করুন → এই পেজ আপডেট হবে → স্বয়ংক্রিয় রিডিরেক্ট
     </div>
     
     <div class="successBox">
@@ -185,6 +231,13 @@
         <li>Gmail এ <strong>"প্রমোশন" ট্যাব</strong> দেখুন</li>
         <li>আপনার ইমেইল ঠিকানা সঠিক কিনা যাচাই করুন</li>
         <li>কয়েক মিনিট অপেক্ষা করে পুনরায় চেক করুন</li>
+        {% if email %}
+        <li style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(146, 64, 14, 0.2);">
+          <strong>এখনও পাচ্ছেন না?</strong>
+          <br/>
+          <a href="{% url 'accounts:resend_verification' %}?email={{ email }}" class="resendButton">📨 ইমেইল পুনরায় পাঠান</a>
+        </li>
+        {% endif %}
       </ul>
     </div>
     
@@ -194,4 +247,46 @@
     </div>
   </div>
 </div>
+
+<!-- Auto-check email verification status -->
+<script>
+(function() {
+  // Check every 3 seconds if email has been verified
+  const checkInterval = setInterval(function() {
+    fetch('{% url "accounts:check-email-verification" %}')
+      .then(response => response.json())
+      .then(data => {
+        if (data.verified) {
+          // Email verified! Clear interval and redirect
+          clearInterval(checkInterval);
+          
+          // Show success message
+          const card = document.querySelector('.verificationCard');
+          if (card) {
+            card.innerHTML = `
+              <div style="text-align: center;">
+                <div style="font-size: 56px; margin-bottom: 20px;">✓</div>
+                <h1 style="font-size: 26px; margin: 0 0 12px; color: #1f2937;">যাচাইকরণ সম্পন্ন!</h1>
+                <p style="color: #6b7280; margin: 0; font-size: 15px;">আপনার অ্যাকাউন্ট সফলভাবে সক্রিয় হয়েছে</p>
+                <p style="color: #9ca3af; margin-top: 16px; font-size: 14px;">পাঠানো হচ্ছে...</p>
+              </div>
+            `;
+          }
+          
+          // Redirect after 1 second
+          setTimeout(function() {
+            window.location.href = data.redirect_url;
+          }, 1000);
+        }
+      })
+      .catch(error => console.log('কোন সমস্যা নেই, পুনরায় চেষ্টা করছি...'));
+  }, 3000);
+  
+  // Stop checking after 10 minutes (600 seconds)
+  setTimeout(function() {
+    clearInterval(checkInterval);
+  }, 600000);
+})();
+</script>
+
 {% endblock %}

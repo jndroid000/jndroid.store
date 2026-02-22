@@ -8,6 +8,7 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.conf import settings
 from django.utils import timezone
+from django.http import JsonResponse
 from allauth.account.models import EmailAddress, EmailConfirmationHMAC
 from .models import User, PasswordResetOTP, AccountDeletionOTP
 from .forms import SignUpForm, LoginForm, ProfileUpdateForm
@@ -131,6 +132,20 @@ def signup_view(request):
                 logger.error(f"[SIGNUP EMAIL ERROR] Failed to send confirmation email to {user.email}: {str(e)}", exc_info=True)
                 print(f"[ERROR] Error sending confirmation email: {e}")
             
+            # Store referrer URL in session for post-verification redirect
+            referrer = request.GET.get('next', request.POST.get('next'))
+            if not referrer:
+                # Try to get HTTP_REFERER if no next parameter
+                http_referer = request.META.get('HTTP_REFERER', '')
+                if http_referer and 'signup' not in http_referer:
+                    referrer = http_referer
+            
+            if referrer:
+                request.session['signup_referrer'] = referrer
+            
+            # Store email in session
+            request.session['signup_email'] = user.email
+            
             messages.success(
                 request,
                 f'Account created! Please check your email at {user.email} to verify your account. '
@@ -150,10 +165,77 @@ def signup_view(request):
 @require_http_methods(["GET"])
 def email_verification_sent(request):
     """Show message after sending verification email"""
+    # Get email from session or find most recent unverified user
+    email = request.session.get('signup_email')
+    
+    if not email:
+        # Try to find the most recent unverified user
+        try:
+            unverified_user = User.objects.filter(is_active=False).order_by('-date_joined').first()
+            if unverified_user:
+                email = unverified_user.email
+        except:
+            pass
+    
     context = {
         'title': 'Verify Your Email',
+        'email': email,
     }
     return render(request, 'accounts/email_verification_sent.html', context)
+
+
+@require_http_methods(["GET"])
+def check_email_verification_status(request):
+    """
+    API endpoint to check if email has been verified
+    Returns JSON with verification status and redirect URL
+    """
+    email = request.session.get('signup_email')
+    
+    if not email:
+        return JsonResponse({
+            'verified': False,
+            'message': 'No email in session'
+        })
+    
+    try:
+        # Check if user exists and is active (verified)
+        user = User.objects.get(email=email)
+        
+        if user.is_active and user.email_verified:
+            # Email has been verified
+            # Determine redirect URL
+            redirect_url = request.session.pop('signup_referrer', None)
+            
+            # Clear email from session
+            request.session.pop('signup_email', None)
+            request.session.save()
+            
+            # If no referrer, default to profile
+            if not redirect_url:
+                redirect_url = '/accounts/profile/'
+            
+            return JsonResponse({
+                'verified': True,
+                'redirect_url': redirect_url,
+                'message': 'Email verified successfully!'
+            })
+        else:
+            return JsonResponse({
+                'verified': False,
+                'message': 'Email not yet verified'
+            })
+    
+    except User.DoesNotExist:
+        return JsonResponse({
+            'verified': False,
+            'message': 'User not found'
+        })
+    except Exception as e:
+        return JsonResponse({
+            'verified': False,
+            'message': f'Error: {str(e)}'
+        })
 
 
 @require_http_methods(["GET"])
@@ -194,14 +276,20 @@ def email_confirmation_view(request, key):
         # Check if already verified
         if email_address.verified:
             print(f"[DEBUG] Email already verified: {email_address.email}")
-            # Already verified - show success page
-            context = {
-                'title': 'Email Already Verified',
-                'email': email_address.email,
-                'already_verified': True,
-            }
+            # Already verified - just ensure user is logged in and redirect
+            user = email_address.user
+            
+            # Auto-login the user
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            
+            # Store email in session
+            request.session['signup_email'] = user.email
+            request.session.save()
+            
             messages.info(request, 'এই ইমেইল ইতিমধ্যে যাচাই করা হয়েছে এবং আপনার অ্যাকাউন্ট সক্রিয়।')
-            return render(request, 'accounts/email_verification_success.html', context)
+            
+            # Redirect to email-verification-sent where polling will handle final redirect
+            return redirect('accounts:email-verification-sent')
         
         # Verify the email address - handle duplicate email addresses first
         user = email_address.user
@@ -235,13 +323,15 @@ def email_confirmation_view(request, key):
         login(request, user, backend='django.contrib.auth.backends.ModelBackend')
         print(f"[DEBUG] User logged in: {user.username}")
         
-        # Show success page with redirect info
-        context = {
-            'title': 'Email Verified',
-            'email': user.email,
-        }
+        # Store email and message in session so they persist through redirect
+        request.session['signup_email'] = user.email
+        request.session.save()
+        
+        # Show success message
         messages.success(request, '✓ ইমেইল যাচাইকরণ সফল! আপনার অ্যাকাউন্ট এখন সক্রিয়।')
-        return render(request, 'accounts/email_verification_success.html', context)
+        
+        # Redirect to email-verification-sent page where polling will handle final redirect
+        return redirect('accounts:email-verification-sent')
     
     except Exception as e:
         # Handle expired or invalid confirmations
@@ -463,6 +553,12 @@ def password_reset_view(request):
             messages.error(request, 'দয়া করে একটি ইমেইল ঠিকানা প্রদান করুন।')
             return render(request, 'accounts/password_reset.html')
         
+        # Security check: If user is logged in, they can only reset for their own email
+        if request.user.is_authenticated:
+            if email != request.user.email:
+                messages.error(request, 'আপনি আপনার সঠিক ইমেইল প্রদান করে নিজের অ্যাকাউন্টের পাসওয়ার্ড রিসেট করতে পারেন।')
+                return render(request, 'accounts/password_reset.html')
+        
         try:
             user = User.objects.get(email=email)
             
@@ -528,6 +624,12 @@ def password_reset_verify_otp_view(request, email):
     """Verify OTP for password reset"""
     from django.utils import timezone
     
+    # Security check: If user is logged in, they can only reset for their own email
+    if request.user.is_authenticated:
+        if email != request.user.email:
+            messages.error(request, 'আপনি শুধুমাত্র আপনার নিজের অ্যাকাউন্টের পাসওয়ার্ড পরিবর্তন করতে পারেন।')
+            return redirect('accounts:profile')
+    
     try:
         user = User.objects.get(email=email)
     except User.DoesNotExist:
@@ -582,6 +684,12 @@ def password_reset_verify_otp_view(request, email):
 @csrf_protect
 def password_reset_new_password_view(request, email):
     """Set new password after OTP verification"""
+    
+    # Security check: If user is logged in, they can only reset for their own email
+    if request.user.is_authenticated:
+        if email != request.user.email:
+            messages.error(request, 'আপনি শুধুমাত্র আপনার নিজের অ্যাকাউন্টের পাসওয়ার্ড পরিবর্তন করতে পারেন।')
+            return redirect('accounts:profile')
     
     try:
         user = User.objects.get(email=email)

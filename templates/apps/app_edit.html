@@ -1,0 +1,839 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Edit {{ app.title }} - JnDroid Store{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/app_upload.css' %}">
+<style>
+  .edit-header-preview {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
+    align-items: start;
+  }
+
+  .edit-preview-card {
+    background: var(--bg-secondary);
+    border: 2px solid var(--line);
+    border-radius: var(--radius);
+    padding: 24px;
+  }
+
+  .edit-cover-preview {
+    width: 100%;
+    aspect-ratio: 1;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 48px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  .edit-cover-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .edit-app-info {
+    text-align: center;
+  }
+
+  .edit-app-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 12px 0 4px;
+    color: var(--text);
+  }
+
+  .edit-app-version {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+
+  .edit-app-category {
+    display: inline-block;
+    padding: 4px 12px;
+    background: var(--primary);
+    color: white;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+
+  .edit-app-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+  }
+
+  .edit-stat {
+    text-align: center;
+  }
+
+  .edit-stat-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary);
+  }
+
+  .edit-stat-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .edit-current-values {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.05), rgba(59, 130, 246, 0.05));
+    border-left: 3px solid var(--primary);
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    margin-top: 12px;
+  }
+
+  .edit-current-values strong {
+    color: var(--primary);
+  }
+
+  @media (max-width: 768px) {
+    .edit-header-preview {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .warning-section {
+    background: linear-gradient(135deg, rgba(217, 119, 6, 0.1), rgba(239, 68, 68, 0.1));
+    border-left: 4px solid #d97706;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+  }
+
+  .warning-section h4 {
+    color: #d97706;
+    margin: 0 0 8px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .warning-section p {
+    margin: 0;
+    color: #78350f;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="upload-container">
+  <!-- Header -->
+  <div class="upload-header">
+    <h1>✏️ Edit Your App</h1>
+    <p>Update app details, cover image, version, and more to keep your listing fresh and accurate</p>
+  </div>
+
+  <!-- Messages -->
+  {% if messages %}
+  <div class="messages">
+    {% for message in messages %}
+      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}">
+        <span class="alert-icon">
+          {% if message.tags == 'success' %}✅{% elif message.tags == 'error' %}❌{% elif message.tags == 'warning' %}⚠️{% else %}ℹ️{% endif %}
+        </span>
+        <span class="alert-message">{{ message }}</span>
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- App Preview Section -->
+  <div class="edit-header-preview">
+    <!-- Preview -->
+    <div class="edit-preview-card">
+      <h3 style="margin: 0 0 16px; font-size: 14px; font-weight: 700; text-transform: uppercase; color: var(--text-muted);">
+        📱 Preview (How it looks in store)
+      </h3>
+      
+      <div class="edit-cover-preview">
+        {% if form.cover_image.value %}
+          <img src="{{ form.cover_image.value.url }}" alt="{{ app.title }}">
+        {% else %}
+          🎨
+        {% endif %}
+      </div>
+
+      <div class="edit-app-info">
+        <div class="edit-app-category">
+          {{ app.category.icon }} {{ app.category.name }}
+        </div>
+        <h2 class="edit-app-title">{{ app.title }}</h2>
+        <div class="edit-app-version">v{{ app.version }}</div>
+        <p style="margin: 12px 0; color: var(--text-muted); font-size: 13px; line-height: 1.5;">
+          {{ app.short_description|truncatewords:20 }}
+        </p>
+
+        <div class="edit-app-stats">
+          <div class="edit-stat">
+            <div class="edit-stat-value">{{ app.downloads }}</div>
+            <div class="edit-stat-label">Downloads</div>
+          </div>
+          <div class="edit-stat">
+            <div class="edit-stat-value">{{ app.avg_rating|default:"0" }}</div>
+            <div class="edit-stat-label">Rating</div>
+          </div>
+        </div>
+
+        <div class="edit-current-values">
+          <strong>📊 Published:</strong> {{ app.is_published|yesno:"Yes,No" }}<br>
+          <strong>📅 Updated:</strong> {{ app.updated_at|date:"M d, Y" }}<br>
+          <strong>📦 Size:</strong> {{ app.size_mb }}MB
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Info -->
+    <div class="edit-preview-card">
+      <h3 style="margin: 0 0 16px; font-size: 14px; font-weight: 700; text-transform: uppercase; color: var(--text-muted);">
+        📋 App Information
+      </h3>
+
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <!-- App Details -->
+        <div>
+          <label style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px;">
+            App Name
+          </label>
+          <div style="font-size: 14px; font-weight: 600; color: var(--text);">{{ app.title }}</div>
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px;">
+            App URL
+          </label>
+          <a href="{% url 'apps:detail' app.slug %}" target="_blank" style="font-size: 13px; color: var(--primary); word-break: break-all;">
+            /apps/{{ app.slug }}/
+          </a>
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px;">
+            Developer
+          </label>
+          <div style="font-size: 13px; color: var(--text);">{{ app.developer_name }}</div>
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px;">
+            Category
+          </label>
+          <div style="font-size: 13px; color: var(--text);">{{ app.category.icon }} {{ app.category.name }}</div>
+        </div>
+
+        <div style="padding-top: 16px; border-top: 1px solid var(--line); margin-top: 16px;">
+          <a href="{% url 'apps:detail' app.slug %}" target="_blank" class="btn btn-secondary" style="width: 100%; text-align: center;">
+            👁️ View Live
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Warning Section -->
+  <div class="warning-section">
+    <h4>⚠️ Important: What You Can Edit</h4>
+    <p>
+      You can update most app details below. However, once published, changing the <strong>App Name</strong> or <strong>Category</strong> may affect discoverability. 
+      Always ensure accuracy in <strong>cover images, descriptions, and version information</strong> to maintain user trust.
+    </p>
+  </div>
+
+  <!-- Edit Form -->
+  <form method="POST" enctype="multipart/form-data" class="upload-form">
+    {% csrf_token %}
+
+    <!-- Basic Information Section -->
+    <div class="form-section">
+      <div class="section-header">
+        <span class="section-emoji">📋</span>
+        <h2 class="section-title">Basic Information</h2>
+      </div>
+
+      <div class="form-row">
+        <!-- App Name -->
+        <div class="form-group">
+          <label class="form-label">
+            App Name <span class="required">*</span>
+          </label>
+          <input 
+            type="text" 
+            name="title" 
+            class="form-input {% if form.title.errors %}is-invalid{% endif %}"
+            value="{{ form.title.value|default:'' }}"
+            placeholder="MyAwesome App"
+            required
+          >
+          {% if form.title.errors %}
+            <div class="form-error">
+              {% for error in form.title.errors %}{{ error }}{% endfor %}
+            </div>
+          {% endif %}
+          <span class="form-help">The name users will see in the app store</span>
+        </div>
+
+        <!-- App Slug -->
+        <div class="form-group">
+          <label class="form-label">
+            App Slug (URL) <span class="required">*</span>
+          </label>
+          <div style="display: flex; gap: 8px;">
+            <span style="display: flex; align-items: center; padding: 0 12px; background: var(--bg-tertiary); border-radius: var(--radius); font-size: 13px; color: var(--text-muted);">
+              /apps/
+            </span>
+            <input 
+              type="text" 
+              name="slug" 
+              class="form-input {% if form.slug.errors %}is-invalid{% endif %}"
+              value="{{ form.slug.value|default:'' }}"
+              placeholder="my-awesome-app"
+              required
+              style="flex: 1;"
+            >
+          </div>
+          {% if form.slug.errors %}
+            <div class="form-error">
+              {% for error in form.slug.errors %}{{ error }}{% endfor %}
+            </div>
+          {% endif %}
+          <span class="form-help">URL-friendly name (lowercase, hyphens only). Changing this will break existing links!</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <!-- Category -->
+        <div class="form-group">
+          <label class="form-label">
+            Category <span class="required">*</span>
+          </label>
+          <select name="category" class="form-select {% if form.category.errors %}is-invalid{% endif %}" required>
+            <option value="">-- Select a category --</option>
+            {% for category in form.category.field.queryset %}
+              <option value="{{ category.id }}" {% if form.category.value == category.id|stringformat:"s" %}selected{% endif %}>
+                {{ category.icon }} {{ category.name }}
+              </option>
+            {% endfor %}
+          </select>
+          {% if form.category.errors %}
+            <div class="form-error">
+              {% for error in form.category.errors %}{{ error }}{% endfor %}
+            </div>
+          {% endif %}
+          <span class="form-help">Changing category may affect visibility</span>
+        </div>
+
+        <!-- Version -->
+        <div class="form-group">
+          <label class="form-label">App Version</label>
+          <input 
+            type="text" 
+            name="version" 
+            class="form-input"
+            value="{{ form.version.value|default:'' }}"
+            placeholder="1.0.0"
+          >
+          <span class="form-help">Update this when you release a new version. Current: {{ app.version }}</span>
+        </div>
+
+        <!-- Size in MB -->
+        <div class="form-group">
+          <label class="form-label">App Size (MB)</label>
+          <input 
+            type="number" 
+            name="size_mb" 
+            class="form-input"
+            value="{{ form.size_mb.value|default:'' }}"
+            placeholder="50.5"
+            step="0.01"
+            min="0"
+          >
+          <span class="form-help">File size in megabytes. Current: {{ app.size_mb }}MB</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Description Section -->
+    <div class="form-section">
+      <div class="section-header">
+        <span class="section-emoji">📝</span>
+        <h2 class="section-title">Description</h2>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Short Description</label>
+        <textarea 
+          name="short_description" 
+          class="form-textarea {% if form.short_description.errors %}is-invalid{% endif %}"
+          placeholder="Brief summary of your app (max 220 characters)"
+          rows="2"
+        >{{ form.short_description.value|default:'' }}</textarea>
+        {% if form.short_description.errors %}
+          <div class="form-error">
+            {% for error in form.short_description.errors %}{{ error }}{% endfor %}
+          </div>
+        {% endif %}
+        <span class="form-help">One-line summary shown in app listings. Keep it catchy!</span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Full Description</label>
+        <textarea 
+          name="description" 
+          class="form-textarea {% if form.description.errors %}is-invalid{% endif %}"
+          placeholder="Detailed description: features, benefits, usage instructions, requirements..."
+          rows="6"
+        >{{ form.description.value|default:'' }}</textarea>
+        {% if form.description.errors %}
+          <div class="form-error">
+            {% for error in form.description.errors %}{{ error }}{% endfor %}
+          </div>
+        {% endif %}
+        <span class="form-help">Complete details shown on the app detail page. Be detailed and informative!</span>
+      </div>
+    </div>
+
+    <!-- Media & Downloads Section -->
+    <div class="form-section">
+      <div class="section-header">
+        <span class="section-emoji">🎨</span>
+        <h2 class="section-title">Media & Downloads</h2>
+      </div>
+
+      <div class="form-row">
+        <!-- Cover Image -->
+        <div class="form-group">
+          <label class="form-label">Cover Image</label>
+          <div class="file-upload-wrapper">
+            {% if form.cover_image.value %}
+              <div style="margin-bottom: 12px;">
+                <img src="{{ form.cover_image.value.url }}" alt="Current cover" style="max-width: 150px; border-radius: var(--radius); border: 2px solid var(--primary);">
+                <div style="margin-top: 8px;">
+                  <small style="color: var(--text-muted);">Current cover image</small>
+                </div>
+              </div>
+            {% endif %}
+            <label for="id_cover_image" class="file-upload-input">
+              <span class="file-upload-icon">🖼️</span>
+              <span class="file-upload-text">Click to upload or drag image here</span>
+              <span class="file-upload-subtext">JPG, PNG (1:1 ratio recommended)</span>
+            </label>
+            <input type="file" id="id_cover_image" name="cover_image" accept="image/*">
+          </div>
+          {% if form.cover_image.errors %}
+            <div class="form-error">
+              {% for error in form.cover_image.errors %}{{ error }}{% endfor %}
+            </div>
+          {% endif %}
+          <span class="form-help">{{ app.cover_image|truncatechars:40 }}</span>
+        </div>
+
+        <!-- APK File -->
+        <div class="form-group">
+          <label class="form-label">App File (APK/EXE/IPA)</label>
+          <div class="file-upload-wrapper">
+            {% if form.apk_file.value %}
+              <div style="margin-bottom: 12px; padding: 12px; background: var(--bg-tertiary); border-radius: var(--radius); color: var(--text-muted); font-size: 12px;">
+                ✅ File uploaded: {{ form.apk_file.value|truncatechars:30 }}
+              </div>
+            {% endif %}
+            <label for="id_apk_file" class="file-upload-input">
+              <span class="file-upload-icon">📦</span>
+              <span class="file-upload-text">Click to upload or drag file here</span>
+              <span class="file-upload-subtext">APK, EXE, or IPA file</span>
+            </label>
+            <input type="file" id="id_apk_file" name="apk_file" accept=".apk,.exe,.ipa">
+          </div>
+          {% if form.apk_file.errors %}
+            <div class="form-error">
+              {% for error in form.apk_file.errors %}{{ error }}{% endfor %}
+            </div>
+          {% endif %}
+          <span class="form-help">{% if app.apk_file %}Update the app file or keep the current one{% else %}Optional if using external download link{% endif %}</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <!-- Download Link -->
+        <div class="form-group">
+          <label class="form-label">External Download Link</label>
+          <input 
+            type="url" 
+            name="download_link" 
+            class="form-input"
+            value="{{ form.download_link.value|default:'' }}"
+            placeholder="https://drive.google.com/..."
+          >
+          {% if form.download_link.errors %}
+            <div class="form-error">
+              {% for error in form.download_link.errors %}{{ error }}{% endfor %}
+            </div>
+          {% endif %}
+          <span class="form-help">Google Drive, Mega, GitHub Releases, etc. (optional)</span>
+        </div>
+
+        <!-- Store Name -->
+        <div class="form-group">
+          <label class="form-label">Store / Platform Name</label>
+          <input 
+            type="text" 
+            name="store_name" 
+            class="form-input"
+            value="{{ form.store_name.value|default:'JnDroid Store' }}"
+            placeholder="e.g., Google Play Store, App Store, GitHub"
+          >
+          <span class="form-help">Where the app is available</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Android Requirements Section -->
+    <div class="form-section">
+      <div class="section-header">
+        <span class="section-emoji">🤖</span>
+        <h2 class="section-title">Android Requirements</h2>
+      </div>
+
+      <div class="form-row">
+        <!-- Min Android Version -->
+        <div class="form-group">
+          <label class="form-label">Minimum Android Version</label>
+          <input 
+            type="text" 
+            name="min_android_version" 
+            class="form-input"
+            value="{{ form.min_android_version.value|default:'5.0' }}"
+            placeholder="e.g., 5.0 (Lollipop)"
+          >
+          <span class="form-help">Minimum Android OS required</span>
+        </div>
+
+        <!-- Target Android Version -->
+        <div class="form-group">
+          <label class="form-label">Target Android Version</label>
+          <input 
+            type="text" 
+            name="target_android_version" 
+            class="form-input"
+            value="{{ form.target_android_version.value|default:'15.0' }}"
+            placeholder="e.g., 15.0 (VanillaIceCream)"
+          >
+          <span class="form-help">Target Android OS version</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <!-- Min API Level -->
+        <div class="form-group">
+          <label class="form-label">Minimum API Level</label>
+          <input 
+            type="number" 
+            name="min_api_level" 
+            class="form-input"
+            value="{{ form.min_api_level.value|default:'21' }}"
+            placeholder="21"
+            min="1"
+          >
+          <span class="form-help">API Level 21 = Android 5.0 Lollipop</span>
+        </div>
+
+        <!-- Target API Level -->
+        <div class="form-group">
+          <label class="form-label">Target API Level</label>
+          <input 
+            type="number" 
+            name="target_api_level" 
+            class="form-input"
+            value="{{ form.target_api_level.value|default:'35' }}"
+            placeholder="35"
+            min="1"
+          >
+          <span class="form-help">API Level 35 = Android 15 VanillaIceCream</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Developer Information Section -->
+    <div class="form-section">
+      <div class="section-header">
+        <span class="section-emoji">👨‍💼</span>
+        <h2 class="section-title">Developer Information</h2>
+        {% if not is_superuser %}
+        <span style="margin-left: auto; color: var(--text-muted); font-size: 12px; padding: 4px 12px; background: var(--bg); border-radius: var(--radius); border: 1px solid var(--line);">
+          🔒 Account Info (Read-only)
+        </span>
+        {% endif %}
+      </div>
+
+      <div class="form-row">
+        <!-- Developer Name -->
+        <div class="form-group">
+          <label class="form-label">Developer / Company Name</label>
+          {{ form.developer_name }}
+          {% if form.developer_name.errors %}
+            <div class="form-error">
+              {% for error in form.developer_name.errors %}{{ error }}{% endfor %}
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Developer Email -->
+        <div class="form-group">
+          <label class="form-label">Developer Email</label>
+          {{ form.developer_email }}
+          {% if form.developer_email.errors %}
+            <div class="form-error">
+              {% for error in form.developer_email.errors %}{{ error }}{% endfor %}
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Support Email -->
+        <div class="form-group">
+          <label class="form-label">Support Email</label>
+          {{ form.support_email }}
+          {% if form.support_email.errors %}
+            <div class="form-error">
+              {% for error in form.support_email.errors %}{{ error }}{% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="form-row">
+        <!-- Website -->
+        <div class="form-group">
+          <label class="form-label">Website URL</label>
+          <input 
+            type="url" 
+            name="website_url" 
+            class="form-input"
+            value="{{ form.website_url.value|default:'' }}"
+            placeholder="https://www.example.com"
+          >
+          <span class="form-help">Your official website</span>
+        </div>
+
+        <!-- Source Code -->
+        <div class="form-group">
+          <label class="form-label">Source Code URL</label>
+          <input 
+            type="url" 
+            name="source_url" 
+            class="form-input"
+            value="{{ form.source_url.value|default:'' }}"
+            placeholder="https://github.com/username/repo"
+          >
+          <span class="form-help">GitHub, GitLab, or other source repository</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <!-- Privacy Policy -->
+        <div class="form-group">
+          <label class="form-label">Privacy Policy URL</label>
+          <input 
+            type="url" 
+            name="privacy_policy_url" 
+            class="form-input"
+            value="{{ form.privacy_policy_url.value|default:'' }}"
+            placeholder="https://example.com/privacy"
+          >
+          <span class="form-help">Link to your privacy policy</span>
+        </div>
+
+        <!-- Terms of Service -->
+        <div class="form-group">
+          <label class="form-label">Terms of Service URL</label>
+          <input 
+            type="url" 
+            name="terms_url" 
+            class="form-input"
+            value="{{ form.terms_url.value|default:'' }}"
+            placeholder="https://example.com/terms"
+          >
+          <span class="form-help">Link to your terms of service</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Monetization Section -->
+    <div class="form-section">
+      <div class="section-header">
+        <span class="section-emoji">💰</span>
+        <h2 class="section-title">Monetization</h2>
+      </div>
+
+      <div class="form-row">
+        <!-- Is Free -->
+        <div class="form-group">
+          <label class="form-check">
+            <input type="checkbox" name="is_free" {% if form.is_free.value %}checked{% endif %}>
+            <span class="form-check-label">This app is free</span>
+          </label>
+          <span class="form-check-help">Uncheck if this app has a price</span>
+        </div>
+
+        <!-- Price -->
+        <div class="form-group">
+          <label class="form-label">Price (USD)</label>
+          <input 
+            type="number" 
+            name="price" 
+            class="form-input"
+            value="{{ form.price.value|default:'' }}"
+            placeholder="9.99"
+            step="0.01"
+            min="0"
+          >
+          <span class="form-help">Leave empty if free or use decimal format (9.99)</span>
+        </div>
+
+        <!-- Has IAP -->
+        <div class="form-group">
+          <label class="form-check">
+            <input type="checkbox" name="has_iap" {% if form.has_iap.value %}checked{% endif %}>
+            <span class="form-check-label">Has in-app purchases</span>
+          </label>
+          <span class="form-check-help">Check if app offers IAP content</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <!-- Age Rating -->
+        <div class="form-group">
+          <label class="form-label">Age Rating</label>
+          <select name="age_rating" class="form-select">
+            <option value="3+" {% if form.age_rating.value == '3+' %}selected{% endif %}>3+ years</option>
+            <option value="7+" {% if form.age_rating.value == '7+' %}selected{% endif %}>7+ years</option>
+            <option value="12+" {% if form.age_rating.value == '12+' %}selected{% endif %}>12+ years</option>
+            <option value="16+" {% if form.age_rating.value == '16+' %}selected{% endif %}>16+ years</option>
+            <option value="18+" {% if form.age_rating.value == '18+' %}selected{% endif %}>18+ years</option>
+          </select>
+          <span class="form-help">Content rating for your app</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Publishing Section -->
+    <div class="form-section">
+      <div class="section-header">
+        <span class="section-emoji">📢</span>
+        <h2 class="section-title">Publishing</h2>
+      </div>
+
+      <label class="form-check">
+        <input type="checkbox" name="is_published" {% if form.is_published.value %}checked{% endif %}>
+        <span class="form-check-label">Publish immediately</span>
+      </label>
+      <span class="form-check-help">If checked, app will be visible to all users. Uncheck to save as draft.</span>
+    </div>
+
+    <!-- Copyright & Legal Section -->
+    <div class="form-section" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(32, 201, 51, 0.1)); border-left: 4px solid var(--primary);">
+      <div class="section-header">
+        <span class="section-emoji">⚖️</span>
+        <h2 class="section-title">Copyright & Legal Declaration</h2>
+      </div>
+
+      <!-- Copyright Statement -->
+      <div class="form-group">
+        <label class="form-label">Your Copyright Claim</label>
+        <textarea 
+          name="copyright_statement" 
+          class="form-input {% if form.copyright_statement.errors %}is-invalid{% endif %}"
+          rows="4"
+          placeholder="Describe your copyright claim and ownership of this app..."
+        >{{ form.copyright_statement.value|default:"This app is the original creation of the developer listed above." }}</textarea>
+        {% if form.copyright_statement.errors %}
+          <div class="form-error">
+            {% for error in form.copyright_statement.errors %}{{ error }}{% endfor %}
+          </div>
+        {% endif %}
+        <span class="form-help">Explain why you have the right to distribute this app</span>
+      </div>
+
+      <!-- License Type -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">License Type</label>
+          <select name="copyright_license_type" class="form-input">
+            <option value="proprietary" {% if form.copyright_license_type.value == 'proprietary' %}selected{% endif %}>Proprietary/Commercial</option>
+            <option value="mit" {% if form.copyright_license_type.value == 'mit' %}selected{% endif %}>MIT License</option>
+            <option value="gpl" {% if form.copyright_license_type.value == 'gpl' %}selected{% endif %}>GPL License</option>
+            <option value="apache" {% if form.copyright_license_type.value == 'apache' %}selected{% endif %}>Apache License</option>
+            <option value="bsd" {% if form.copyright_license_type.value == 'bsd' %}selected{% endif %}>BSD License</option>
+            <option value="custom" {% if form.copyright_license_type.value == 'custom' %}selected{% endif %}>Custom License</option>
+            <option value="public_domain" {% if form.copyright_license_type.value == 'public_domain' %}selected{% endif %}>Public Domain</option>
+          </select>
+          <span class="form-help">What license does your app use?</span>
+        </div>
+
+        <!-- License URL -->
+        <div class="form-group">
+          <label class="form-label">License URL (Optional)</label>
+          <input 
+            type="url" 
+            name="copyright_license_url" 
+            class="form-input"
+            value="{{ form.copyright_license_url.value|default:'' }}"
+            placeholder="https://yourcompany.com/license"
+          >
+          <span class="form-help">Link to full license text</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <a href="{% url 'apps:my_apps' %}" class="btn btn-secondary">
+        <span>←</span> Go Back
+      </a>
+      <a href="{% url 'apps:detail' app.slug %}" class="btn btn-secondary">
+        👁️ View App
+      </a>
+      <button type="submit" class="btn btn-primary">
+        <span class="btn-icon">✏️</span>
+        Save Changes
+      </button>
+    </div>
+  </form>
+
+  <!-- Help Section -->
+  <div class="help-section">
+    <h3 class="help-title">
+      <span>💡</span> Editing Tips
+    </h3>
+    <ul class="help-list">
+      <li><strong>Description:</strong> Keep descriptions accurate and detailed. Good descriptions help with discoverability.</li>
+      <li><strong>Cover Image:</strong> Use high-quality images. They're the first thing users see!</li>
+      <li><strong>Version:</strong> Update this when you release a new version of your app.</li>
+      <li><strong>Size:</strong> Keep the file size accurate. Update it when you release new versions.</li>
+      <li><strong>Download Link:</strong> Make sure external links are still valid and working.</li>
+      <li><strong>Contact Info:</strong> Keep your support email and website up to date for user inquiries.</li>
+      <li><strong>Publishing Status:</strong> Keep your app published to maintain visibility. Users won't find unpublished apps.</li>
+      <li><strong>Android Requirements:</strong> Be accurate about API levels. This affects which devices can install your app.</li>
+      <li><strong>Slug & Category:</strong> These significantly affect search visibility. Change them carefully!</li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

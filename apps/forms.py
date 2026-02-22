@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import App, AppVersion
+from .models import App, AppVersion, CopyrightClaim, CopyrightInfringementReport
 import os
 
 
@@ -152,6 +152,15 @@ class AppUploadForm(forms.ModelForm):
             'store_name',
             'store_email',
             'is_published',
+            'content_ownership_type',
+            'play_store_link',
+            'developer_website',
+            'copyright_statement',
+            'is_original_content',
+            'copyright_holder_email',
+            'copyright_license_type',
+            'copyright_license_url',
+            'copyright_notice_required',
         ]
         widgets = {
             'title': forms.TextInput(attrs={
@@ -272,6 +281,42 @@ class AppUploadForm(forms.ModelForm):
             'is_published': forms.CheckboxInput(attrs={
                 'class': 'form-check-input',
             }),
+            'content_ownership_type': forms.RadioSelect(attrs={
+                'class': 'form-check-input',
+            }),
+            'play_store_link': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'https://play.google.com/store/apps/details?id=com.example.app',
+                'required': False,
+            }),
+            'developer_website': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'https://www.developer-website.com (optional)',
+                'required': False,
+            }),
+            'copyright_statement': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'State your copyright claim (e.g., "This app is the original creation of...")',
+                'rows': 3,
+            }),
+            'is_original_content': forms.CheckboxInput(attrs={
+                'class': 'form-check-input',
+                'required': 'required',
+            }),
+            'copyright_holder_email': forms.EmailInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'copyright.holder@example.com',
+            }),
+            'copyright_license_type': forms.Select(attrs={
+                'class': 'form-control',
+            }),
+            'copyright_license_url': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'https://example.com/license',
+            }),
+            'copyright_notice_required': forms.CheckboxInput(attrs={
+                'class': 'form-check-input',
+            }),
         }
 
 
@@ -311,3 +356,179 @@ class AppVersionForm(forms.ModelForm):
                 'class': 'form-check-input',
             }),
         }
+
+
+class AppTakedownRequestForm(forms.Form):
+    """Form for app owners to request automatic takedown of their own apps"""
+    
+    REASON_CHOICES = [
+        ('', '-- Select a reason --'),
+        ('no_longer_maintain', 'No longer maintaining the app'),
+        ('personal_request', 'Personal/privacy request'),
+        ('discontinuing', 'Discontinuing the app'),
+        ('uploading_newer_version', 'Uploading newer version elsewhere'),
+        ('contains_sensitive_data', 'Contains sensitive personal data'),
+        ('violates_terms', 'App violates store terms'),
+        ('other', 'Other reason'),
+    ]
+    
+    reason = forms.ChoiceField(
+        choices=REASON_CHOICES,
+        required=True,
+        help_text="Reason for takedown request"
+    )
+    
+    detailed_reason = forms.CharField(
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'rows': 4,
+            'placeholder': 'Please provide additional details about your takedown request...',
+        }),
+        required=True,
+        help_text="Detailed explanation of your request"
+    )
+    
+    confirm_owner = forms.BooleanField(
+        required=True,
+        widget=forms.CheckboxInput(attrs={
+            'class': 'form-check-input',
+        }),
+        label="I confirm I am the owner of this app and request its takedown"
+    )
+    
+    confirm_permanent = forms.BooleanField(
+        required=True,
+        widget=forms.CheckboxInput(attrs={
+            'class': 'form-check-input',
+        }),
+        label="I understand this action is permanent and cannot be reversed automatically"
+    )
+
+
+class CopyrightClaimForm(forms.ModelForm):
+    """Form for submitting external DMCA/Copyright claims"""
+    
+    class Meta:
+        model = CopyrightClaim
+        fields = [
+            'claimant_name',
+            'claimant_email',
+            'claimant_address',
+            'description',
+            'reason',
+            'evidence_url',
+        ]
+        widgets = {
+            'claimant_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Your name or organization',
+                'required': 'required',
+            }),
+            'claimant_email': forms.EmailInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'your.email@example.com',
+                'required': 'required',
+            }),
+            'claimant_address': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Full address including country',
+            }),
+            'description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 4,
+                'placeholder': 'Describe the original copyrighted work...',
+                'required': 'required',
+            }),
+            'reason': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 5,
+                'placeholder': 'Explain how your copyright is being infringed...',
+                'required': 'required',
+            }),
+            'evidence_url': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Link to original work (if available)',
+            }),
+        }
+
+
+class CopyrightInfringementReportForm(forms.ModelForm):
+    """Form for users/developers to report copyright infringement"""
+    
+    class Meta:
+        model = CopyrightInfringementReport
+        fields = [
+            'reporter_name',
+            'reporter_email',
+            'title',
+            'description',
+            'original_app_name',
+            'original_app_url',
+            'evidence_description',
+        ]
+        widgets = {
+            'reporter_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Your name',
+                'required': 'required',
+            }),
+            'reporter_email': forms.EmailInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'your.email@example.com',
+                'required': 'required',
+            }),
+            'title': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Brief title of the infringement',
+                'required': 'required',
+            }),
+            'description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 5,
+                'placeholder': 'Detailed description of how copyright is being infringed...',
+                'required': 'required',
+            }),
+            'original_app_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Name of original app (if applicable)',
+            }),
+            'original_app_url': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Link to original app/website',
+            }),
+            'evidence_description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Specific evidence (code similarities, asset matches, etc.)',
+            }),
+        }
+
+
+class AppCopyrightBadgeForm(forms.Form):
+    """Simple form to request copyright verification badge"""
+    
+    copyright_holder_name = forms.CharField(
+        max_length=255,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Your name or company',
+            'required': 'required',
+        })
+    )
+    
+    copyright_holder_email = forms.EmailField(
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'verification@example.com',
+            'required': 'required',
+        })
+    )
+    
+    confirm_ownership = forms.BooleanField(
+        required=True,
+        widget=forms.CheckboxInput(attrs={
+            'class': 'form-check-input',
+        }),
+        label="I am the copyright holder of this app"
+    )

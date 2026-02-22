@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from core.views import home, support, community_guidelines, report_bug, terms_of_service, service_worker, offline_error
+from core.views import home, support, community_guidelines, report_bug, terms_of_service, service_worker, offline_error, search
 from apps.views import popular_apps_api
 from django.views.generic import TemplateView
 from core import views
@@ -24,6 +24,7 @@ from core import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
+    path('search/', search, name='search'),
     path('support/', support, name='support'),
     path('offline-error/', offline_error, name='offline_error'),
     path('pwa-guide/', TemplateView.as_view(template_name='pwa-guides.html'), name='pwa_guide'),

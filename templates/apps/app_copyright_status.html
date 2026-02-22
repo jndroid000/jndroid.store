@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Copyright Status - {{ app.title }} - JnDroid Store{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/app_detail.css' %}">{% endblock %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 0 auto; padding: 40px 20px;">
+  <!-- Header -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; padding-bottom: 24px; border-bottom: 2px solid var(--line);">
+    <div>
+      <h1 style="margin: 0 0 8px; font-size: 32px;">⚖️ Copyright & Legal Status</h1>
+      <p style="margin: 0; color: var(--muted);">{{ app.title }} v{{ app.version|default:"1.0" }}</p>
+    </div>
+    <a href="{% url 'apps:detail' app.slug %}" style="padding: 12px 24px; background: var(--primary); color: white; border-radius: var(--radius); text-decoration: none; font-weight: 600;">
+      ← Back to App
+    </a>
+  </div>
+
+  <!-- Copyright Status Section -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px;">
+    <!-- Original Content Status -->
+    <div style="padding: 20px; background: var(--bg-secondary); border-radius: var(--radius); border: 1px solid var(--line); border-left: 4px solid var(--primary);">
+      <div style="font-size: 24px; margin-bottom: 8px;">📋</div>
+      <h3 style="margin: 0 0 4px; font-size: 14px; font-weight: 600;">Original Content</h3>
+      <p style="margin: 0; color: var(--muted); font-size: 12px;">
+        {% if app.is_original_content %}
+          <span style="color: #28a745; font-weight: 600;">✅ Confirmed</span>
+        {% else %}
+          <span style="color: #dc3545; font-weight: 600;">❌ Not Verified</span>
+        {% endif %}
+      </p>
+    </div>
+
+    <!-- Copyright Verification -->
+    <div style="padding: 20px; background: var(--bg-secondary); border-radius: var(--radius); border: 1px solid var(--line); border-left: 4px solid #17a2b8;">
+      <div style="font-size: 24px; margin-bottom: 8px;">✔️</div>
+      <h3 style="margin: 0 0 4px; font-size: 14px; font-weight: 600;">Admin Verification</h3>
+      <p style="margin: 0; color: var(--muted); font-size: 12px;">
+        {% if app.copyright_verified %}
+          <span style="color: #28a745; font-weight: 600;">✅ Verified</span>
+        {% else %}
+          <span style="color: #FFC107; font-weight: 600;">⏳ Pending</span>
+        {% endif %}
+      </p>
+    </div>
+
+    <!-- Active Claims -->
+    <div style="padding: 20px; background: var(--bg-secondary); border-radius: var(--radius); border: 1px solid var(--line); border-left: 4px; border-left-color: {% if pending_claims > 0 %}#dc3545{% else %}#28a745{% endif %};">
+      <div style="font-size: 24px; margin-bottom: 8px;">📌</div>
+      <h3 style="margin: 0 0 4px; font-size: 14px; font-weight: 600;">Pending Claims</h3>
+      <p style="margin: 0; color: var(--muted); font-size: 12px;">
+        <strong style="font-size: 18px; color: {% if pending_claims > 0 %}#dc3545{% else %}#28a745{% endif %};">{{ pending_claims }}</strong> claim{{ pending_claims|pluralize }}
+      </p>
+    </div>
+
+    <!-- Approved Claims -->
+    <div style="padding: 20px; background: var(--bg-secondary); border-radius: var(--radius); border: 1px solid var(--line); border-left: 4px; border-left-color: {% if approved_claims > 0 %}#dc3545{% else %}#28a745{% endif %};">
+      <div style="font-size: 24px; margin-bottom: 8px;">�</div>
+      <h3 style="margin: 0 0 4px; font-size: 14px; font-weight: 600;">Approved Claims</h3>
+      <p style="margin: 0; color: var(--muted); font-size: 12px;">
+        <strong style="font-size: 18px; color: {% if approved_claims > 0 %}#dc3545{% else %}#28a745{% endif %};">{{ approved_claims }}</strong> takedown{{ approved_claims|pluralize }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Copyright Statement -->
+  <div style="padding: 24px; background: var(--bg-secondary); border-radius: var(--radius); border: 1px solid var(--line); margin-bottom: 32px;">
+    <h2 style="margin: 0 0 12px; font-size: 16px;">📝 Your Copyright Statement</h2>
+    <p style="margin: 0 0 8px; color: var(--muted); font-size: 13px;">What you claimed about your content's originality:</p>
+    <div style="padding: 12px; background: var(--bg); border-radius: 6px; border-left: 3px solid var(--primary); font-size: 13px; line-height: 1.6;">
+      {% if app.copyright_statement %}
+        {{ app.copyright_statement }}
+      {% else %}
+        <span style="color: var(--muted);">No copyright statement provided</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Claims Section -->
+  {% if claims %}
+  <div style="margin-bottom: 32px;">
+    <h2 style="margin: 0 0 20px; font-size: 20px;">📋 Copyright Claims & Notices ({{ claims|length }})</h2>
+    
+    {% for claim in claims %}
+    <div style="padding: 24px; background: var(--bg-secondary); border-radius: var(--radius); border: 1px solid var(--line); margin-bottom: 16px; border-left: 4px solid {% if claim.status == 'approved' %}#dc3545{% elif claim.status == 'pending' %}#FFC107{% elif claim.status == 'rejected' %}#28a745{% else %}#17a2b8{% endif %};">
+      <!-- Claim Header -->
+      <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--line);">
+        <div>
+          <h3 style="margin: 0 0 4px; font-size: 16px;">
+            {% if claim.claim_type == 'dmca' %}
+              🔴 DMCA Takedown Notice
+            {% elif claim.claim_type == 'owner_request' %}
+              🟡 Owner Takedown Request
+            {% elif claim.claim_type == 'counter_notice' %}
+              🟢 Counter-Notice
+            {% else %}
+              📋 {{ claim.get_claim_type_display }}
+            {% endif %}
+          </h3>
+          <p style="margin: 4px 0 0; color: var(--muted); font-size: 12px;">
+            Submitted on {{ claim.submitted_at|date:"M d, Y H:i A" }}
+          </p>
+        </div>
+        <div style="display: inline-block; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 600; background: {% if claim.status == 'approved' %}#dc3545; color: white{% elif claim.status == 'pending' %}#FFC107; color: #333{% elif claim.status == 'rejected' %}#28a745; color: white{% else %}#17a2b8; color: white{% endif %};">
+          {% if claim.status == 'pending' %}
+            ⏳ Pending Review
+          {% elif claim.status == 'approved' %}
+            ✅ Approved
+          {% elif claim.status == 'rejected' %}
+            ❌ Rejected
+          {% elif claim.status == 'under_investigation' %}
+            🔍 Under Investigation
+          {% elif claim.status == 'resolved' %}
+            ✓ Resolved
+          {% elif claim.status == 'appealed' %}
+            📣 Appealed
+          {% else %}
+            {{ claim.get_status_display }}
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Claimant Info -->
+      <div style="margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--line);">
+        <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 600; color: var(--muted);">FROM</h4>
+        <div style="display: grid; grid-template-columns: auto 1fr; gap: 12px;">
+          <div style="font-size: 12px;">
+            <strong>Name:</strong><br>
+            <strong>Email:</strong><br>
+            {% if claim.claimant_address %}<strong>Address:</strong><br>{% endif %}
+          </div>
+          <div style="font-size: 12px; color: var(--muted);">
+            {{ claim.claimant_name }}<br>
+            <a href="mailto:{{ claim.claimant_email }}" style="color: var(--primary); text-decoration: none;">{{ claim.claimant_email }}</a><br>
+            {% if claim.claimant_address %}{{ claim.claimant_address|truncatewords:20 }}<br>{% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Claim Details -->
+      <div style="margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--line);">
+        <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 600; color: var(--muted);">CLAIM DETAILS</h4>
+        
+        <div style="margin-bottom: 12px;">
+          <strong style="font-size: 12px; color: var(--muted); display: block; margin-bottom: 4px;">Copyrighted Work:</strong>
+          <p style="margin: 0; font-size: 12px; line-height: 1.6;">{{ claim.description }}</p>
+        </div>
+
+        <div style="margin-bottom: 12px;">
+          <strong style="font-size: 12px; color: var(--muted); display: block; margin-bottom: 4px;">Reason for Claim:</strong>
+          <p style="margin: 0; font-size: 12px; line-height: 1.6;">{{ claim.reason }}</p>
+        </div>
+
+        {% if claim.evidence_url %}
+        <div>
+          <strong style="font-size: 12px; color: var(--muted); display: block; margin-bottom: 4px;">Evidence:</strong>
+          <a href="{{ claim.evidence_url }}" target="_blank" style="font-size: 12px; color: var(--primary); text-decoration: none;">
+            {{ claim.evidence_url|truncatechars:60 }} 🔗
+          </a>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Admin Notes (if available) -->
+      {% if claim.admin_notes %}
+      <div style="margin-bottom: 16px; padding: 12px; background: var(--bg); border-radius: 6px; border-left: 3px solid #17a2b8;">
+        <strong style="font-size: 12px; color: var(--muted);">📝 Admin Review Notes:</strong>
+        <p style="margin: 4px 0 0; font-size: 12px; line-height: 1.6;">{{ claim.admin_notes }}</p>
+      </div>
+      {% endif %}
+
+      <!-- Action Taken (if available) -->
+      {% if claim.action_taken %}
+      <div>
+        <strong style="font-size: 12px; color: var(--muted);">⚡ Action Taken:</strong>
+        <p style="margin: 4px 0 0; font-size: 12px; line-height: 1.6;">{{ claim.action_taken }}</p>
+      </div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="padding: 40px; text-align: center; background: var(--bg-secondary); border-radius: var(--radius); border: 2px dashed var(--line);">
+    <div style="font-size: 48px; margin-bottom: 12px;">✅</div>
+    <h3 style="margin: 0 0 8px; font-size: 18px;">No Copyright Claims</h3>
+    <p style="margin: 0; color: var(--muted);">Your app has no active copyright or DMCA claims.</p>
+  </div>
+  {% endif %}
+
+  <!-- Action Buttons -->
+  <div style="display: flex; gap: 12px; margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--line); flex-wrap: wrap;">
+    <a href="{% url 'apps:detail' app.slug %}" class="btn" style="padding: 12px 24px; background: var(--primary); color: white; border-radius: var(--radius); text-decoration: none; font-weight: 600;">
+      ← Back to App
+    </a>
+    {% if not app.takedown_requested %}
+    <a href="{% url 'apps:takedown_request' app.slug %}" class="btn btn-danger" style="padding: 12px 24px; background: #dc3545; color: white; border-radius: var(--radius); text-decoration: none; font-weight: 600;">
+      🗑️ Request Takedown
+    </a>
+    {% endif %}
+  </div>
+
+  <!-- Info Box -->
+  <div style="margin-top: 32px; padding: 20px; background: rgba(59, 130, 246, 0.1); border-radius: var(--radius); border: 1px solid rgba(59, 130, 246, 0.2);">
+    <h3 style="margin: 0 0 12px; font-size: 14px;">ℹ️ About Copyright Enforcement</h3>
+    <p style="margin: 0 0 8px; color: var(--muted); font-size: 12px;">
+      JnDroid Store takes copyright and intellectual property rights seriously. We:
+    </p>
+    <ul style="margin: 0; padding-left: 20px; font-size: 12px; color: var(--muted);">
+      <li>Honor valid DMCA takedown notices</li>
+      <li>Allow app owners to request their own app removal</li>
+      <li>Review all claims carefully before taking action</li>
+      <li>Maintain a record of all copyright-related notices</li>
+      <li>Protect the rights of both creators and users</li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

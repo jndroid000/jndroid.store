@@ -1,11 +1,274 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}{{ app.title }} - JN App Store{% endblock %}
-{% block extra_css %}<link rel="stylesheet" href="{% static 'css/app_detail.css' %}">{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/app_detail_new.css' %}">{% endblock %}
 
 {% block content %}
-<!-- HERO BANNER SECTION (Like Play Store) -->
+
+<!-- HERO BANNER SECTION -->
 <div class="app-hero">
+  <div class="hero-container">
+    <div class="hero-left">
+      <!-- App Icon -->
+      <div class="app-icon">
+        {% if app.cover_image %}<img src="{{ app.cover_image.url }}" alt="{{ app.title }}">{% else %}{{ app.title|first|upper }}{% endif %}
+      </div>
+
+      <!-- App Title & Basic Info -->
+      <div class="hero-info">
+        <h1 class="app-title">{{ app.title }}</h1>
+        <p class="app-developer">by {{ app.owner.first_name|default:app.owner.username }}</p>
+        
+        <div class="app-rating">
+          <span class="rating-stars">★★★★★</span>
+          <span class="rating-text">{{ app.avg_rating|default_if_none:"0"|floatformat:1 }}/5 ({{ reviews_count }} reviews)</span>
+        </div>
+
+        <p class="app-brief">{{ app.short_description|default:"A great app to explore" }}</p>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-label">Downloads</div>
+        <div class="stat-value">{{ app.downloads|default:0 }}</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Version</div>
+        <div class="stat-value">{{ app.version|default:"1.0" }}</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">Size</div>
+        <div class="stat-value">{{ app.size_mb|floatformat:1 }}MB</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ACTION BAR -->
+<div class="action-bar">
+  <div class="action-container">
+    <a href="{% url 'apps:download' app.slug %}" class="btn btn-primary btn-large">
+      <span class="btn-icon">⬇</span> Download
+    </a>
+    {% if user.is_authenticated %}
+      <a href="{% url 'reviews:add' app.slug %}" class="btn btn-secondary">
+        <span class="btn-icon">✎</span> Review
+      </a>
+    {% else %}
+      <a href="{% url 'accounts:login' %}" class="btn btn-secondary">
+        <span class="btn-icon">🔐</span> Login
+      </a>
+    {% endif %}
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="app-content">
+  <div class="content-container">
+    
+    <!-- LEFT COLUMN -->
+    <div class="content-left">
+      
+      <!-- About Section -->
+      <section class="content-section">
+        <h2 class="section-header">About this app</h2>
+        <p class="section-text">{{ app.description|default:"No description available" }}</p>
+      </section>
+
+      <!-- Screenshots Section -->
+      {% if app.screenshots.all or app.cover_image %}
+      <section class="content-section">
+        <h2 class="section-header">Screenshots</h2>
+        {% if app.screenshots.all %}
+          <div class="gallery-container">
+            <div class="gallery-main">
+              <img id="main-screenshot" src="{{ app.screenshots.first.image.url }}" alt="Screenshot">
+            </div>
+            {% if app.screenshots.count > 1 %}
+            <div class="gallery-thumbs">
+              {% for screenshot in app.screenshots.all %}
+              <img 
+                src="{{ screenshot.image.url }}" 
+                alt="Thumbnail"
+                class="thumb {% if forloop.first %}active{% endif %}"
+                onclick="changeScreenshot(this, '{{ screenshot.image.url }}')"
+              >
+              {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+        {% else %}
+          <div class="empty-section">
+            <p>No screenshots available</p>
+          </div>
+        {% endif %}
+      </section>
+      {% endif %}
+
+      <!-- What's New / Details -->
+      <section class="content-section">
+        <h2 class="section-header">App Details</h2>
+        <div class="details-grid">
+          <div class="detail-item">
+            <label>Current Version</label>
+            <value>{{ app.version|default:"1.0" }}</value>
+          </div>
+          <div class="detail-item">
+            <label>Android Requirements</label>
+            <value>{{ app.min_android_version }} and up</value>
+          </div>
+          <div class="detail-item">
+            <label>Min API Level</label>
+            <value>{{ app.min_api_level }}</value>
+          </div>
+          <div class="detail-item">
+            <label>Target API Level</label>
+            <value>{{ app.target_api_level }}</value>
+          </div>
+          <div class="detail-item">
+            <label>Price</label>
+            <value>{% if app.is_free %}<span class="badge badge-free">FREE</span>{% else %}<span>${{ app.price|floatformat:2 }}</span>{% endif %}</value>
+          </div>
+          <div class="detail-item">
+            <label>Updated</label>
+            <value>{{ app.updated_at|date:"M d, Y" }}</value>
+          </div>
+        </div>
+      </section>
+
+      <!-- Developer Section -->
+      <section class="content-section">
+        <h2 class="section-header">Developer</h2>
+        <div class="developer-card">
+          <div class="dev-name">{{ app.developer_name|default:app.owner.get_full_name|default:app.owner.username }}</div>
+          {% if app.website_url %}
+          <div class="dev-link"><a href="{{ app.website_url }}" target="_blank">Visit Website</a></div>
+          {% endif %}
+          {% if app.support_email %}
+          <div class="dev-link"><a href="mailto:{{ app.support_email }}">Contact Support</a></div>
+          {% endif %}
+        </div>
+      </section>
+
+    </div>
+
+    <!-- RIGHT COLUMN SIDEBAR -->
+    <div class="content-right">
+      
+      <!-- Price & Download Card -->
+      <div class="info-card featured">
+        <div class="card-badge">{% if app.is_free %}FREE{% else %}PAID{% endif %}</div>
+        <div class="card-price">
+          {% if app.is_free %}
+            <div class="price-text">Free</div>
+          {% else %}
+            <div class="price-amount">${{ app.price|floatformat:2 }}</div>
+          {% endif %}
+        </div>
+        <a href="{% url 'apps:download' app.slug %}" class="btn btn-primary">Get Now</a>
+      </div>
+
+      <!-- Stats Card -->
+      <div class="info-card">
+        <div class="card-title">Stats</div>
+        <div class="stats-list">
+          <div class="stats-row">
+            <span class="stats-label">Rating</span>
+            <strong class="stats-value">{{ app.avg_rating|default_if_none:"0"|floatformat:1 }}/5</strong>
+          </div>
+          <div class="stats-row">
+            <span class="stats-label">Reviews</span>
+            <strong class="stats-value">{{ reviews_count }}</strong>
+          </div>
+          <div class="stats-row">
+            <span class="stats-label">Downloads</span>
+            <strong class="stats-value">{{ app.downloads|default:0 }}</strong>
+          </div>
+          <div class="stats-row">
+            <span class="stats-label">Published</span>
+            <strong class="stats-value">{{ app.created_at|date:"M d, Y" }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- System Requirements -->
+      <div class="info-card">
+        <div class="card-title">Requirements</div>
+        <div class="req-list">
+          <div class="req-item">
+            <span>Min Android</span>
+            <strong>{{ app.min_android_version }}</strong>
+          </div>
+          <div class="req-item">
+            <span>Size</span>
+            <strong>{{ app.size_mb|floatformat:1 }}MB</strong>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- REVIEWS SECTION -->
+<div class="reviews-section">
+  <div class="section-container">
+    <h2 class="section-header">Reviews ({{ reviews_count }})</h2>
+    
+    {% if reviews %}
+    <div class="reviews-list">
+      {% for r in reviews %}
+      <div class="review-item">
+        <div class="review-header">
+          <strong class="review-author">{{ r.user.first_name|default:r.user.username }}</strong>
+          <span class="review-rating">★ {{ r.rating }}.0</span>
+        </div>
+        <div class="review-date">{{ r.created_at|date:"M d, Y" }}</div>
+        {% if r.comment %}
+        <p class="review-text">{{ r.comment }}</p>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-reviews">
+      <p>No reviews yet. Be the first to review!</p>
+      {% if user.is_authenticated %}
+        <a href="{% url 'reviews:add' app.slug %}" class="btn btn-secondary">Write a Review</a>
+      {% else %}
+        <a href="{% url 'accounts:login' %}" class="btn btn-secondary">Login to Review</a>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="app-footer">
+  <div class="section-container">
+    <h3>Developer Responsibility</h3>
+    <p>This app is distributed by {{ app.owner.get_full_name|default:app.owner.username }}. The developer is solely responsible for the app's content and legality.</p>
+    {% if app.privacy_policy_url or app.terms_url %}
+    <div class="footer-links">
+      {% if app.privacy_policy_url %}<a href="{{ app.privacy_policy_url }}" target="_blank">Privacy Policy</a>{% endif %}
+      {% if app.terms_url %}<a href="{{ app.terms_url }}" target="_blank">Terms</a>{% endif %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+function changeScreenshot(el, url) {
+  document.getElementById('main-screenshot').src = url;
+  document.querySelectorAll('.gallery-thumbs .thumb').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+</script>
+
+
   <div class="app-hero-container">
     <div class="app-hero-left">
       <!-- App Cover Image -->
@@ -18,26 +281,30 @@
         <h1 class="app-title">{{ app.title }}</h1>
         
         <div class="app-meta">
-          <span class="app-category">{{ app.category.icon }} {{ app.category.name }}</span>
-          <span>by <strong>{{ app.owner.first_name|default:app.owner.username }}</strong></span>
+          <span class="app-category"><span class="app-category-icon">📱</span> {{ app.category.name }}</span>
+          <span class="app-author">by <strong>{{ app.owner.first_name|default:app.owner.username }}</strong></span>
         </div>
 
-        <p style="color: #7f8c8d; font-size: 14px; margin: 12px 0;">
-          📦 {{ app.size_mb|floatformat:2 }} MB • v{{ app.version|default:"1.0" }} • Updated {{ app.updated_at|date:"M d, Y" }}
-        </p>
+        <div class="app-meta-info">
+          <span class="meta-item"><span class="meta-icon">📦</span>{{ app.size_mb|floatformat:2 }} MB</span>
+          <span class="meta-divider">•</span>
+          <span class="meta-item"><span class="meta-icon">🔖</span>v{{ app.version|default:"1.0" }}</span>
+          <span class="meta-divider">•</span>
+          <span class="meta-item"><span class="meta-icon">📅</span>{{ app.updated_at|date:"M d, Y" }}</span>
+        </div>
 
         <!-- Stats -->
         <div class="app-stats">
           <div class="app-stat">
-            <span>⭐</span>
-            <div>
+            <div class="app-stat-icon rating">⭐</div>
+            <div class="app-stat-content">
               <div class="app-stat-value">{{ app.avg_rating|default_if_none:"0"|floatformat:1 }}/5</div>
               <div class="app-stat-label">({{ reviews_count }} reviews)</div>
             </div>
           </div>
           <div class="app-stat">
-            <span>⬇️</span>
-            <div>
+            <div class="app-stat-icon downloads">⬇</div>
+            <div class="app-stat-content">
               <div class="app-stat-value">{{ app.downloads|default:0 }}</div>
               <div class="app-stat-label">downloads</div>
             </div>
@@ -46,11 +313,20 @@
 
         <!-- Action Buttons -->
         <div class="app-actions">
-          <a href="{% url 'apps:download' app.slug %}" class="btn btn-primary">⬇ Download Now</a>
+          <a href="{% url 'apps:download' app.slug %}" class="btn btn-primary btn-lg">
+            <span class="btn-icon">↓</span>
+            <span class="btn-text">Download Now</span>
+          </a>
           {% if user.is_authenticated %}
-            <a href="{% url 'reviews:add' app.slug %}" class="btn btn-secondary">✍ Write Review</a>
+            <a href="{% url 'reviews:add' app.slug %}" class="btn btn-secondary">
+              <span class="btn-icon">✎</span>
+              <span>Write Review</span>
+            </a>
           {% else %}
-            <a href="{% url 'accounts:login' %}" class="btn btn-secondary">🔐 Login</a>
+            <a href="{% url 'accounts:login' %}" class="btn btn-secondary">
+              <span class="btn-icon">🔐</span>
+              <span>Login</span>
+            </a>
           {% endif %}
         </div>
       </div>
@@ -59,35 +335,41 @@
     <!-- SIDEBAR - Quick Info (Like Play Store) -->
     <div class="app-sidebar">
       <div class="info-box">
+        <div class="info-box-icon">📦</div>
         <div class="info-box-label">File Size</div>
         <div class="info-box-value">{{ app.size_mb|floatformat:1 }}MB</div>
       </div>
 
       <div class="info-box">
+        <div class="info-box-icon">🔖</div>
         <div class="info-box-label">Version</div>
         <div class="info-box-value">{{ app.version|default:"1.0" }}</div>
       </div>
 
       <div class="info-box">
+        <div class="info-box-icon">🤖</div>
         <div class="info-box-label">Min Android</div>
         <div class="info-box-value">{{ app.min_android_version }}</div>
         <div class="info-box-subtext">API {{ app.min_api_level }}</div>
       </div>
 
       <div class="info-box">
+        <div class="info-box-icon">📊</div>
         <div class="info-box-label">Target Android</div>
         <div class="info-box-value">{{ app.target_android_version }}</div>
         <div class="info-box-subtext">API {{ app.target_api_level }}</div>
       </div>
 
       <div class="info-box">
+        <div class="info-box-icon">⬇️</div>
         <div class="info-box-label">Downloads</div>
         <div class="info-box-value">{{ app.downloads|default:0 }}</div>
       </div>
 
       <div class="info-box {% if app.is_free %}badge-free{% else %}badge-paid{% endif %}">
+        <div class="info-box-icon">💰</div>
         <div class="info-box-label">Price</div>
-        <div class="info-box-value">{% if app.is_free %}FREE{% else %}${{ app.price|floatformat:2 }}{% endif %}</div>
+        <div class="info-box-value"><span class="badge-text">{% if app.is_free %}FREE{% else %}${{ app.price|floatformat:2 }}{% endif %}</span></div>
       </div>
     </div>
   </div>
@@ -117,6 +399,66 @@
         <div class="section-card">
           <h2 class="section-title">✨ Key Features</h2>
           <p class="section-text">{{ app.short_description }}</p>
+        </div>
+      {% endif %}
+
+      <!-- Screenshots Gallery -->
+      {% if app.screenshots.all %}
+        <div class="section-card featured">
+          <h2 class="section-title">📸 Screenshots</h2>
+          <div class="screenshots-container">
+            <div class="screenshots-main">
+              <img 
+                id="main-screenshot" 
+                src="{{ app.screenshots.first.image.url }}" 
+                alt="Screenshot" 
+                class="main-screenshot"
+              >
+              {% if app.screenshots.first.caption %}
+                <p class="screenshot-caption">{{ app.screenshots.first.caption }}</p>
+              {% endif %}
+            </div>
+            
+            {% if app.screenshots.count > 1 %}
+              <div class="screenshots-thumbnails">
+                {% for screenshot in app.screenshots.all %}
+                  <div 
+                    class="screenshot-thumb {% if forloop.first %}active{% endif %}"
+                    onclick="changeScreenshot(this, '{{ screenshot.image.url }}', '{{ screenshot.caption }}')"
+                    role="button"
+                    aria-label="Screenshot {{ forloop.counter }}"
+                  >
+                    <img src="{{ screenshot.image.url }}" alt="Thumbnail {{ forloop.counter }}">
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% else %}
+        <div class="section-card featured">
+          <h2 class="section-title">📸 Screenshots</h2>
+          <div class="screenshots-empty">
+            <div class="screenshots-empty-icon">🖼️</div>
+            <div class="screenshots-empty-content">
+              <h3>No Screenshots Available</h3>
+              <p>This app doesn't have screenshots yet. Get started by installing and exploring the app yourself!</p>
+              <div class="screenshots-features">
+                <div class="feature-item">
+                  <span class="feature-icon">✨</span>
+                  <span class="feature-text">Discover Features</span>
+                </div>
+                <div class="feature-item">
+                  <span class="feature-icon">⚡</span>
+                  <span class="feature-text">Fast & Smooth</span>
+                </div>
+                <div class="feature-item">
+                  <span class="feature-icon">🎯</span>
+                  <span class="feature-text">User Friendly</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       {% endif %}
 
@@ -189,19 +531,19 @@
         <h2 class="section-title">📊 Statistics</h2>
         <div class="stats-grid">
           <div class="stat-row">
-            <span class="stat-label">⭐ Rating</span>
+            <span class="stat-label">Rating</span>
             <strong class="stat-value highlight">{{ app.avg_rating|default_if_none:"0"|floatformat:1 }}/5.0</strong>
           </div>
           <div class="stat-row">
-            <span class="stat-label">💬 Reviews</span>
+            <span class="stat-label">Reviews</span>
             <strong class="stat-value">{{ reviews_count }}</strong>
           </div>
           <div class="stat-row">
-            <span class="stat-label">⬇️ Downloads</span>
+            <span class="stat-label">Downloads</span>
             <strong class="stat-value">{{ app.downloads|default:0 }}</strong>
           </div>
           <div class="stat-row">
-            <span class="stat-label">📅 Published</span>
+            <span class="stat-label">Published</span>
             <strong class="stat-value">{{ app.created_at|date:"M d, Y" }}</strong>
           </div>
         </div>
@@ -272,16 +614,47 @@
   <div class="app-footer">
     <h3 class="app-footer-title">📋 App Information & Copyright</h3>
     <div class="app-footer-content">
-      <p>This application is listed on <strong>JN App Store</strong> and is owned/developed by <strong>{{ app.owner.get_full_name|default:app.owner.username }}</strong>. All content, features, and availability are the responsibility of the developer.</p>
+      <p><strong>⚠️ Important Notice:</strong> This application is listed on <strong>JN App Store</strong> and is owned/developed by <strong>{{ app.owner.get_full_name|default:app.owner.username }}</strong>. The developer confirms that this is an <strong>original application</strong> and not a copy or unauthorized distribution from Google Play Store, Apple App Store, or any other platform.</p>
+      
       <p style="margin-top: 12px; font-size: 12px; color: #95a5a6;">By downloading and using this app, you agree to these terms:</p>
       <ul>
-        <li>The app is provided for personal, non-commercial use only</li>
-        <li>Redistribution, reverse engineering, or commercial use is strictly prohibited</li>
-        <li>All intellectual property rights are retained by the developer</li>
-        <li>The developer is not responsible for any damages or issues caused by the app</li>
-        <li>For support, licensing, or inquiries, contact the developer directly</li>
+        <li>✓ The developer owns all intellectual property rights and is solely responsible for the app's legality</li>
+        <li>✓ This is NOT a rebranded, copied, or unauthorized version of apps from other stores</li>
+        <li>✓ The developer has full authority to distribute this app and accepts all legal responsibility</li>
+        <li>✓ The app is provided for personal, non-commercial use only</li>
+        <li>✓ Redistribution, reverse engineering, or commercial use is strictly prohibited</li>
+        <li>✓ JN App Store reserves the right to remove apps that violate copyright or intellectual property laws</li>
+        <li>✓ For copyright claims or IP violations, contact us at <strong>support@jnappstore.com</strong></li>
       </ul>
+      
+      <p style="margin-top: 12px; font-size: 11px; color: #c0392b;"><strong>⚖️ Legal Liability:</strong> The developer, not JN App Store, is fully responsible for any copyright infringement, trademark violations, or intellectual property disputes. Users harmed by copyright violations can pursue legal action against the developer directly.</p>
     </div>
   </div>
 </div>
+
+<script>
+function changeScreenshot(element, imageUrl, caption) {
+  // Update main screenshot
+  const mainImg = document.getElementById('main-screenshot');
+  mainImg.style.opacity = '0.7';
+  
+  setTimeout(() => {
+    mainImg.src = imageUrl;
+    mainImg.style.opacity = '1';
+  }, 150);
+  
+  // Update caption
+  const captionEl = document.querySelector('.screenshot-caption');
+  if (captionEl && caption) {
+    captionEl.textContent = caption;
+  }
+  
+  // Update active thumbnail
+  document.querySelectorAll('.screenshot-thumb').forEach(thumb => {
+    thumb.classList.remove('active');
+  });
+  element.classList.add('active');
+}
+</script>
+
 {% endblock %}

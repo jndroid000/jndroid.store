@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}ইমেইল যাচাইকরণ সফল - JN App Store{% endblock %}
+{% block title %}ইমেইল যাচাইকরণ সফল - JnDroid Store{% endblock %}
 {% block extra_css %}<link rel="stylesheet" href="{% static 'css/review_form.css' %}">{% endblock %}
 
 {% block content %}
@@ -59,7 +59,16 @@
   </div>
 
   <div style="background: rgba(124, 92, 255, 0.08); border: 1px solid rgba(124, 92, 255, 0.2); border-radius: 12px; padding: 16px; text-align: center; color: var(--muted); font-size: 13px;">
-    💡 টিপ: আপনার বন্ধুদের JN App Store এ আমন্ত্রণ জানান এবং একসাথে অ্যাপ আবিষ্কার করুন।
+    💡 টিপ: আপনার বন্ধুদের JnDroid Store এ আমন্ত্রণ জানান এবং একসাথে অ্যাপ আবিষ্কার করুন।
   </div>
+
+  {% if redirect_url %}
+  <script>
+    // Auto-redirect after 2 seconds
+    setTimeout(function() {
+      window.location.href = "{{ redirect_url }}";
+    }, 2000);
+  </script>
+  {% endif %}
 </div>
 {% endblock %}

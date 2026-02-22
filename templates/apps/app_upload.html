@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}{% if is_edit %}Edit App{% else %}Upload App{% endif %} - JN App Store{% endblock %}
+{% block title %}{% if is_edit %}Edit App{% else %}Upload App{% endif %} - JnDroid Store{% endblock %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/app_upload.css' %}">
 {% endblock %}
@@ -11,7 +11,7 @@
   <!-- Header -->
   <div class="upload-header">
     <h1>{% if is_edit %}✏️ Edit Your App{% else %}📤 Upload Your App{% endif %}</h1>
-    <p>{% if is_edit %}Update your app details and keep your listing fresh{% else %}Share your creation with the JN App Store community{% endif %}</p>
+    <p>{% if is_edit %}Update your app details and keep your listing fresh{% else %}Share your creation with the JnDroid Store community{% endif %}</p>
   </div>
 
   <!-- Info Cards -->
@@ -280,7 +280,7 @@
             type="text" 
             name="store_name" 
             class="form-input"
-            value="{{ form.store_name.value|default:'JN App Store' }}"
+            value="{{ form.store_name.value|default:'JnDroid Store' }}"
             placeholder="e.g., Google Play Store, App Store, GitHub"
           >
           <span class="form-help">Where the app is available</span>
@@ -560,6 +560,257 @@
       <span class="form-check-help">If unchecked, your app will be in draft mode (visible only to you)</span>
     </div>
 
+    <!-- Content Source & Ownership Declaration Section -->
+    <div class="form-section" style="background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(59, 130, 246, 0.1)); border-left: 4px solid #a855f7;">
+      <div class="section-header">
+        <span class="section-emoji">📌</span>
+        <h2 class="section-title">Content Source & Ownership Declaration</h2>
+      </div>
+
+      <div style="padding: 16px; background: rgba(255, 255, 255, 0.7); border-radius: 8px; margin-bottom: 20px;">
+        <p style="margin: 0; color: #333; font-size: 13px; line-height: 1.6;">
+          <strong>⚠️ Important:</strong> Please declare your relationship to this app's content. This helps us ensure legal compliance and protects both you and JnDroid Store.
+        </p>
+      </div>
+
+      <!-- Content Ownership Type Selection -->
+      <div class="form-group">
+        <label class="form-label">
+          What is your relationship to this app? <span class="required">*</span>
+        </label>
+        <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 12px;">
+          
+          <!-- Original Creator Option -->
+          <div style="padding: 14px; border: 2px solid #e5e7eb; border-radius: 8px; cursor: pointer; transition: all 0.3s;" id="ownership-original">
+            <label style="display: flex; gap: 12px; cursor: pointer; margin: 0;">
+              <input 
+                type="radio" 
+                name="content_ownership_type" 
+                value="original"
+                {% if form.content_ownership_type.value == "original" %}checked{% endif %}
+                style="margin-top: 4px; width: 20px; height: 20px; cursor: pointer;"
+              />
+              <div>
+                <strong style="color: #059669;">✅ I am the original creator</strong>
+                <p style="margin: 6px 0 0; color: #6b7280; font-size: 13px;">
+                  I developed this app myself. I have full rights and ownership.
+                </p>
+              </div>
+            </label>
+          </div>
+
+          <!-- With Permission Option -->
+          <div style="padding: 14px; border: 2px solid #e5e7eb; border-radius: 8px; cursor: pointer; transition: all 0.3s;" id="ownership-permission">
+            <label style="display: flex; gap: 12px; cursor: pointer; margin: 0;">
+              <input 
+                type="radio" 
+                name="content_ownership_type" 
+                value="permission"
+                {% if form.content_ownership_type.value == "permission" %}checked{% endif %}
+                style="margin-top: 4px; width: 20px; height: 20px; cursor: pointer;"
+              />
+              <div>
+                <strong style="color: #0891b2;">🔐 I have legal permission</strong>
+                <p style="margin: 6px 0 0; color: #6b7280; font-size: 13px;">
+                  I'm an authorized distributor, have a license agreement, or am the copyright holder's agent.
+                </p>
+              </div>
+            </label>
+          </div>
+
+          <!-- Informational Sharing Option -->
+          <div style="padding: 14px; border: 2px solid #e5e7eb; border-radius: 8px; cursor: pointer; transition: all 0.3s;" id="ownership-informational">
+            <label style="display: flex; gap: 12px; cursor: pointer; margin: 0;">
+              <input 
+                type="radio" 
+                name="content_ownership_type" 
+                value="informational"
+                {% if form.content_ownership_type.value == "informational" or not form.content_ownership_type.value %}checked{% endif %}
+                style="margin-top: 4px; width: 20px; height: 20px; cursor: pointer;"
+              />
+              <div>
+                <strong style="color: #ea580c;">ℹ️ Sharing for informational purposes</strong>
+                <p style="margin: 6px 0 0; color: #6b7280; font-size: 13px;">
+                  I'm sharing this app for informational purposes. JnDroid Store will be the primary contact for copyright claims.
+                  <span style="display: block; margin-top: 8px; padding: 8px 12px; background: #fef3c7; border-radius: 4px; color: #92400e;">
+                    ⚠️ Note: JnDroid Store assumes responsibility for legal compliance. Your account will not be permanently banned for valid DMCA claims, but the content will be removed immediately.
+                  </span>
+                </p>
+              </div>
+            </label>
+          </div>
+        </div>
+        {% if form.content_ownership_type.errors %}
+          <div class="form-error" style="margin-top: 12px;">
+            {% for error in form.content_ownership_type.errors %}{{ error }}{% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Play Store Link (Optional) -->
+      <div class="form-group">
+        <label class="form-label">
+          Google Play Store Link <span style="color: #6b7280; font-weight: 400;">(Optional)</span>
+        </label>
+        <input 
+          type="url" 
+          name="play_store_link" 
+          class="form-input"
+          value="{{ form.play_store_link.value|default:'' }}"
+          placeholder="https://play.google.com/store/apps/details?id=com.example.app"
+        >
+        <span class="form-help">
+          ✅ Having a Play Store link significantly improves our verification process and reduces legal risk. We can easily verify the official source.
+        </span>
+      </div>
+
+      <!-- Developer Website (Optional) -->
+      <div class="form-group">
+        <label class="form-label">
+          Developer Website or Portfolio <span style="color: #6b7280; font-weight: 400;">(Optional)</span>
+        </label>
+        <input 
+          type="url" 
+          name="developer_website" 
+          class="form-input"
+          value="{{ form.developer_website.value|default:'' }}"
+          placeholder="https://www.your-company.com"
+        >
+        <span class="form-help">
+          Providing your website helps verify your identity and increases user trust.
+        </span>
+      </div>
+    </div>
+
+    <!-- Copyright & Legal Section -->
+    <div class="form-section" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(32, 201, 51, 0.1)); border-left: 4px solid var(--primary);">
+      <div class="section-header">
+        <span class="section-emoji">⚖️</span>
+        <h2 class="section-title">Copyright & Legal Declaration</h2>
+      </div>
+
+      <div style="padding: 16px; background: rgba(255, 255, 255, 0.7); border-radius: 8px; margin-bottom: 20px;">
+        <p style="margin: 0; color: #333; font-size: 13px; line-height: 1.6;">
+          <strong>📋 Important:</strong> By submitting this app, you declare and certify that:
+          <ul style="margin: 12px 0 0; padding-left: 20px;">
+            <li>You are the original developer or owner of this app, OR you have explicit permission to distribute it</li>
+            <li>The app does not infringe on anyone else's intellectual property rights</li>
+            <li>The app does not contain stolen code, assets, or copyrighted material</li>
+            <li>All the information provided is accurate and truthful</li>
+            <li>You understand that false declarations may result in legal action</li>
+          </ul>
+        </p>
+      </div>
+
+      <!-- Copyright Statement -->
+      <div class="form-group">
+        <label class="form-label">
+          Your Copyright Claim <span class="required">*</span>
+        </label>
+        <textarea 
+          name="copyright_statement" 
+          class="form-input {% if form.copyright_statement.errors %}is-invalid{% endif %}"
+          rows="4"
+          placeholder="Describe your copyright claim and ownership of this app..."
+          required
+        >{{ form.copyright_statement.value|default:"This app is the original creation of the developer listed above." }}</textarea>
+        {% if form.copyright_statement.errors %}
+          <div class="form-error">
+            {% for error in form.copyright_statement.errors %}{{ error }}{% endfor %}
+          </div>
+        {% endif %}
+        <span class="form-help">Explain why you have the right to distribute this app</span>
+      </div>
+
+      <!-- Original Content Confirmation -->
+      <div class="form-group">
+        <label class="form-check">
+          <input 
+            type="checkbox" 
+            name="is_original_content" 
+            class="form-check-input"
+            {% if form.is_original_content.value %}checked{% endif %}
+            required
+          >
+          <span class="form-check-label">
+            I confirm this is original content and I have the rights to distribute it
+          </span>
+        </label>
+        {% if form.is_original_content.errors %}
+          <div class="form-error">
+            {% for error in form.is_original_content.errors %}{{ error }}{% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Additional Copyright Information -->
+      <div style="padding: 16px; background: rgba(59, 130, 246, 0.1); border-radius: 8px; margin: 20px 0; border-left: 3px solid var(--primary);">
+        <p style="margin: 0; font-size: 12px; color: var(--muted);">
+          <strong>📋 Additional Copyright Information (Optional)</strong><br>
+          Provide more details about your copyrights to get a Premium verification badge
+        </p>
+      </div>
+
+      <!-- Copyright Holder Email -->
+      <div class="form-group">
+        <label class="form-label">Copyright Holder Email (Optional)</label>
+        <input 
+          type="email" 
+          name="copyright_holder_email" 
+          class="form-input"
+          value="{{ form.copyright_holder_email.value|default:'' }}"
+          placeholder="copyright@yourcompany.com"
+        >
+        <span class="form-help">Email of the copyright holder (for verification)</span>
+      </div>
+
+      <!-- License Type -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">License Type</label>
+          <select name="copyright_license_type" class="form-input">
+            <option value="proprietary" {% if form.copyright_license_type.value == 'proprietary' %}selected{% endif %}>Proprietary/Commercial</option>
+            <option value="mit" {% if form.copyright_license_type.value == 'mit' %}selected{% endif %}>MIT License</option>
+            <option value="gpl" {% if form.copyright_license_type.value == 'gpl' %}selected{% endif %}>GPL License</option>
+            <option value="apache" {% if form.copyright_license_type.value == 'apache' %}selected{% endif %}>Apache License</option>
+            <option value="bsd" {% if form.copyright_license_type.value == 'bsd' %}selected{% endif %}>BSD License</option>
+            <option value="custom" {% if form.copyright_license_type.value == 'custom' %}selected{% endif %}>Custom License</option>
+            <option value="public_domain" {% if form.copyright_license_type.value == 'public_domain' %}selected{% endif %}>Public Domain</option>
+          </select>
+          <span class="form-help">What license does your app use?</span>
+        </div>
+
+        <!-- License URL -->
+        <div class="form-group">
+          <label class="form-label">License URL (Optional)</label>
+          <input 
+            type="url" 
+            name="copyright_license_url" 
+            class="form-input"
+            value="{{ form.copyright_license_url.value|default:'' }}"
+            placeholder="https://yourcompany.com/license"
+          >
+          <span class="form-help">Link to full license text</span>
+        </div>
+      </div>
+
+      <!-- Copyright Notice Required -->
+      <div class="form-group">
+        <label class="form-check">
+          <input 
+            type="checkbox" 
+            name="copyright_notice_required" 
+            class="form-check-input"
+            {% if form.copyright_notice_required.value %}checked{% endif %}
+          >
+          <span class="form-check-label">
+            Users must display copyright notice
+          </span>
+        </label>
+        <span class="form-check-help">Check if your app requires displaying a copyright notice</span>
+      </div>
+    </div>
+
     <!-- Terms Box -->
     <div class="terms-box">
       <div class="terms-text">
@@ -573,7 +824,7 @@
         </div>
         <div class="terms-item">
           <span class="terms-icon">✓</span>
-          <span>JN App Store reserves the right to remove apps that violate our policies.</span>
+          <span>JnDroid Store reserves the right to remove apps that violate our policies.</span>
         </div>
       </div>
     </div>

@@ -1,0 +1,532 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ app.title }} - JnDroid Store{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/app_detail_modern.css' %}">{% endblock %}
+
+{% block content %}
+
+<!-- HERO SECTION -->
+<div class="app-hero">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-left">
+      <div class="app-icon-hero">
+        {% if app.cover_image %}
+          <img src="{{ app.cover_image.url }}" alt="{{ app.title }}"  class="icon-img">
+        {% else %}
+          <div class="icon-placeholder">{{ app.title|first|upper }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="hero-info">
+      <h1 class="app-title">{{ app.title }}</h1>
+      <p class="app-developer">
+        <i class="fas fa-user-circle"></i>
+        {{ app.developer_name|default:app.owner.username }}
+      </p>
+      
+      <div class="app-rating-bar">
+        <div class="rating-stars">
+          {% with rating=app.avg_rating|floatformat:0|add:"0" %}
+            {% for i in "12345" %}
+              <span class="star {% if i|add:"0" <= rating %}filled{% endif %}">★</span>
+            {% endfor %}
+          {% endwith %}
+        </div>
+        <span class="rating-value">{{ app.avg_rating|default_if_none:"0"|floatformat:1 }}/5</span>
+        <span class="rating-count">({{ reviews_count }} reviews)</span>
+      </div>
+
+      <p class="app-tagline">{{ app.short_description|default:"A great app" }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- ACTION BAR -->
+<div class="action-bar">
+  <div class="action-container">
+    <a href="{% url 'apps:download' app.slug %}" class="btn btn-primary btn-lg">
+      <i class="fas fa-download"></i>
+      Download Now
+    </a>
+    
+    {% if user.is_authenticated %}
+      <a href="{% url 'reviews:add' app.slug %}" class="btn btn-secondary btn-lg">
+        <i class="fas fa-star"></i>
+        Write Review
+      </a>
+    {% else %}
+      <a href="{% url 'accounts:login' %}" class="btn btn-secondary btn-lg">
+        <i class="fas fa-sign-in-alt"></i>
+        Sign In
+      </a>
+    {% endif %}
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<main class="app-main">
+  <div class="content-wrapper">
+    
+    <!-- LEFT COLUMN -->
+    <div class="content-left">
+      
+      <!-- SCREENSHOTS -->
+      {% if app.screenshots.all or app.cover_image %}
+      <section class="content-card">
+        <h2 class="section-title">Screenshots</h2>
+        {% if app.screenshots.all %}
+          <div class="gallery">
+            <div class="gallery-main">
+              <img id="mainScreenshot" src="{{ app.screenshots.first.image.url }}" alt="Screenshot" class="main-image">
+            </div>
+            {% if app.screenshots.count > 1 %}
+            <div class="gallery-thumbs">
+              {% for screenshot in app.screenshots.all %}
+              <img 
+                src="{{ screenshot.image.url }}" 
+                alt="Screenshot thumbnail"
+                class="thumb-image {% if forloop.first %}active{% endif %}"
+                onclick="updateMainScreenshot('{{ screenshot.image.url }}', this)"
+              >
+              {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </section>
+      {% endif %}
+
+      <!-- ABOUT -->
+      <section class="content-card">
+        <h2 class="section-title">About this app</h2>
+        <div class="app-description">
+          {{ app.description|default:"No description available" }}
+        </div>
+      </section>
+
+      <!-- APP DETAILS -->
+      <section class="content-card">
+        <h2 class="section-title">App Details</h2>
+        <div class="details-grid">
+          <div class="detail-item">
+            <span class="detail-label">Current Version</span>
+            <span class="detail-value">{{ app.version|default:"1.0" }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Updated</span>
+            <span class="detail-value">{{ app.updated_at|date:"M d, Y" }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Android Min</span>
+            <span class="detail-value">{{ app.min_android_version }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Target Android</span>
+            <span class="detail-value">{{ app.target_android_version }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">API Level</span>
+            <span class="detail-value">{{ app.min_api_level }} - {{ app.target_api_level }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">File Size</span>
+            <span class="detail-value">{{ app.size_mb|floatformat:1 }} MB</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Price</span>
+            <span class="detail-value">
+              {% if app.is_free %}
+                <span class="badge-free">FREE</span>
+              {% else %}
+                <span class="price">${{ app.price|floatformat:2 }}</span>
+              {% endif %}
+            </span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">In-App Purchases</span>
+            <span class="detail-value">{% if app.has_iap %}Yes{% else %}No{% endif %}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Age Rating</span>
+            <span class="detail-value">{{ app.age_rating }}</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- DEVELOPER INFO -->
+      <section class="content-card">
+        <h2 class="section-title">Developer</h2>
+        <div class="developer-card">
+          <div class="dev-name">{{ app.developer_name|default:app.owner.get_full_name|default:app.owner.username }}</div>
+          
+          <div class="dev-links">
+            {% if app.website_url %}
+            <a href="{{ app.website_url }}" target="_blank" rel="noopener" class="dev-link">
+              <i class="fas fa-globe"></i> Website
+            </a>
+            {% endif %}
+            
+            {% if app.support_email %}
+            <a href="mailto:{{ app.support_email }}" class="dev-link">
+              <i class="fas fa-envelope"></i> Support
+            </a>
+            {% endif %}
+          </div>
+
+          {% if app.privacy_policy_url or app.terms_url %}
+          <div class="dev-policies">
+            {% if app.privacy_policy_url %}
+            <a href="{{ app.privacy_policy_url }}" target="_blank" rel="noopener" class="policy-link">
+              Privacy Policy
+            </a>
+            {% endif %}
+            
+            {% if app.terms_url %}
+            <a href="{{ app.terms_url }}" target="_blank" rel="noopener" class="policy-link">
+              Terms of Service
+            </a>
+            {% endif %}
+          </div>
+          {% endif %}
+        </div>
+      </section>
+
+      <!-- REVIEWS -->
+      {% if reviews %}
+      <section class="content-card">
+        <h2 class="section-title">User Reviews</h2>
+        <div class="reviews-list">
+          {% for review in reviews|slice:":5" %}
+          <div class="review-item">
+            <div class="review-header">
+              <div class="reviewer-info">
+                <span class="reviewer-name">{{ review.user.username }}</span>
+                <div class="review-rating">
+                  {% for i in "12345" %}
+                    <span class="star-sm {% if i|add:"0" <= review.rating %}filled{% endif %}">★</span>
+                  {% endfor %}
+                </div>
+              </div>
+              <span class="review-date">{{ review.created_at|timesince }} ago</span>
+            </div>
+            {% if review.comment %}
+            <p class="review-text">{{ review.comment }}</p>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+
+        {% if reviews|length > 5 %}
+        <a href="{% url 'reviews:add' app.slug %}" class="view-all-reviews">
+          View All {{ reviews|length }} Reviews
+        </a>
+        {% endif %}
+      </section>
+      {% endif %}
+
+    </div>
+
+    <!-- RIGHT SIDEBAR -->
+    <aside class="sidebar">
+      
+      <!-- DOWNLOAD CARD -->
+      <div class="sidebar-card featured">
+        <div class="card-price">
+          {% if app.is_free %}
+            <span class="price-free">FREE</span>
+          {% else %}
+            <span class="price-amount">${{ app.price|floatformat:2 }}</span>
+          {% endif %}
+        </div>
+        <a href="{% url 'apps:download' app.slug %}" class="btn btn-primary btn-block">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <p class="card-info">Safe & Verified Download</p>
+      </div>
+
+      <!-- STATS CARD -->
+      <div class="sidebar-card">
+        <h3 class="card-title">Statistics</h3>
+        <div class="stats-list">
+          <div class="stat-row">
+            <span class="stat-icon">⬇️</span>
+            <div class="stat-info">
+              <span class="stat-label">Downloads</span>
+              <span class="stat-value">{{ app.downloads|default:0 }}</span>
+            </div>
+          </div>
+          <div class="stat-row">
+            <span class="stat-icon">⭐</span>
+            <div class="stat-info">
+              <span class="stat-label">Rating</span>
+              <span class="stat-value">{{ app.avg_rating|default_if_none:"0"|floatformat:1 }}/5</span>
+            </div>
+          </div>
+          <div class="stat-row">
+            <span class="stat-icon">💬</span>
+            <div class="stat-info">
+              <span class="stat-label">Reviews</span>
+              <span class="stat-value">{{ reviews_count }}</span>
+            </div>
+          </div>
+          <div class="stat-row">
+            <span class="stat-icon">📅</span>
+            <div class="stat-info">
+              <span class="stat-label">Released</span>
+              <span class="stat-value">{{ app.created_at|date:"M Y" }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REQUIREMENTS CARD -->
+      <div class="sidebar-card">
+        <h3 class="card-title">Requirements</h3>
+        <div class="requirements-list">
+          <div class="req-item">
+            <span class="req-icon">📱</span>
+            <span class="req-text">Android {{ app.min_android_version }}+</span>
+          </div>
+          <div class="req-item">
+            <span class="req-icon">💾</span>
+            <span class="req-text">{{ app.size_mb|floatformat:1 }} MB</span>
+          </div>
+          <div class="req-item">
+            <span class="req-icon">🔧</span>
+            <span class="req-text">API {{ app.min_api_level }}</span>
+          </div>
+          {% if app.has_iap %}
+          <div class="req-item">
+            <span class="req-icon">🛒</span>
+            <span class="req-text">In-App Purchases</span>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- CATEGORY CARD -->
+      <div class="sidebar-card">
+        <h3 class="card-title">Category</h3>
+        <a href="{% url 'categories:detail' app.category.slug %}" class="category-link">
+          <span class="cat-icon">{{ app.category.icon }}</span>
+          <span class="cat-name">{{ app.category.name }}</span>
+        </a>
+      </div>
+
+      <!-- SHARE CARD -->
+      <div class="sidebar-card">
+        <h3 class="card-title">Share</h3>
+        <div class="share-buttons">
+          <a href="https://www.facebook.com/sharer/sharer.php?u=http://{{ request.host }}/apps/{{ app.slug }}/" target="_blank" class="share-btn facebook" title="Share on Facebook">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="https://twitter.com/intent/tweet?text={{ app.title }}&url=http://{{ request.host }}/apps/{{ app.slug }}/" target="_blank" class="share-btn twitter" title="Share on Twitter">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="https://wa.me/?text={{ app.title }}%20http://{{ request.host }}/apps/{{ app.slug }}/" target="_blank" class="share-btn whatsapp" title="Share on WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+          </a>
+          <button class="share-btn generic" onclick="copyToClipboard('http://{{ request.host }}/apps/{{ app.slug }}/')" title="Copy Link">
+            <i class="fas fa-link"></i>
+          </button>
+        </div>
+      </div>
+
+    </aside>
+
+  </div>
+
+  <!-- SOURCE VERIFICATION SECTION -->
+  <section class="content-card" style="background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(59, 130, 246, 0.1)); border-left: 4px solid #a855f7; margin-bottom: 32px;">
+    <h2 class="section-title">📌 Source & Origin Information</h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 20px;">
+      <!-- Ownership Type Badge -->
+      <div style="padding: 12px; background: rgba(255, 255, 255, 0.5); border-radius: 8px; border-left: 3px solid #0891b2;">
+        <div style="font-size: 12px; color: var(--muted);">Content Type</div>
+        <div style="font-size: 16px; font-weight: 600; color: #0891b2; margin-top: 4px;">
+          {% if app.content_ownership_type == 'original' %}
+            ✅ Original
+          {% elif app.content_ownership_type == 'permission' %}
+            🔐 Licensed
+          {% else %}
+            ℹ️ Informational
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Source Verification Badge -->
+      <div style="padding: 12px; background: rgba(255, 255, 255, 0.5); border-radius: 8px; border-left: 3px solid {% if app.verified_external_link %}#28a745{% else %}#FFC107{% endif %};">
+        <div style="font-size: 12px; color: var(--muted);">Source Verified</div>
+        <div style="font-size: 16px; font-weight: 600; color: {% if app.verified_external_link %}#28a745{% else %}#FFC107{% endif %}; margin-top: 4px;">
+          {% if app.verified_external_link %}✅ Yes{% else %}❌ No{% endif %}
+        </div>
+      </div>
+
+      <!-- Risk Level Badge -->
+      <div style="padding: 12px; background: rgba(255, 255, 255, 0.5); border-radius: 8px; border-left: 3px solid {% if app.legal_risk_level == 'low' %}#28a745{% elif app.legal_risk_level == 'medium' %}#FFC107{% else %}#dc3545{% endif %};">
+        <div style="font-size: 12px; color: var(--muted);">Legal Risk</div>
+        <div style="font-size: 16px; font-weight: 600; color: {% if app.legal_risk_level == 'low' %}#28a745{% elif app.legal_risk_level == 'medium' %}#FFC107{% else %}#dc3545{% endif %}; margin-top: 4px;">
+          {% if app.legal_risk_level == 'low' %}✅ Low{% elif app.legal_risk_level == 'medium' %}⚠️ Medium{% else %}🔴 High{% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Source Links -->
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      {% if app.play_store_link %}
+      <div style="padding: 14px; background: rgba(255, 255, 255, 0.7); border-radius: 8px; border-left: 4px solid #34a853;">
+        <div style="font-size: 12px; color: var(--muted); margin-bottom: 6px;">▶️ Google Play Store</div>
+        <a href="{{ app.play_store_link }}" target="_blank" rel="noopener noreferrer" style="color: var(--primary); text-decoration: none; font-weight: 600; word-break: break-all; font-size: 13px;">
+          {{ app.play_store_link|truncatewords:5 }}
+        </a>
+        <p style="margin: 8px 0 0; font-size: 12px; color: #28a745;">✅ Official verified source</p>
+      </div>
+      {% endif %}
+
+      {% if app.developer_website %}
+      <div style="padding: 14px; background: rgba(255, 255, 255, 0.7); border-radius: 8px; border-left: 4px solid #3b82f6;">
+        <div style="font-size: 12px; color: var(--muted); margin-bottom: 6px;">🌐 Developer Website</div>
+        <a href="{{ app.developer_website }}" target="_blank" rel="noopener noreferrer" style="color: var(--primary); text-decoration: none; font-weight: 600; word-break: break-all; font-size: 13px;">
+          {{ app.developer_website|truncatewords:5 }}
+        </a>
+        {% if app.verified_external_link %}
+        <p style="margin: 8px 0 0; font-size: 12px; color: #28a745;">✅ Verified by jndroid store</p>
+        {% else %}
+        <p style="margin: 8px 0 0; font-size: 12px; color: var(--muted);">Being verified...</p>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Ownership Declaration -->
+    {% if app.content_ownership_type == 'informational' %}
+    <div style="padding: 12px; background: #fef3c7; border-radius: 8px; margin-top: 16px; border-left: 4px solid #ea580c;">
+      <div style="font-size: 12px; color: #92400e; font-weight: 600; margin-bottom: 4px;">⚠️ Informational Sharing Notice</div>
+      <p style="margin: 0; font-size: 12px; color: #92400e; line-height: 1.5;">
+        This app is shared for informational purposes. jndroid store assumes responsibility for copyright compliance. Users retain the right to report infringement concerns through our DMCA process.
+      </p>
+    </div>
+    {% elif app.content_ownership_type == 'permission' %}
+    <div style="padding: 12px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; margin-top: 16px; border-left: 4px solid #10b981;">
+      <div style="font-size: 12px; color: #047857; font-weight: 600; margin-bottom: 4px;">🔐 Licensed Distribution</div>
+      <p style="margin: 0; font-size: 12px; color: #047857; line-height: 1.5;">
+        This app is shared under valid license agreement or with explicit permission from the copyright holder.
+      </p>
+    </div>
+    {% endif %}
+  </section>
+
+  <!-- COPYRIGHT & LEGAL SECTION -->
+  <section class="content-card" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(32, 201, 51, 0.1)); border-left: 4px solid var(--primary); margin-bottom: 32px;">
+    <h2 class="section-title">⚖️ Copyright & Legal Information</h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 20px;">
+      <!-- Original Content Badge -->
+      <div style="padding: 12px; background: rgba(255, 255, 255, 0.5); border-radius: 8px; border-left: 3px solid #28a745;">
+        <div style="font-size: 12px; color: var(--muted);">Original Content</div>
+        <div style="font-size: 16px; font-weight: 600; color: #28a745; margin-top: 4px;">
+          {% if app.is_original_content %}✅ Yes{% else %}❓ Unverified{% endif %}
+        </div>
+      </div>
+
+      <!-- Copyright Claims Badge -->
+      <div style="padding: 12px; background: rgba(255, 255, 255, 0.5); border-radius: 8px; border-left: 3px solid {% if app.has_copyright_claim %}#dc3545{% else %}#28a745{% endif %};">
+        <div style="font-size: 12px; color: var(--muted);">Copyright Claims</div>
+        <div style="font-size: 16px; font-weight: 600; color: {% if app.has_copyright_claim %}#dc3545{% else %}#28a745{% endif %}; margin-top: 4px;">
+          {% if app.has_copyright_claim %}⚠️ Active{% else %}✅ None{% endif %}
+        </div>
+      </div>
+
+      <!-- Verification Badge -->
+      <div style="padding: 12px; background: rgba(255, 255, 255, 0.5); border-radius: 8px; border-left: 3px solid {% if app.copyright_verified %}#28a745{% else %}#FFC107{% endif %};">
+        <div style="font-size: 12px; color: var(--muted);">Admin Verified</div>
+        <div style="font-size: 16px; font-weight: 600; color: {% if app.copyright_verified %}#28a745{% else %}#FFC107{% endif %}; margin-top: 4px;">
+          {% if app.copyright_verified %}✅ Yes{% else %}⏳ Pending{% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Copyright Statement -->
+    {% if app.copyright_statement %}
+    <div style="padding: 12px; background: rgba(255, 255, 255, 0.7); border-radius: 6px; margin-bottom: 16px;">
+      <span style="font-size: 12px; color: var(--muted); display: block; margin-bottom: 6px;">📋 Developer's Copyright Claim:</span>
+      <p style="margin: 0; font-size: 13px; line-height: 1.5;">{{ app.copyright_statement }}</p>
+    </div>
+    {% endif %}
+
+    <!-- Info Text -->
+    <p style="margin: 0; font-size: 12px; color: var(--muted); line-height: 1.6;">
+      ✓ This app has been declared as original content by its developer. jndroid store takes copyright protection seriously and investigates all takedown claims. If you believe this app infringes on your copyright, you can <a href="/dmca-takedown/" style="color: var(--primary); text-decoration: none; font-weight: 500;">file a DMCA notice</a>.
+    </p>
+
+    <!-- Action Buttons -->
+    <div style="display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap;">
+      {% if user.is_authenticated and user == app.owner %}
+        <a href="{% url 'apps:copyright_status' app.slug %}" class="btn" style="padding: 8px 16px; background: var(--primary); color: white; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 12px;">
+          ⚖️ View Copyright Status
+        </a>
+        <a href="{% url 'apps:takedown_request' app.slug %}" class="btn btn-outline" style="padding: 8px 16px; background: transparent; color: #dc3545; border: 1px solid #dc3545; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 12px;">
+          🗑️ Request Takedown
+        </a>
+      {% endif %}
+      <a href="{% url 'apps:copyright_check' app.slug %}" class="btn btn-outline" style="padding: 8px 16px; background: transparent; color: var(--primary); border: 1px solid var(--primary); border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 12px;">
+        ℹ️ Copyright Info
+      </a>
+      {% if app.copyright_infringement_count <= 5 %}
+      <a href="{% url 'apps:report_infringement' app.slug %}" class="btn btn-outline" style="padding: 8px 16px; background: transparent; color: #dc3545; border: 1px solid #dc3545; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 12px;">
+        ⚠️ Report Issue
+      </a>
+      {% endif %}
+      <a href="/community-guidelines/" class="btn btn-outline" style="padding: 8px 16px; background: transparent; color: var(--primary); border: 1px solid var(--primary); border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 12px;">
+        📖 Guidelines
+      </a>
+    </div>
+  </section>
+
+  </div>
+
+  <!-- RELATED APPS -->
+  {% if related_apps %}
+  <section class="related-apps">
+    <h2 class="section-title-large">Related Apps</h2>
+    <div class="related-grid">
+      {% for rel_app in related_apps %}
+      <a href="{% url 'apps:detail' rel_app.slug %}" class="related-item">
+        <div class="related-icon">
+          {% if rel_app.cover_image %}
+            <img src="{{ rel_app.cover_image.url }}" alt="{{ rel_app.title }}">
+          {% else %}
+            <div class="placeholder">{{ rel_app.title|first|upper }}</div>
+          {% endif %}
+        </div>
+        <h4 class="related-title">{{ rel_app.title }}</h4>
+        <p class="related-rating">⭐ {{ rel_app.avg_rating|default_if_none:"0"|floatformat:1 }}/5</p>
+        <p class="related-downloads">{{ rel_app.downloads }} downloads</p>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+</main>
+
+<script>
+function updateMainScreenshot(src, elem) {
+  document.getElementById('mainScreenshot').src = src;
+  document.querySelectorAll('.thumb-image').forEach(el => el.classList.remove('active'));
+  elem.classList.add('active');
+}
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    alert('Link copied to clipboard!');
+  }).catch(err => {
+    console.error('Failed to copy:', err);
+  });
+}
+</script>
+
+{% endblock %}

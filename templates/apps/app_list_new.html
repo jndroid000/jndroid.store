@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Browse Apps - jndroid store{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/app_list_new.css' %}">{% endblock %}
+
+{% block content %}
+
+<!-- PAGE HEADER -->
+<div class="apps-hero">
+  <div class="hero-content">
+    <h1 class="hero-title">Discover Amazing Apps</h1>
+    <p class="hero-subtitle">Download quality Android apps from jndroid store</p>
+  </div>
+</div>
+
+<!-- SEARCH AND FILTER SECTION -->
+<div class="apps-container">
+  <div class="filter-section">
+    <form method="get" class="search-box-container">
+      <div class="search-box">
+        <i class="fas fa-search search-icon"></i>
+        <input 
+          type="text" 
+          name="q" 
+          placeholder="Search apps by name..." 
+          value="{{ q }}"
+          class="search-input"
+        />
+      </div>
+      
+      <div class="filter-controls">
+        <select name="cat" class="category-filter">
+          <option value="">All Categories</option>
+          {% for c in categories %}
+            <option value="{{ c.slug }}" {% if cat == c.slug %}selected{% endif %}>
+              {{ c.icon }} {{ c.name }}
+            </option>
+          {% endfor %}
+        </select>
+        
+        <button type="submit" class="btn-search">
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- RESULTS INFO -->
+  <div class="results-info">
+    <h2 class="results-title">
+      {% if q %}
+        Search Results for "{{ q }}"
+      {% elif cat %}
+        {% for c in categories %}
+          {% if c.slug == cat %}{{ c.name }}{% endif %}
+        {% endfor %}
+      {% else %}
+        All Apps
+      {% endif %}
+    </h2>
+    <p class="results-count">{{ total_results }} app{{ total_results|pluralize }}</p>
+  </div>
+
+  <!-- APPS GRID -->
+  {% if apps %}
+    <div class="apps-grid">
+      {% for app in apps %}
+        <a href="{% url 'apps:detail' app.slug %}" class="app-card">
+          <div class="app-card-header">
+            <div class="app-icon">
+              {% if app.cover_image %}
+                <img src="{{ app.cover_image.url }}" alt="{{ app.title }}" class="icon-img">
+              {% else %}
+                <div class="icon-placeholder">{{ app.title|first|upper }}</div>
+              {% endif %}
+            </div>
+            <div class="app-badge">
+              {% if app.avg_rating >= 4 %}
+                <span class="badge-feature">⭐ Featured</span>
+              {% endif %}
+            </div>
+          </div>
+          
+          <div class="app-card-content">
+            <h3 class="app-title">{{ app.title }}</h3>
+            <p class="app-developer">{{ app.developer_name|default:app.owner.username }}</p>
+            <p class="app-description">{{ app.short_description|truncatewords:8 }}</p>
+            
+            <div class="app-category">
+              <span class="category-badge">{{ app.category.icon }} {{ app.category.name }}</span>
+            </div>
+            
+            <div class="app-stats">
+              <div class="stat">
+                <span class="stat-label">Rating</span>
+                <span class="stat-value">⭐ {{ app.avg_rating|default_if_none:"0"|floatformat:1 }}/5</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Downloads</span>
+                <span class="stat-value">{{ app.downloads|default:0 }}</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Size</span>
+                <span class="stat-value">{{ app.size_mb|floatformat:1 }}MB</span>
+              </div>
+            </div>
+            
+            <div class="app-footer">
+              <span class="app-version">v{{ app.version|default:"1.0" }}</span>
+              <button class="btn-download" onclick="event.preventDefault(); window.location.href='{% url 'apps:download' app.slug %}'">
+                <i class="fas fa-download"></i> Download
+              </button>
+            </div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+
+    <!-- PAGINATION -->
+    {% if apps.has_other_pages %}
+      <div class="pagination-container">
+        <nav class="pagination">
+          {% if apps.has_previous %}
+            <a href="?page=1{% if q %}&q={{ q }}{% endif %}{% if cat %}&cat={{ cat }}{% endif %}" class="page-link">First</a>
+            <a href="?page={{ apps.previous_page_number }}{% if q %}&q={{ q }}{% endif %}{% if cat %}&cat={{ cat }}{% endif %}" class="page-link">Previous</a>
+          {% endif %}
+
+          {% for num in apps.paginator.page_range %}
+            {% if apps.number == num %}
+              <span class="page-link active">{{ num }}</span>
+            {% elif num > apps.number|add:'-3' and num < apps.number|add:'3' %}
+              <a href="?page={{ num }}{% if q %}&q={{ q }}{% endif %}{% if cat %}&cat={{ cat }}{% endif %}" class="page-link">{{ num }}</a>
+            {% endif %}
+          {% endfor %}
+
+          {% if apps.has_next %}
+            <a href="?page={{ apps.next_page_number }}{% if q %}&q={{ q }}{% endif %}{% if cat %}&cat={{ cat }}{% endif %}" class="page-link">Next</a>
+            <a href="?page={{ apps.paginator.num_pages }}{% if q %}&q={{ q }}{% endif %}{% if cat %}&cat={{ cat }}{% endif %}" class="page-link">Last</a>
+          {% endif %}
+        </nav>
+      </div>
+    {% endif %}
+  
+  {% else %}
+    <!-- NO APPS FOUND -->
+    <div class="empty-state">
+      <div class="empty-icon">📱</div>
+      <h3 class="empty-title">No Apps Found</h3>
+      <p class="empty-description">
+        We couldn't find any apps matching your search. Try different keywords or browse all categories.
+      </p>
+      <a href="{% url 'apps:list' %}" class="btn btn-primary">Browse All Apps</a>
+    </div>
+  {% endif %}
+</div>
+
+{% endblock %}

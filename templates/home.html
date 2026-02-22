@@ -432,7 +432,9 @@
         <p>এখনই JnDroid Store-এ যোগ দিন এবং হাজারো অ্যাপ আবিষ্কার করুন</p>
         <div class="final-cta-buttons">
           <a href="{% url 'apps:list' %}" class="btn btn-primary btn-lg">অ্যাপ ব্রাউজ করুন</a>
-          <a href="{% url 'accounts:login' %}" class="btn btn-secondary btn-lg">লগইন করুন</a>
+          {% if not user.is_authenticated %}
+            <a href="{% url 'accounts:login' %}" class="btn btn-secondary btn-lg">লগইন করুন</a>
+          {% endif %}
         </div>
       </div>
     </div>

@@ -8,6 +8,7 @@ urlpatterns = [
     path("signup/", views.signup_view, name="signup"),
     path("logout/", views.logout_view, name="logout"),
     path("email-verification-sent/", views.email_verification_sent, name="email-verification-sent"),
+    path("check-email-verification/", views.check_email_verification_status, name="check-email-verification"),
     path("confirm-email/<str:key>/", views.email_confirmation_view, name="email_confirmation"),
     path("resend-verification/", views.resend_verification_email, name="resend_verification"),
     path("profile/", views.profile_view, name="profile"),

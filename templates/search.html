@@ -1,0 +1,342 @@
+{% load static %}
+
+<!doctype html>
+<html lang="bn">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <meta name="description" content="Search results - JnDroid Store" />
+  <title>Search Results - JnDroid Store</title>
+
+  <!-- PWA Manifest & Meta Tags -->
+  <link rel="manifest" href="{% static 'manifest.json' %}">
+  <meta name="theme-color" content="#007bff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)">
+
+  <!-- Favicon Links -->
+  <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <link rel="stylesheet" href="{% static 'css/pages.css' %}">
+  <link rel="stylesheet" href="{% static 'css/header.css' %}">
+  <link rel="stylesheet" href="{% static 'css/search-results.css' %}">
+  <link rel="stylesheet" href="{% static 'css/pwa-banner.css' %}">
+  <script src="{% static 'js/theme.js' %}"></script>
+  <style>
+    .search-page-header {
+      margin-bottom: 30px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .search-page-query {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .search-page-query code {
+      background: rgba(124, 92, 255, 0.1);
+      color: var(--primary);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 16px;
+      font-family: 'Courier New', monospace;
+    }
+
+    .back-to-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 14px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      margin-top: 16px;
+    }
+
+    .back-to-home:hover {
+      background: rgba(124, 92, 255, 0.1);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <div class="nav">
+        <a class="brand" href="/">
+          <img src="{% static 'images/favicon-64x64.png' %}" alt="JnDroid Store Logo" class="logo-icon">
+          <div class="logo-text">
+            <h1>JnDroid Store</h1>
+            <p>Safe • Fast • Bangla-friendly</p>
+          </div>
+        </a>
+
+        <nav class="links" aria-label="Primary">
+          <a href="{% url 'categories:list' %}">Categories</a>
+          <a href="{% url 'apps:list' %}">Apps</a>
+        </nav>
+
+        <div class="actions">
+          <!-- Search Component -->
+          <div class="app-search">
+            <input 
+              type="text" 
+              class="app-search__input" 
+              placeholder="Search apps..." 
+              aria-label="Search applications">
+            <span class="app-search__icon">
+              <i class="fas fa-search"></i>
+            </span>
+            <button class="app-search__go" type="button" aria-label="Submit search">
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+
+          <!-- Profile Dropdown - Desktop -->
+          <div class="profile-dropdown">
+            <button class="profile-btn" id="profileBtn" aria-label="Profile menu">
+              {% if user.is_authenticated %}
+              {% if user.profile.avatar %}
+              <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}" class="profile-avatar">
+              {% else %}
+              <div class="profile-avatar-initial">{{ user.first_name|first|default:user.username|first|upper }}</div>
+              {% endif %}
+              {% else %}
+              <span>👤</span>
+              {% endif %}
+            </button>
+            <div class="profile-menu" id="profileMenu">
+              {% if user.is_authenticated %}
+              <a href="{% url 'accounts:profile' %}" class="profile-menu-item">
+                <span class="icon">👤</span>
+                <span>My Profile</span>
+              </a>
+              <a href="{% url 'apps:my_apps' %}" class="profile-menu-item">
+                <span class="icon">📚</span>
+                <span>My Apps</span>
+              </a>
+              <hr class="menu-divider">
+              <form method="post" action="{% url 'accounts:logout' %}" style="width: 100%;">
+                {% csrf_token %}
+                <button type="submit" class="profile-menu-item logout-btn">
+                  <span class="icon">🚪</span>
+                  <span>Logout</span>
+                </button>
+              </form>
+              {% else %}
+              <a href="{% url 'accounts:login' %}" class="profile-menu-item">
+                <span class="icon">🔑</span>
+                <span>Login</span>
+              </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="search-page-header">
+        <h2 class="search-page-query">
+          Search Results for <code id="searchQuery">query</code>
+        </h2>
+        <a href="/" class="back-to-home">
+          <i class="fas fa-arrow-left"></i>
+          Back to Home
+        </a>
+      </div>
+
+      <div id="searchResults" class="search-results">
+        <div style="text-align: center; padding: 40px 20px;">
+          <i class="fas fa-spinner fa-spin" style="font-size: 48px; color: var(--primary); margin-bottom: 16px;"></i>
+          <p style="color: var(--muted);">Loading results...</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="foot">
+        <div>
+          <h3>JnDroid Store</h3>
+          <p style="margin:4px 0; color:var(--muted); font-size:13px">Safe, verified APK hub for Bangla speakers.</p>
+        </div>
+
+        <div>
+          <h3 style="font-size:14px; margin:0 0 10px">Links</h3>
+          <a href="{% url 'categories:list' %}">Categories</a><br />
+          <a href="{% url 'apps:list' %}">Apps</a><br />
+          <a href="{% url 'support' %}">Guide & Support</a>
+        </div>
+
+        <div>
+          <h3 style="font-size:14px; margin:0 0 10px">Legal</h3>
+          <a href="/privacy/">Privacy Policy</a><br />
+          <a href="{% url 'terms_of_service' %}">Terms of Service</a>
+        </div>
+      </div>
+
+      <p style="margin:12px 0 0">© <span id="year"></span> JnDroid Store. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="{% static 'js/common.js' %}"></script>
+  <script src="{% static 'js/pwa-install.js' %}"></script>
+  <script src="{% static 'js/search-expand.js' %}"></script>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    /**
+     * Get URL query parameter safely
+     */
+    function getQueryParam(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name) || '';
+    }
+
+    /**
+     * Decode and display query
+     */
+    function displaySearchQuery() {
+      const query = getQueryParam('q');
+      const decodedQuery = decodeURIComponent(query);
+      const queryElement = document.getElementById('searchQuery');
+      
+      if (queryElement) {
+        queryElement.textContent = decodedQuery || 'empty query';
+      }
+
+      return decodedQuery;
+    }
+
+    /**
+     * Mock app data (same as in search-expand.js)
+     */
+    const mockApps = [
+      { id: 1, name: 'WhatsApp Business', icon: '💼', category: 'messaging' },
+      { id: 2, name: 'Instagram', icon: '📷', category: 'social' },
+      { id: 3, name: 'Facebook', icon: '👥', category: 'social' },
+      { id: 4, name: 'Netflix', icon: '🎬', category: 'entertainment' },
+      { id: 5, name: 'Spotify', icon: '🎵', category: 'music' },
+      { id: 6, name: 'YouTube', icon: '📹', category: 'video' },
+      { id: 7, name: 'Gmail', icon: '📧', category: 'communication' },
+      { id: 8, name: 'Google Drive', icon: '☁️', category: 'productivity' },
+      { id: 9, name: 'Microsoft Teams', icon: '🤝', category: 'productivity' },
+      { id: 10, name: 'Telegram', icon: '✈️', category: 'messaging' },
+      { id: 11, name: 'TikTok', icon: '🎥', category: 'entertainment' },
+      { id: 12, name: 'Discord', icon: '💬', category: 'communication' },
+      { id: 13, name: 'Slack', icon: '💼', category: 'productivity' },
+      { id: 14, name: 'GitHub', icon: '🐙', category: 'development' },
+      { id: 15, name: 'VS Code', icon: '💻', category: 'development' },
+    ];
+
+    /**
+     * Filter apps based on search query
+     */
+    function filterApps(query) {
+      if (!query.trim()) return [];
+
+      const lowerQuery = query.toLowerCase();
+      return mockApps.filter(app =>
+        app.name.toLowerCase().includes(lowerQuery) ||
+        app.category.toLowerCase().includes(lowerQuery)
+      );
+    }
+
+    /**
+     * Render app card HTML
+     */
+    function renderAppCard(app) {
+      return `
+        <div class="app-card" data-app-id="${app.id}">
+          <div class="app-card__icon">${app.icon}</div>
+          <div class="app-card__info">
+            <h4 class="app-card__name">${app.name}</h4>
+            <p class="app-card__category">${app.category}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    /**
+     * Render search results
+     */
+    function renderPageResults() {
+      const query = displaySearchQuery();
+      const resultsContainer = document.getElementById('searchResults');
+
+      if (!query.trim()) {
+        resultsContainer.innerHTML = `
+          <div class="no-results">
+            <p class="no-results__text">Please provide a search query.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const filteredApps = filterApps(query);
+
+      if (filteredApps.length === 0) {
+        resultsContainer.innerHTML = `
+          <div class="no-results">
+            <p class="no-results__text">No apps found matching "<strong>${query}</strong>". Try different keywords.</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = `
+        <div class="results-section">
+          <h3 class="section-title">🔍 Found ${filteredApps.length} Result${filteredApps.length !== 1 ? 's' : ''}</h3>
+          <div class="apps-vertical-list">
+      `;
+
+      filteredApps.forEach(app => {
+        html += renderAppCard(app);
+      });
+
+      html += `
+          </div>
+        </div>
+      `;
+
+      resultsContainer.innerHTML = html;
+      resultsContainer.classList.add('results--active');
+
+      // Update search input with current query
+      const searchInput = document.querySelector('.app-search__input');
+      if (searchInput) {
+        searchInput.value = query;
+      }
+    }
+
+    // Render results when page loads
+    document.addEventListener('DOMContentLoaded', renderPageResults);
+  </script>
+</body>
+
+</html>

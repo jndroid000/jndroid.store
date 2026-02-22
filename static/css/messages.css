@@ -1,0 +1,172 @@
+/* ==================== Messages/Toast Notifications ==================== */
+
+.messages-container {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 350px;
+  pointer-events: none;
+  padding-right: 20px;
+}
+
+.message-toast {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  animation: slideInRight 0.3s ease-out forwards;
+  pointer-events: auto;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+}
+
+/* Message variants */
+.message-toast.message-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border-color: #059669;
+  color: white;
+}
+
+.message-toast.message-error,
+.message-toast.message-danger {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  border-color: #dc2626;
+  color: white;
+}
+
+.message-toast.message-warning {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  border-color: #d97706;
+  color: white;
+}
+
+.message-toast.message-info {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  border-color: #2563eb;
+  color: white;
+}
+
+.message-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.message-text {
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.message-close {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+}
+
+.message-close:hover {
+  opacity: 1;
+}
+
+/* Auto-hide animation */
+.message-toast.hiding {
+  animation: slideOutRight 0.3s ease-out forwards;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .messages-container {
+    position: fixed;
+    top: auto;
+    right: 10px;
+    left: 35px;
+    bottom: 85px;
+    max-width: none;
+    width: calc(100% - 150px);
+    padding-right: 0;
+  }
+
+  .message-toast {
+    padding: 10px 12px;
+  }
+
+  .message-text {
+    font-size: 13px;
+  }
+
+  .message-close {
+    font-size: 18px;
+  }
+}
+
+/* ==================== Dark Mode Support ==================== */
+
+:root[data-theme="dark"] .message-toast {
+  background: var(--bg-secondary);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .message-toast.message-success {
+  background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+  border-color: #065f46;
+  color: #d1fae5;
+}
+
+:root[data-theme="dark"] .message-toast.message-error,
+:root[data-theme="dark"] .message-toast.message-danger {
+  background: linear-gradient(135deg, #7f1d1d 0%, #5f0f0f 100%);
+  border-color: #5f0f0f;
+  color: #fee2e2;
+}
+
+:root[data-theme="dark"] .message-toast.message-warning {
+  background: linear-gradient(135deg, #78350f 0%, #5a2e0f 100%);
+  border-color: #5a2e0f;
+  color: #fef3c7;
+}
+
+:root[data-theme="dark"] .message-toast.message-info {
+  background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+  border-color: #1e40af;
+  color: #dbeafe;
+}

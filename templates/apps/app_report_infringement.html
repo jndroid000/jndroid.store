@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Report Copyright Infringement - {{ app.title }} - JnDroid Store{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/app_upload.css' %}">{% endblock %}
+
+{% block content %}
+<div class="upload-container">
+  <!-- Header -->
+  <div class="upload-header">
+    <h1>⚠️ Report Copyright Infringement</h1>
+    <p>Report if you believe this app violates copyright or intellectual property rights</p>
+  </div>
+
+  <!-- Important Notice -->
+  <div class="alert alert-warning" style="border-left: 4px solid #FFC107; background: rgba(255, 193, 7, 0.1); padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+    <span class="alert-icon">ℹ️</span>
+    <div>
+      <strong>Important Notice</strong>
+      <p style="margin: 8px 0 0; color: var(--muted); font-size: 13px;">
+        False or malicious infringement reports may result in account suspension or legal action. Only file reports for genuine copyright violations.
+      </p>
+    </div>
+  </div>
+
+  <!-- Messages -->
+  {% if messages %}
+  <div class="messages">
+    {% for message in messages %}
+      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}">
+        <span class="alert-icon">
+          {% if message.tags == 'success' %}✅{% elif message.tags == 'error' %}❌{% elif message.tags == 'warning' %}⚠️{% else %}ℹ️{% endif %}
+        </span>
+        <span class="alert-message">{{ message }}</span>
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Form -->
+  <form method="POST" class="upload-form">
+    {% csrf_token %}
+
+    <!-- App Information Section -->
+    <div class="form-section">
+      <div class="section-header">
+        <span class="section-emoji">📱</span>
+        <h2 class="section-title">App Being Reported</h2>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">App</label>
+        <div style="padding: 16px; background: var(--bg-secondary); border: 1px solid var(--line); border-radius: 8px; display: flex; align-items: center; gap: 16px;">
+          <div style="font-size: 48px; width: 60px; height: 60px; background: var(--bg); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            {% if app.cover_image %}
+              <img src="{{ app.cover_image.url }}" alt="{{ app.title }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+            {% else %}
+              {{ app.title|first|upper }}
+            {% endif %}
+          </div>
+          <div>
+            <h3 style="margin: 0; font-size: 18px;">{{ app.title }}</h3>
+            <p style="margin: 4px 0 0; color: var(--muted); font-size: 13px;">
+              v{{ app.version|default:"1.0" }} · By {{ app.developer_name|default:app.owner.username }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reporter Information Section -->
+    <div class="form-section">
+      <div class="section-header">
+        <span class="section-emoji">👤</span>
+        <h2 class="section-title">Your Information</h2>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">
+            Your Name <span class="required">*</span>
+          </label>
+          <input 
+            type="text" 
+            name="reporter_name" 
+            class="form-input {% if form.reporter_name.errors %}is-invalid{% endif %}"
+            value="{{ form.reporter_name.value|default:'' }}"
+            placeholder="Your full name"
+            required
+          >
+          {% if form.reporter_name.errors %}
+            <div class="form-error">
+              {% for error in form.reporter_name.errors %}{{ error }}{% endfor %}
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            Your Email <span class="required">*</span>
+          </label>
+          <input 
+            type="email" 
+            name="reporter_email" 
+            class="form-input {% if form.reporter_email.errors %}is-invalid{% endif %}"
+            value="{{ form.reporter_email.value|default:'' }}"
+            placeholder="your.email@example.com"
+            required
+          >
+          {% if form.reporter_email.errors %}
+            <div class="form-error">
+              {% for error in form.reporter_email.errors %}{{ error }}{% endfor %}
+            </div>
+          {% endif %}
+          <span class="form-help">We'll use this to contact you about your report</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Report Title Section -->
+    <div class="form-section">
+      <div class="section-header">
+        <span class="section-emoji">📝</span>
+        <h2 class="section-title">Report Title</h2>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          Brief Title <span class="required">*</span>
+        </label>
+        <input 
+          type="text" 
+          name="title" 
+          class="form-input {% if form.title.errors %}is-invalid{% endif %}"
+          value="{{ form.title.value|default:'' }}"
+          placeholder="e.g., 'Copied code from my app', 'Stolen UI design'"
+          required
+        >
+        {% if form.title.errors %}
+          <div class="form-error">
+            {% for error in form.title.errors %}{{ error }}{% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Infringement Details Section -->
+    <div class="form-section">
+      <div class="section-header">
+        <span class="section-emoji">⚖️</span>
+        <h2 class="section-title">Infringement Details</h2>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          Detailed Description <span class="required">*</span>
+        </label>
+        <textarea 
+          name="description" 
+          class="form-input {% if form.description.errors %}is-invalid{% endif %}"
+          rows="6"
+          placeholder="Explain in detail how this app violates copyright. Include specific examples of what was copied..."
+          required
+        >{{ form.description.value|default:'' }}</textarea>
+        {% if form.description.errors %}
+          <div class="form-error">
+            {% for error in form.description.errors %}{{ error }}{% endfor %}
+          </div>
+        {% endif %}
+        <span class="form-help">Be as specific as possible to help our review team</span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">
+          What Specifically Was Copied? <span class="required">*</span>
+        </label>
+        <textarea 
+          name="evidence_description" 
+          class="form-input {% if form.evidence_description.errors %}is-invalid{% endif %}"
+          rows="4"
+          placeholder="E.g., 'Code from src/main.java', 'UI design elements', 'App icon and branding', etc."
+          required
+        >{{ form.evidence_description.value|default:'' }}</textarea>
+        {% if form.evidence_description.errors %}
+          <div class="form-error">
+            {% for error in form.evidence_description.errors %}{{ error }}{% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Original Work Section -->
+    <div class="form-section">
+      <div class="section-header">
+        <span class="section-emoji">📎</span>
+        <h2 class="section-title">Original Work (Optional)</h2>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Original App/Work Name</label>
+          <input 
+            type="text" 
+            name="original_app_name" 
+            class="form-input"
+            value="{{ form.original_app_name.value|default:'' }}"
+            placeholder="Name of the original app or work"
+          >
+          <span class="form-help">The app that was copied from (if applicable)</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Link to Original Work</label>
+          <input 
+            type="url" 
+            name="original_app_url" 
+            class="form-input"
+            value="{{ form.original_app_url.value|default:'' }}"
+            placeholder="https://play.google.com/store/apps/... or https://github.com/..."
+          >
+          <span class="form-help">URL to the original app or website</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Legal Notice -->
+    <div style="padding: 16px; background: rgba(220, 53, 69, 0.1); border-radius: 8px; border-left: 3px solid #dc3545; margin-bottom: 20px;">
+      <p style="margin: 0; color: #333; font-size: 12px; line-height: 1.6;">
+        <strong>⚖️ Legal Notice:</strong>
+        <ul style="margin: 8px 0 0; padding-left: 20px;">
+          <li>I am reporting a genuine copyright infringement with truthful information</li>
+          <li>I understand that making false reports may result in legal action</li>
+          <li>I have the right to file this report</li>
+        </ul>
+      </p>
+    </div>
+
+    <!-- Buttons -->
+    <div style="display: flex; gap: 12px; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--line);">
+      <button type="submit" class="btn btn-primary" style="flex: 1; padding: 12px 24px;">
+        📤 Submit Report
+      </button>
+      <a href="{% url 'apps:detail' app.slug %}" class="btn btn-secondary" style="flex: 1; padding: 12px 24px; background: var(--bg-secondary); color: var(--text); border: 1px solid var(--line); border-radius: 8px; font-weight: 600; cursor: pointer; text-decoration: none; text-align: center;">
+        ← Cancel
+      </a>
+    </div>
+
+    <!-- Info Box -->
+    <div style="margin-top: 30px; padding: 16px; background: var(--bg-secondary); border-radius: 8px; border-left: 4px solid var(--primary);">
+      <h3 style="margin: 0 0 8px; font-size: 14px;">ℹ️ What Happens Next?</h3>
+      <ol style="margin: 0; padding-left: 20px; font-size: 12px; color: var(--muted);">
+        <li>Your report will be received and logged in our system</li>
+        <li>Our team will review it within 24-48 hours</li>
+        <li>We will investigate the claim thoroughly</li>
+        <li>If verified, we will contact the app developer for comment</li>
+        <li>Appropriate action will be taken if infringement is confirmed</li>
+        <li>You'll receive updates via email</li>
+      </ol>
+    </div>
+  </form>
+</div>
+
+<style>
+.required {
+  color: #dc3545;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <!-- Background -->
+  <rect width="256" height="256" fill="#e0e7ff" rx="50"/>
+  
+  <!-- App icon shape - rounded square -->
+  <rect x="50" y="50" width="156" height="156" fill="#7c5cff" rx="35"/>
+  
+  <!-- App symbol - stylized grid for app drawer -->
+  <g fill="#ffffff" opacity="0.9">
+    <!-- Top left dot -->
+    <circle cx="90" cy="90" r="12"/>
+    <!-- Top right dot -->
+    <circle cx="166" cy="90" r="12"/>
+    <!-- Bottom left dot -->
+    <circle cx="90" cy="166" r="12"/>
+    <!-- Bottom right dot -->
+    <circle cx="166" cy="166" r="12"/>
+  </g>
+</svg>

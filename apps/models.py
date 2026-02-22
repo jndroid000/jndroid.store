@@ -127,7 +127,7 @@ class App(models.Model):
     store_name = models.CharField(
         max_length=100,
         blank=True,
-        default="JN App Store",
+        default="JnDroid Store",
         help_text="Store name (for credits)"
     )
     store_email = models.EmailField(
@@ -207,8 +207,215 @@ class App(models.Model):
         default=False,
         help_text="Marked for deletion?"
     )
-
-    # ==================== Timestamps ====================
+    
+    # ==================== Copyright & Legal ====================
+    copyright_statement = models.TextField(
+        blank=True,
+        default="This app is the original creation of the developer listed above.",
+        help_text="Copyright claim statement"
+    )
+    is_original_content = models.BooleanField(
+        default=True,
+        help_text="I confirm this is original content and I have rights to distribute it"
+    )
+    copyright_verified = models.BooleanField(
+        default=False,
+        help_text="Admin verified copyright claims"
+    )
+    has_copyright_claim = models.BooleanField(
+        default=False,
+        help_text="Does this app have a copyright/DMCA claim against it?"
+    )
+    copyright_claim_reason = models.TextField(
+        blank=True,
+        help_text="Reason for copyright claim if applicable"
+    )
+    takedown_requested = models.BooleanField(
+        default=False,
+        help_text="Owner requested takedown?"
+    )
+    takedown_reason = models.TextField(
+        blank=True,
+        help_text="Reason for owner-requested takedown"
+    )
+    takedown_requested_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="When takedown was requested"
+    )
+    
+    # ==================== Copyright Registration & Verification ====================
+    COPYRIGHT_PROTECTION_CHOICES = [
+        ('basic', 'Basic - Developer Statement Only'),
+        ('standard', 'Standard - Admin Verified'),
+        ('premium', 'Premium - Registered & Verified'),
+    ]
+    
+    LICENSE_TYPE_CHOICES = [
+        ('proprietary', 'Proprietary/Commercial'),
+        ('mit', 'MIT License'),
+        ('gpl', 'GPL License'),
+        ('apache', 'Apache License'),
+        ('bsd', 'BSD License'),
+        ('custom', 'Custom License'),
+        ('public_domain', 'Public Domain'),
+    ]
+    
+    copyright_registration_number = models.CharField(
+        max_length=100,
+        blank=True,
+        unique=True,
+        null=True,
+        help_text="Official copyright/trademark registration number"
+    )
+    
+    copyright_holder_email = models.EmailField(
+        blank=True,
+        help_text="Email of copyright holder for verification"
+    )
+    
+    copyright_holder_verified = models.BooleanField(
+        default=False,
+        help_text="Copyright holder email verified?"
+    )
+    
+    copyright_protection_level = models.CharField(
+        max_length=20,
+        choices=COPYRIGHT_PROTECTION_CHOICES,
+        default='basic',
+        help_text="Level of copyright protection"
+    )
+    
+    copyright_license_type = models.CharField(
+        max_length=20,
+        choices=LICENSE_TYPE_CHOICES,
+        default='proprietary',
+        help_text="Type of license/copyright protection"
+    )
+    
+    copyright_license_url = models.URLField(
+        blank=True,
+        help_text="URL to license details or full license text"
+    )
+    
+    copyright_expiration_date = models.DateField(
+        null=True,
+        blank=True,
+        help_text="When copyright protection expires (if applicable)"
+    )
+    
+    copyright_notice_required = models.BooleanField(
+        default=True,
+        help_text="Must show copyright notice in app"
+    )
+    
+    copyright_verified_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="verified_apps",
+        help_text="Admin who verified copyright"
+    )
+    
+    copyright_verified_date = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="When copyright was verified by admin"
+    )
+    
+    copyright_dispute_status = models.CharField(
+        max_length=20,
+        choices=[
+            ('none', 'No Dispute'),
+            ('under_investigation', 'Under Investigation'),
+            ('disputed', 'Disputed/Contested'),
+            ('resolved', 'Resolved'),
+        ],
+        default='none',
+        help_text="Current dispute status"
+    )
+    
+    has_infringement_report = models.BooleanField(
+        default=False,
+        help_text="Has any infringement reports against this app?"
+    )
+    
+    copyright_infringement_count = models.PositiveIntegerField(
+        default=0,
+        help_text="Number of infringement reports"
+    )
+    
+    # ==================== Content Ownership & Source Verification ====================
+    CONTENT_OWNERSHIP_CHOICES = [
+        ('original', 'I am the original creator'),
+        ('permission', 'I have legal permission to share'),
+        ('informational', 'Sharing for informational purposes'),
+    ]
+    
+    content_ownership_type = models.CharField(
+        max_length=20,
+        choices=CONTENT_OWNERSHIP_CHOICES,
+        default='informational',
+        help_text="Declare your rights/ownership of this content"
+    )
+    
+    play_store_link = models.URLField(
+        blank=True,
+        null=True,
+        help_text="Link to app on Google Play Store (if available)"
+    )
+    
+    developer_website = models.URLField(
+        blank=True,
+        null=True,
+        help_text="Official developer website or portfolio"
+    )
+    
+    verified_external_link = models.BooleanField(
+        default=False,
+        help_text="Admin verified the external link (Play Store or official website)"
+    )
+    
+    source_verified_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="source_verified_apps",
+        help_text="Admin who verified the source"
+    )
+    
+    source_verified_date = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="When source was verified"
+    )
+    
+    # Platform compliance tracking
+    RISK_LEVEL_CHOICES = [
+        ('low', 'Low Risk - Verified Source'),
+        ('medium', 'Medium Risk - Unverified Source'),
+        ('high', 'High Risk - Requires Investigation'),
+    ]
+    
+    legal_risk_level = models.CharField(
+        max_length=20,
+        choices=RISK_LEVEL_CHOICES,
+        default='medium',
+        help_text="Legal/copyright risk assessment"
+    )
+    
+    requires_manual_review = models.BooleanField(
+        default=True,
+        help_text="App requires manual copyright review before publication"
+    )
+    
+    admin_review_notes = models.TextField(
+        blank=True,
+        help_text="Admin notes about copyright/ownership verification"
+    )
+    
     release_date = models.DateField(
         auto_now_add=False,
         default='2026-01-29',
@@ -246,6 +453,38 @@ class App(models.Model):
     def get_absolute_url(self):
         from django.urls import reverse
         return reverse('apps:detail', kwargs={'slug': self.slug})
+
+
+class AppScreenshot(models.Model):
+    """Screenshots for app showcase"""
+    app = models.ForeignKey(
+        App,
+        on_delete=models.CASCADE,
+        related_name="screenshots",
+        help_text="App this screenshot belongs to"
+    )
+    image = models.ImageField(
+        upload_to="app_screenshots/",
+        help_text="Screenshot image (recommended: 1080x1920 or similar)"
+    )
+    caption = models.CharField(
+        max_length=200,
+        blank=True,
+        help_text="Optional caption/description"
+    )
+    order = models.PositiveIntegerField(
+        default=0,
+        help_text="Display order (lower = first)"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['order', '-created_at']
+        verbose_name = "App Screenshot"
+        verbose_name_plural = "App Screenshots"
+    
+    def __str__(self):
+        return f"{self.app.title} - Screenshot {self.order}"
 
 
 class AppVersion(models.Model):
@@ -346,3 +585,314 @@ class AppDownload(models.Model):
     
     def __str__(self):
         return f"{self.user.username} downloaded {self.app.title}"
+
+
+class CopyrightClaim(models.Model):
+    """
+    Track DMCA/Copyright claims and takedown requests
+    For both external DMCA claims and owner-requested takedowns
+    """
+    STATUS_CHOICES = [
+        ('pending', 'Pending Review'),
+        ('approved', 'Approved - Takedown Approved'),
+        ('rejected', 'Rejected - No Action Taken'),
+        ('under_investigation', 'Under Investigation'),
+        ('resolved', 'Resolved'),
+        ('appealed', 'Counter-Notice Filed (Appealed)'),
+    ]
+    
+    CLAIM_TYPE_CHOICES = [
+        ('dmca', 'DMCA Takedown Notice'),
+        ('owner_request', 'Owner Requested Takedown'),
+        ('counter_notice', 'Counter-Notice'),
+    ]
+    
+    # App being claimed/removed
+    app = models.ForeignKey(
+        App,
+        on_delete=models.CASCADE,
+        related_name="copyright_claims",
+        help_text="App being claimed"
+    )
+    
+    # Claim details
+    claim_type = models.CharField(
+        max_length=20,
+        choices=CLAIM_TYPE_CHOICES,
+        default='dmca',
+        help_text="Type of claim"
+    )
+    
+    # Claimant information
+    claimant_name = models.CharField(
+        max_length=200,
+        help_text="Name of person/organization filing claim"
+    )
+    claimant_email = models.EmailField(
+        help_text="Claimant email"
+    )
+    claimant_address = models.TextField(
+        blank=True,
+        help_text="Claimant address"
+    )
+    
+    # Description
+    description = models.TextField(
+        help_text="Description of copyrighted work being infringed"
+    )
+    reason = models.TextField(
+        help_text="Reason for claim (detailed explanation)"
+    )
+    
+    # Evidence
+    evidence_url = models.URLField(
+        blank=True,
+        help_text="URL to original/competing work"
+    )
+    
+    # Status
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='pending',
+        help_text="Claim status"
+    )
+    
+    # Admin notes
+    admin_notes = models.TextField(
+        blank=True,
+        help_text="Internal notes from admin review"
+    )
+    
+    # Action taken
+    action_taken = models.TextField(
+        blank=True,
+        help_text="What action was taken (if any)"
+    )
+    
+    # Timestamps
+    submitted_at = models.DateTimeField(auto_now_add=True)
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+    resolved_at = models.DateTimeField(null=True, blank=True)
+    
+    class Meta:
+        ordering = ['-submitted_at']
+        verbose_name = "Copyright Claim"
+        verbose_name_plural = "Copyright Claims"
+        indexes = [
+            models.Index(fields=['app', '-submitted_at']),
+            models.Index(fields=['status']),
+        ]
+    
+    def __str__(self):
+        return f"{self.get_claim_type_display()} - {self.app.title} ({self.status})"
+
+
+class CopyrightInfringementReport(models.Model):
+    """
+    User reports of potential copyright infringement
+    Anyone can report if they believe an app violates copyright
+    """
+    STATUS_CHOICES = [
+        ('submitted', 'Submitted'),
+        ('under_review', 'Under Review'),
+        ('verified', 'Verified - Infringement Confirmed'),
+        ('dismissed', 'Dismissed - No Infringement'),
+        ('resolved', 'Resolved'),
+    ]
+    
+    # Reported app
+    app = models.ForeignKey(
+        App,
+        on_delete=models.CASCADE,
+        related_name="infringement_reports",
+        help_text="App being reported"
+    )
+    
+    # Reporter information
+    reporter_name = models.CharField(
+        max_length=200,
+        help_text="Name of person reporting"
+    )
+    reporter_email = models.EmailField(
+        help_text="Reporter email"
+    )
+    
+    # Report details
+    title = models.CharField(
+        max_length=255,
+        help_text="Brief title of the report"
+    )
+    description = models.TextField(
+        help_text="Detailed description of infringement"
+    )
+    
+    # Original/Competing Work
+    original_app_name = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="Name of original app (if applicable)"
+    )
+    original_app_url = models.URLField(
+        blank=True,
+        help_text="Link to original work"
+    )
+    
+    # Evidence
+    evidence_description = models.TextField(
+        blank=True,
+        help_text="Specific details about what was copied"
+    )
+    
+    # Status
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='submitted',
+        help_text="Report status"
+    )
+    
+    # Admin review
+    admin_notes = models.TextField(
+        blank=True,
+        help_text="Admin's investigation notes"
+    )
+    
+    # Timestamps
+    submitted_at = models.DateTimeField(auto_now_add=True)
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+    resolved_at = models.DateTimeField(null=True, blank=True)
+    
+    class Meta:
+        ordering = ['-submitted_at']
+        verbose_name = "Copyright Infringement Report"
+        verbose_name_plural = "Copyright Infringement Reports"
+        indexes = [
+            models.Index(fields=['app', '-submitted_at']),
+            models.Index(fields=['status']),
+        ]
+    
+    def __str__(self):
+        return f"Infringement Report: {self.app.title} ({self.status})"
+
+
+class CopyrightDisputeResolution(models.Model):
+    """
+    Manage disputes between app owner and copyright claimants
+    """
+    RESOLUTION_STATUS_CHOICES = [
+        ('open', 'Open - Awaiting Resolution'),
+        ('negotiation', 'Under Negotiation'),
+        ('mediation', 'Mediation In Progress'),
+        ('resolved_agree', 'Resolved - Both Parties Agree'),
+        ('resolved_takedown', 'Resolved - App Removed'),
+        ('resolved_other', 'Resolved - Other Outcome'),
+        ('cancelled', 'Cancelled'),
+    ]
+    
+    # Related claim and app
+    copyright_claim = models.OneToOneField(
+        CopyrightClaim,
+        on_delete=models.CASCADE,
+        related_name="dispute_resolution",
+        help_text="Associated copyright claim"
+    )
+    
+    app = models.ForeignKey(
+        App,
+        on_delete=models.CASCADE,
+        related_name="disputes",
+        help_text="App in dispute"
+    )
+    
+    # Description
+    description = models.TextField(
+        help_text="Description of the dispute"
+    )
+    
+    # Resolution attempt
+    resolution_status = models.CharField(
+        max_length=20,
+        choices=RESOLUTION_STATUS_CHOICES,
+        default='open',
+        help_text="Current dispute resolution status"
+    )
+    
+    # Terms (if resolved)
+    resolution_terms = models.TextField(
+        blank=True,
+        help_text="Agreed upon resolution terms"
+    )
+    
+    # Communication
+    last_communication = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="Last communication with parties"
+    )
+    
+    # Admin handling
+    assigned_to = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="dispute_cases",
+        help_text="Admin assigned to handle dispute"
+    )
+    
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    resolved_at = models.DateTimeField(null=True, blank=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Copyright Dispute Resolution"
+        verbose_name_plural = "Copyright Dispute Resolutions"
+    
+    def __str__(self):
+        return f"Dispute: {self.app.title} ({self.resolution_status})"
+
+
+class CopyrightVerificationToken(models.Model):
+    """
+    Email verification tokens for copyright holder verification
+    """
+    app = models.OneToOneField(
+        App,
+        on_delete=models.CASCADE,
+        related_name="copyright_verification",
+        help_text="App being verified"
+    )
+    
+    token = models.CharField(
+        max_length=100,
+        unique=True,
+        help_text="Unique verification token"
+    )
+    
+    email = models.EmailField(
+        help_text="Email to verify"
+    )
+    
+    is_verified = models.BooleanField(
+        default=False,
+        help_text="Has email been verified?"
+    )
+    
+    attempts = models.PositiveIntegerField(
+        default=0,
+        help_text="Verification attempts made"
+    )
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    verified_at = models.DateTimeField(null=True, blank=True)
+    expires_at = models.DateTimeField(help_text="Token expiration time")
+    
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Copyright Verification Token"
+        verbose_name_plural = "Copyright Verification Tokens"
+    
+    def __str__(self):
+        return f"Verification Token: {self.app.title} ({self.email})"
