@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import App, AppVersion, CopyrightClaim, CopyrightInfringementReport
+from .models import App, AppVersion, CopyrightClaim, CopyrightInfringementReport, AppScreenshot
 import os
 
 
@@ -501,6 +501,53 @@ class CopyrightInfringementReportForm(forms.ModelForm):
                 'class': 'form-control',
                 'rows': 3,
                 'placeholder': 'Specific evidence (code similarities, asset matches, etc.)',
+            }),
+        }
+
+
+class AppScreenshotForm(forms.ModelForm):
+    """Form for uploading app screenshots"""
+    
+    MAX_IMAGE_SIZE = 10 * 1024 * 1024  # 10 MB
+    ALLOWED_IMG_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.gif', '.webp'}
+    
+    def clean_image(self):
+        """Validate screenshot image file size and format"""
+        image = self.cleaned_data.get('image')
+        if image:
+            # Check file size
+            if image.size > self.MAX_IMAGE_SIZE:
+                raise ValidationError(
+                    f"Image file is too large. Maximum size is 10 MB. "
+                    f"Your file is {image.size / (1024 * 1024):.2f} MB."
+                )
+            
+            # Check file extension
+            ext = os.path.splitext(image.name)[1].lower()
+            if ext not in self.ALLOWED_IMG_EXTENSIONS:
+                raise ValidationError(
+                    f"Image format '{ext}' is not allowed. "
+                    f"Please use JPG, PNG, GIF, or WebP."
+                )
+        return image
+    
+    class Meta:
+        model = AppScreenshot
+        fields = ['image', 'caption', 'order']
+        widgets = {
+            'image': forms.FileInput(attrs={
+                'class': 'form-control',
+                'accept': 'image/*',
+            }),
+            'caption': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'e.g., "Home screen", "Settings" (optional)',
+                'maxlength': '200',
+            }),
+            'order': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'min': '0',
+                'placeholder': '0',
             }),
         }
 

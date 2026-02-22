@@ -10,7 +10,7 @@ from django.http import JsonResponse
 from django.views.decorators.cache import cache_page
 from django.utils import timezone
 
-from .models import App, CopyrightClaim, CopyrightInfringementReport
+from .models import App, CopyrightClaim, CopyrightInfringementReport, AppScreenshot
 from .forms import AppUploadForm, AppTakedownRequestForm, CopyrightInfringementReportForm
 from categories.models import Category
 
@@ -131,6 +131,17 @@ def app_upload(request):
                     app = form.save(commit=False)
                     app.owner = request.user
                     app.save()
+                    
+                    # Handle screenshot uploads
+                    screenshots = request.FILES.getlist('screenshots')
+                    for i, screenshot in enumerate(screenshots):
+                        if screenshot:
+                            AppScreenshot.objects.create(
+                                app=app,
+                                image=screenshot,
+                                order=i,
+                            )
+                    
                     messages.success(
                         request,
                         f"✅ Success! '{app.title}' has been uploaded to JnDroid Store.",

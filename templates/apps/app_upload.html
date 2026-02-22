@@ -288,6 +288,26 @@
       </div>
     </div>
 
+    <!-- Screenshots Section -->
+    <div class="form-section">
+      <div class="section-header">
+        <span class="section-emoji">📸</span>
+        <h2 class="section-title">Screenshots (Gallery)</h2>
+      </div>
+
+      <p class="form-help" style="margin-bottom: 20px;">
+        ℹ️ Upload 2-5 screenshots to showcase your app. These will appear in the app detail page with an interactive gallery.
+      </p>
+
+      <div id="screenshots-container">
+        <!-- Screenshots will be added here dynamically -->
+      </div>
+
+      <button type="button" id="add-screenshot-btn" class="btn btn-secondary" onclick="addScreenshot()">
+        <i class="fas fa-plus"></i> Add Screenshot
+      </button>
+    </div>
+
     <!-- Android Requirements Section -->
     <div class="form-section">
       <div class="section-header">
@@ -860,4 +880,207 @@
     </ul>
   </div>
 </div>
+
+<script>
+let screenshotCount = 0;
+const MAX_SCREENSHOTS = 10;
+
+function addScreenshot() {
+  if (screenshotCount >= MAX_SCREENSHOTS) {
+    alert(`Maximum ${MAX_SCREENSHOTS} screenshots allowed!`);
+    return;
+  }
+
+  const container = document.getElementById('screenshots-container');
+  const screenshotId = screenshotCount++;
+  
+  const screenshotDiv = document.createElement('div');
+  screenshotDiv.id = `screenshot-${screenshotId}`;
+  screenshotDiv.className = 'screenshot-item';
+  screenshotDiv.innerHTML = `
+    <div class="screenshot-box">
+      <div class="screenshot-header">
+        <span class="screenshot-num">Screenshot ${screenshotId + 1}</span>
+        <button type="button" class="btn-remove" onclick="removeScreenshot(${screenshotId})">
+          <i class="fas fa-trash"></i> Remove
+        </button>
+      </div>
+      
+      <div class="screenshot-preview-area">
+        <label class="file-upload-input" for="screenshot-image-${screenshotId}">
+          <span class="file-upload-icon">📸</span>
+          <span class="file-upload-text">Click to upload image</span>
+          <span class="file-upload-subtext">JPG, PNG (recommended: 1080x1920 or similar)</span>
+        </label>
+        <input 
+          type="file" 
+          id="screenshot-image-${screenshotId}" 
+          name="screenshots" 
+          accept="image/*"
+          onchange="previewScreenshot(this, ${screenshotId})"
+        >
+        <div id="preview-${screenshotId}" class="screenshot-preview" style="display:none;">
+          <img id="previewImg-${screenshotId}" src="" alt="Preview">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">Caption (optional)</label>
+        <input 
+          type="text" 
+          class="form-input" 
+          placeholder="e.g., Home screen, Settings, etc."
+          maxlength="200"
+        >
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Order</label>
+        <input 
+          type="number" 
+          class="form-input" 
+          value="${screenshotId}" 
+          min="0"
+          placeholder="0"
+        >
+      </div>
+    </div>
+  `;
+  
+  container.appendChild(screenshotDiv);
+}
+
+function removeScreenshot(id) {
+  const elem = document.getElementById(`screenshot-${id}`);
+  if (elem) {
+    elem.remove();
+  }
+}
+
+function previewScreenshot(input, id) {
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const preview = document.getElementById(`preview-${id}`);
+      const previewImg = document.getElementById(`previewImg-${id}`);
+      previewImg.src = e.target.result;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+// Add first screenshot by default
+document.addEventListener('DOMContentLoaded', function() {
+  addScreenshot();
+});
+</script>
+
+<style>
+.screenshot-item {
+  background: var(--bg-secondary);
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 20px;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.screenshot-box {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.screenshot-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.screenshot-num {
+  font-weight: 600;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.btn-remove {
+  background: var(--danger);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.2s;
+}
+
+.btn-remove:hover {
+  background: #c82333;
+}
+
+.screenshot-preview-area {
+  position: relative;
+}
+
+.screenshot-preview {
+  margin-top: 12px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 2px solid var(--primary);
+  background: var(--bg-tertiary);
+  padding: 8px;
+}
+
+.screenshot-preview img {
+  max-width: 200px;
+  max-height: 300px;
+  border-radius: 6px;
+  display: block;
+}
+
+.screenshot-item .form-group {
+  margin: 0;
+}
+
+.screenshot-item .form-label {
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.screenshot-item .form-input {
+  font-size: 13px;
+  padding: 8px 12px;
+}
+
+@media (max-width: 768px) {
+  .screenshot-item {
+    padding: 16px;
+  }
+  
+  .screenshot-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .btn-remove {
+    width: 100%;
+  }
+}
+</style>
+
 {% endblock %}
