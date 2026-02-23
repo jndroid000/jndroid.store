@@ -19,6 +19,10 @@ CSRF_TRUSTED_ORIGINS = [
 
 # ==================== DEVELOPMENT TOOLS ====================
 
+# ==================== STATIC FILES (Development) ====================
+# Use simple static files storage for development (no manifest.json needed)
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+
 # ==================== ALLAUTH (Development) ====================
 # In development, use optional email verification for easier testing
 ACCOUNT_EMAIL_VERIFICATION = 'optional'

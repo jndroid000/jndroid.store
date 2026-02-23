@@ -92,7 +92,7 @@ def app_detail(request, slug):
         "reviews_count": reviews.count(),
         "related_apps": related_apps,
     }
-    return render(request, "apps/app_detail_modern.html", context)
+    return render(request, "apps/app_detail.html", context)
 
 
 @require_http_methods(["GET"])
